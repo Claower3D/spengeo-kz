@@ -635,6 +635,24 @@ function App() {
               </HudCard>
             </section>
 
+            {/* 1.5. Clients / Partners (Moved up) */}
+            <section style={{ marginBottom: '80px', textAlign: 'center', position: 'relative', overflow: 'hidden', padding: '40px 0' }}>
+               <div className="bg-glow-orb" style={{ top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '1000px', height: '400px', opacity: 0.08, background: 'radial-gradient(ellipse, var(--color-cyan) 0%, transparent 70%)' }}></div>
+               <span className="hero-subtitle" style={{ color: 'var(--color-accent)', textShadow: '0 0 15px rgba(234, 179, 8, 0.6)' }}>НАМ ДОВЕРЯЮТ</span>
+               <h2 style={{ fontSize: '3.2rem', marginBottom: '40px', textShadow: '0 0 40px rgba(255,255,255,0.2)' }}>{t.sections.clientsTitle}</h2>
+               
+               <div className="marquee-container" style={{ position: 'relative', zIndex: 2, marginTop: '20px' }}>
+                 <div className="marquee-content">
+                   {/* Double array for seamless infinite scroll */}
+                   {[...['BI Group', 'Air Astana', 'QazaqGaz', 'Mega Center', 'Bazis-A', 'RAMS Qazaqstan', 'KazMinerals'], ...['BI Group', 'Air Astana', 'QazaqGaz', 'Mega Center', 'Bazis-A', 'RAMS Qazaqstan', 'KazMinerals']].map((client, idx) => (
+                     <div key={idx} className="client-card-premium">
+                       <span className="client-name-gradient">{client}</span>
+                     </div>
+                   ))}
+                 </div>
+               </div>
+            </section>
+
             {/* 2.5 About Company Overview */}
             <section style={{ marginBottom: '40px', display: 'flex', flexDirection: 'column', gap: '20px', padding: '40px', background: 'linear-gradient(135deg, rgba(6, 182, 212, 0.05) 0%, rgba(3, 5, 9, 0) 100%)', borderRadius: 'var(--border-radius-lg)', borderLeft: '4px solid var(--color-cyan)', position: 'relative', overflow: 'hidden' }}>
               <div className="bg-glow-orb-1" style={{ position: 'absolute', top: '-100px', right: '-100px', width: '300px', height: '300px', background: 'radial-gradient(circle, var(--color-accent) 0%, transparent 70%)', opacity: 0.05 }}></div>
@@ -914,24 +932,6 @@ function App() {
                   </div>
                 </div>
               </div>
-            </section>
-
-            {/* 6. Clients / Partners */}
-            <section style={{ marginBottom: '80px', textAlign: 'center', position: 'relative', overflow: 'hidden', padding: '40px 0' }}>
-               <div className="bg-glow-orb" style={{ top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '1000px', height: '400px', opacity: 0.08, background: 'radial-gradient(ellipse, var(--color-cyan) 0%, transparent 70%)' }}></div>
-               <span className="hero-subtitle" style={{ color: 'var(--color-accent)', textShadow: '0 0 15px rgba(234, 179, 8, 0.6)' }}>НАМ ДОВЕРЯЮТ</span>
-               <h2 style={{ fontSize: '3.2rem', marginBottom: '40px', textShadow: '0 0 40px rgba(255,255,255,0.2)' }}>{t.sections.clientsTitle}</h2>
-               
-               <div className="marquee-container" style={{ position: 'relative', zIndex: 2, marginTop: '20px' }}>
-                 <div className="marquee-content">
-                   {/* Double array for seamless infinite scroll */}
-                   {[...['BI Group', 'Air Astana', 'QazaqGaz', 'Mega Center', 'Bazis-A', 'RAMS Qazaqstan', 'KazMinerals'], ...['BI Group', 'Air Astana', 'QazaqGaz', 'Mega Center', 'Bazis-A', 'RAMS Qazaqstan', 'KazMinerals']].map((client, idx) => (
-                     <div key={idx} className="client-card-premium">
-                       <span className="client-name-gradient">{client}</span>
-                     </div>
-                   ))}
-                 </div>
-               </div>
             </section>
 
             {/* 7. Licenses Overview */}
