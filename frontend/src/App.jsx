@@ -917,16 +917,20 @@ function App() {
             </section>
 
             {/* 6. Clients / Partners */}
-            <section style={{ marginBottom: '50px', textAlign: 'center', position: 'relative' }}>
-               <div className="bg-glow-orb" style={{ top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '800px', height: '800px', opacity: 0.08, background: 'radial-gradient(circle, var(--color-cyan) 0%, transparent 70%)' }}></div>
+            <section style={{ marginBottom: '80px', textAlign: 'center', position: 'relative', overflow: 'hidden', padding: '40px 0' }}>
+               <div className="bg-glow-orb" style={{ top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '1000px', height: '400px', opacity: 0.08, background: 'radial-gradient(ellipse, var(--color-cyan) 0%, transparent 70%)' }}></div>
                <span className="hero-subtitle" style={{ color: 'var(--color-accent)', textShadow: '0 0 15px rgba(234, 179, 8, 0.6)' }}>НАМ ДОВЕРЯЮТ</span>
-               <h2 style={{ fontSize: '3.2rem', marginBottom: '20px', textShadow: '0 0 40px rgba(255,255,255,0.2)' }}>Наши Клиенты</h2>
-               <div style={{ display: 'flex', justifyContent: 'center', gap: '25px', flexWrap: 'wrap', marginTop: '50px', position: 'relative', zIndex: 2 }}>
-                 {['BI Group', 'Air Astana', 'QazaqGaz', 'Mega Center', 'Bazis-A', 'RAMS Qazaqstan'].map(client => (
-                   <div key={client} className="glow-card-premium client-tag">
-                     <span className="client-name-gradient">{client}</span>
-                   </div>
-                 ))}
+               <h2 style={{ fontSize: '3.2rem', marginBottom: '40px', textShadow: '0 0 40px rgba(255,255,255,0.2)' }}>{t.sections.clientsTitle}</h2>
+               
+               <div className="marquee-container" style={{ position: 'relative', zIndex: 2, marginTop: '20px' }}>
+                 <div className="marquee-content">
+                   {/* Double array for seamless infinite scroll */}
+                   {[...['BI Group', 'Air Astana', 'QazaqGaz', 'Mega Center', 'Bazis-A', 'RAMS Qazaqstan', 'KazMinerals'], ...['BI Group', 'Air Astana', 'QazaqGaz', 'Mega Center', 'Bazis-A', 'RAMS Qazaqstan', 'KazMinerals']].map((client, idx) => (
+                     <div key={idx} className="client-card-premium">
+                       <span className="client-name-gradient">{client}</span>
+                     </div>
+                   ))}
+                 </div>
                </div>
             </section>
 
