@@ -237,7 +237,18 @@ function HudCard({ children, className = '', style = {}, onClick }) {
 }
 
 function App() {
-  const [activePage, setActivePage] = useState('home');
+  const [activePage, setActivePage] = useState(() => {
+    const path = window.location.pathname.replace(/^\//, '');
+    return ['home', 'about', 'services', 'projects', 'admin'].includes(path) ? path : 'home';
+  });
+  
+  useEffect(() => {
+    if (activePage === 'home') {
+      window.history.pushState({}, '', '/');
+    } else {
+      window.history.pushState({}, '', `/${activePage}`);
+    }
+  }, [activePage]);
   const [language, setLanguage] = useState('ru');
   const t = translations[language];
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
