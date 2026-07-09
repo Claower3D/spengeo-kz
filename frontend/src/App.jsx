@@ -236,6 +236,40 @@ function HudCard({ children, className = '', style = {}, onClick }) {
   );
 }
 
+function EditableText({ id, defaultText, isVisualBuilder, as: Component = 'span', className, style, ...props }) {
+  const [text, setText] = useState(() => localStorage.getItem(`vb_${id}`) || defaultText);
+
+  useEffect(() => {
+    if (text !== defaultText && text !== localStorage.getItem(`vb_${id}`)) {
+      localStorage.setItem(`vb_${id}`, text);
+    }
+  }, [text, id, defaultText]);
+
+  return (
+    <Component
+      style={{
+        ...style,
+        outline: isVisualBuilder ? '2px dashed var(--color-accent)' : 'none',
+        outlineOffset: '2px',
+        cursor: isVisualBuilder ? 'text' : 'inherit',
+        display: isVisualBuilder ? 'inline-block' : 'inherit',
+        minWidth: isVisualBuilder ? '20px' : 'auto',
+        minHeight: isVisualBuilder ? '1em' : 'auto',
+        transition: 'outline 0.3s ease',
+        borderRadius: '4px',
+        padding: isVisualBuilder ? '2px 4px' : '0'
+      }}
+      className={className}
+      contentEditable={isVisualBuilder}
+      suppressContentEditableWarning={true}
+      onBlur={(e) => setText(e.currentTarget.textContent)}
+      {...props}
+    >
+      {text}
+    </Component>
+  );
+}
+
 function App() {
   const [activePage, setActivePage] = useState(() => {
     const path = window.location.pathname.replace(/^\//, '');
@@ -648,8 +682,8 @@ function App() {
             {/* 1.5. Clients / Partners (Moved above stats) */}
             <section style={{ marginBottom: '60px', textAlign: 'center', position: 'relative', overflow: 'visible', padding: '40px 0', width: '100vw', marginLeft: 'calc(-50vw + 50%)', marginRight: 'calc(-50vw + 50%)' }}>
                <div className="bg-glow-orb" style={{ top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '1000px', height: '400px', opacity: 0.08, background: 'radial-gradient(ellipse, var(--color-cyan) 0%, transparent 70%)' }}></div>
-               <span className="hero-subtitle" style={{ color: 'var(--color-accent)', textShadow: '0 0 15px rgba(234, 179, 8, 0.6)' }}>НАМ ДОВЕРЯЮТ</span>
-               <h2 style={{ fontSize: '3.2rem', marginBottom: '40px', textShadow: '0 0 40px rgba(255,255,255,0.2)' }}>{t.sections.clientsTitle}</h2>
+               <EditableText id="clients_subtitle" defaultText="НАМ ДОВЕРЯЮТ" isVisualBuilder={isVisualBuilder} className="hero-subtitle" style={{ color: 'var(--color-accent)', textShadow: '0 0 15px rgba(234, 179, 8, 0.6)' }} />
+               <EditableText as="h2" id="clients_title" defaultText={t.sections.clientsTitle} isVisualBuilder={isVisualBuilder} style={{ fontSize: '3.2rem', marginBottom: '40px', textShadow: '0 0 40px rgba(255,255,255,0.2)' }} />
                
                <div className="marquee-container" style={{ position: 'relative', zIndex: 2, marginTop: '20px' }}>
                  <div className="marquee-content">
@@ -665,8 +699,8 @@ function App() {
 
             {/* Quick KPI stats dashboard */}
             <div style={{ textAlign: 'center', marginBottom: '40px', position: 'relative', zIndex: 2 }}>
-               <span className="hero-subtitle" style={{ color: 'var(--color-cyan)', textShadow: '0 0 15px rgba(6, 182, 212, 0.6)' }}>{t.stats.subtitle}</span>
-               <h2 style={{ fontSize: '3.2rem', textShadow: '0 0 40px rgba(255,255,255,0.2)' }}>{t.stats.title}</h2>
+               <EditableText id="stats_subtitle" defaultText={t.stats.subtitle} isVisualBuilder={isVisualBuilder} className="hero-subtitle" style={{ color: 'var(--color-cyan)', textShadow: '0 0 15px rgba(6, 182, 212, 0.6)' }} />
+               <EditableText as="h2" id="stats_title" defaultText={t.stats.title} isVisualBuilder={isVisualBuilder} style={{ fontSize: '3.2rem', textShadow: '0 0 40px rgba(255,255,255,0.2)' }} />
             </div>
             <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '30px', marginBottom: '60px', position: 'relative' }}>
               <div className="bg-glow-orb" style={{ top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '800px', height: '300px', opacity: 0.1, background: 'radial-gradient(ellipse, var(--color-cyan) 0%, transparent 70%)' }}></div>
@@ -676,9 +710,9 @@ function App() {
                 <div style={{ background: 'rgba(234, 179, 8, 0.1)', padding: '12px', borderRadius: '12px', marginBottom: '20px' }}>
                   <Hammer size={24} color="var(--color-accent)" />
                 </div>
-                <span className="spec-label" style={{ marginBottom: '10px' }}>{t.stats.wells}</span>
-                <div style={{ fontSize: '3.2rem', fontWeight: 800, color: 'var(--color-accent)', fontFamily: 'var(--font-mono)', lineHeight: 1, marginBottom: '15px', textShadow: '0 0 20px rgba(234, 179, 8, 0.4)' }}>1,420+</div>
-                <p style={{ fontSize: '0.95rem', color: 'var(--color-text-secondary)', margin: 0, lineHeight: 1.6, position: 'relative', zIndex: 2 }}>{t.stats.wellsDesc}</p>
+                <EditableText id="stats_wells" defaultText={t.stats.wells} isVisualBuilder={isVisualBuilder} className="spec-label" style={{ marginBottom: '10px' }} />
+                <EditableText id="stats_wells_val" defaultText="1,420+" isVisualBuilder={isVisualBuilder} as="div" style={{ fontSize: '3.2rem', fontWeight: 800, color: 'var(--color-accent)', fontFamily: 'var(--font-mono)', lineHeight: 1, marginBottom: '15px', textShadow: '0 0 20px rgba(234, 179, 8, 0.4)' }} />
+                <EditableText id="stats_wells_desc" defaultText={t.stats.wellsDesc} isVisualBuilder={isVisualBuilder} as="p" style={{ fontSize: '0.95rem', color: 'var(--color-text-secondary)', margin: 0, lineHeight: 1.6, position: 'relative', zIndex: 2 }} />
               </div>
 
               <div className="glow-card-premium" style={{ padding: '35px 25px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', position: 'relative', overflow: 'hidden' }}>
@@ -686,9 +720,9 @@ function App() {
                 <div style={{ background: 'rgba(6, 182, 212, 0.1)', padding: '12px', borderRadius: '12px', marginBottom: '20px' }}>
                   <MapPin size={24} color="var(--color-cyan)" />
                 </div>
-                <span className="spec-label" style={{ marginBottom: '10px' }}>{t.stats.geo}</span>
-                <div style={{ fontSize: '3.2rem', fontWeight: 800, color: 'var(--color-cyan)', fontFamily: 'var(--font-mono)', lineHeight: 1, marginBottom: '15px', textShadow: '0 0 20px rgba(6, 182, 212, 0.4)' }}>{t.stats.geoValue}</div>
-                <p style={{ fontSize: '0.95rem', color: 'var(--color-text-secondary)', margin: 0, lineHeight: 1.6, position: 'relative', zIndex: 2 }}>{t.stats.geoDesc}</p>
+                <EditableText id="stats_geo" defaultText={t.stats.geo} isVisualBuilder={isVisualBuilder} className="spec-label" style={{ marginBottom: '10px' }} />
+                <EditableText id="stats_geo_val" defaultText={t.stats.geoValue} isVisualBuilder={isVisualBuilder} as="div" style={{ fontSize: '3.2rem', fontWeight: 800, color: 'var(--color-cyan)', fontFamily: 'var(--font-mono)', lineHeight: 1, marginBottom: '15px', textShadow: '0 0 20px rgba(6, 182, 212, 0.4)' }} />
+                <EditableText id="stats_geo_desc" defaultText={t.stats.geoDesc} isVisualBuilder={isVisualBuilder} as="p" style={{ fontSize: '0.95rem', color: 'var(--color-text-secondary)', margin: 0, lineHeight: 1.6, position: 'relative', zIndex: 2 }} />
               </div>
 
               <div className="glow-card-premium" style={{ padding: '35px 25px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', position: 'relative', overflow: 'hidden' }}>
@@ -696,9 +730,9 @@ function App() {
                 <div style={{ background: 'rgba(234, 179, 8, 0.1)', padding: '12px', borderRadius: '12px', marginBottom: '20px' }}>
                   <Award size={24} color="var(--color-accent)" />
                 </div>
-                <span className="spec-label" style={{ marginBottom: '10px' }}>{t.stats.standards}</span>
-                <div style={{ fontSize: '3.2rem', fontWeight: 800, color: 'var(--color-accent)', fontFamily: 'var(--font-mono)', lineHeight: 1, marginBottom: '15px', textShadow: '0 0 20px rgba(234, 179, 8, 0.4)' }}>100%</div>
-                <p style={{ fontSize: '0.95rem', color: 'var(--color-text-secondary)', margin: 0, lineHeight: 1.6, position: 'relative', zIndex: 2 }}>{t.stats.standardsDesc}</p>
+                <EditableText id="stats_standards" defaultText={t.stats.standards} isVisualBuilder={isVisualBuilder} className="spec-label" style={{ marginBottom: '10px' }} />
+                <EditableText id="stats_standards_val" defaultText="100%" isVisualBuilder={isVisualBuilder} as="div" style={{ fontSize: '3.2rem', fontWeight: 800, color: 'var(--color-accent)', fontFamily: 'var(--font-mono)', lineHeight: 1, marginBottom: '15px', textShadow: '0 0 20px rgba(234, 179, 8, 0.4)' }} />
+                <EditableText id="stats_standards_desc" defaultText={t.stats.standardsDesc} isVisualBuilder={isVisualBuilder} as="p" style={{ fontSize: '0.95rem', color: 'var(--color-text-secondary)', margin: 0, lineHeight: 1.6, position: 'relative', zIndex: 2 }} />
               </div>
 
               <div className="glow-card-premium" style={{ padding: '35px 25px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', position: 'relative', overflow: 'hidden' }}>
@@ -706,9 +740,9 @@ function App() {
                 <div style={{ background: 'rgba(6, 182, 212, 0.1)', padding: '12px', borderRadius: '12px', marginBottom: '20px' }}>
                   <Settings size={24} color="var(--color-cyan)" />
                 </div>
-                <span className="spec-label" style={{ marginBottom: '10px' }}>{t.stats.fleet}</span>
-                <div style={{ fontSize: '3.2rem', fontWeight: 800, color: 'var(--color-cyan)', fontFamily: 'var(--font-mono)', lineHeight: 1, marginBottom: '15px', textShadow: '0 0 20px rgba(6, 182, 212, 0.4)' }}>{t.stats.fleetValue}</div>
-                <p style={{ fontSize: '0.95rem', color: 'var(--color-text-secondary)', margin: 0, lineHeight: 1.6, position: 'relative', zIndex: 2 }}>{t.stats.fleetDesc}</p>
+                <EditableText id="stats_fleet" defaultText={t.stats.fleet} isVisualBuilder={isVisualBuilder} className="spec-label" style={{ marginBottom: '10px' }} />
+                <EditableText id="stats_fleet_val" defaultText={t.stats.fleetValue} isVisualBuilder={isVisualBuilder} as="div" style={{ fontSize: '3.2rem', fontWeight: 800, color: 'var(--color-cyan)', fontFamily: 'var(--font-mono)', lineHeight: 1, marginBottom: '15px', textShadow: '0 0 20px rgba(6, 182, 212, 0.4)' }} />
+                <EditableText id="stats_fleet_desc" defaultText={t.stats.fleetDesc} isVisualBuilder={isVisualBuilder} as="p" style={{ fontSize: '0.95rem', color: 'var(--color-text-secondary)', margin: 0, lineHeight: 1.6, position: 'relative', zIndex: 2 }} />
               </div>
             </section>
 
