@@ -236,7 +236,7 @@ function HudCard({ children, className = '', style = {}, onClick }) {
   );
 }
 
-function EditableText({ id, defaultText, isVisualBuilder, as: Component = 'span', className, style, ...props }) {
+function EditableText({ id, defaultText, isVisualBuilder, dangerously = false, as: Component = 'span', className, style, ...props }) {
   const [text, setText] = useState(() => localStorage.getItem(`vb_${id}`) || defaultText);
 
   useEffect(() => {
@@ -262,10 +262,11 @@ function EditableText({ id, defaultText, isVisualBuilder, as: Component = 'span'
       className={className}
       contentEditable={isVisualBuilder}
       suppressContentEditableWarning={true}
-      onBlur={(e) => setText(e.currentTarget.textContent)}
+      onBlur={(e) => setText(dangerously ? e.currentTarget.innerHTML : e.currentTarget.textContent)}
+      dangerouslySetInnerHTML={dangerously ? { __html: text } : undefined}
       {...props}
     >
-      {text}
+      {!dangerously ? text : null}
     </Component>
   );
 }
@@ -750,27 +751,27 @@ function App() {
             <section className="glow-card-premium" style={{ marginBottom: '60px', display: 'flex', flexDirection: 'column', gap: '20px', padding: '50px', position: 'relative', overflow: 'hidden' }}>
               <div className="bg-glow-orb-1" style={{ position: 'absolute', top: '-100px', right: '-100px', width: '300px', height: '300px', background: 'radial-gradient(circle, var(--color-accent) 0%, transparent 70%)', opacity: 0.05 }}></div>
               <div>
-                <span className="spec-label" style={{ color: 'var(--color-accent)', fontSize: '1rem' }}>{t.sections.aboutLabel}</span>
-                <h2 style={{ fontSize: '2.5rem', marginBottom: '20px', lineHeight: 1.2 }} dangerouslySetInnerHTML={{ __html: t.sections.aboutTitle }}></h2>
+                <EditableText id="about_label" defaultText={t.sections.aboutLabel} isVisualBuilder={isVisualBuilder} className="spec-label" style={{ color: 'var(--color-accent)', fontSize: '1rem' }} />
+                <EditableText as="h2" id="about_title" dangerously={true} defaultText={t.sections.aboutTitle} isVisualBuilder={isVisualBuilder} style={{ fontSize: '2.5rem', marginBottom: '20px', lineHeight: 1.2 }} />
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '40px' }}>
                 <div>
-                  <p style={{ color: 'var(--color-text-secondary)', fontSize: '1.05rem', lineHeight: 1.7, marginBottom: '20px' }} dangerouslySetInnerHTML={{ __html: t.sections.aboutP1 }}></p>
-                  <p style={{ color: 'var(--color-text-secondary)', fontSize: '1.05rem', lineHeight: 1.7 }} dangerouslySetInnerHTML={{ __html: t.sections.aboutP2 }}></p>
+                  <EditableText as="p" id="about_p1" dangerously={true} defaultText={t.sections.aboutP1} isVisualBuilder={isVisualBuilder} style={{ color: 'var(--color-text-secondary)', fontSize: '1.05rem', lineHeight: 1.7, marginBottom: '20px' }} />
+                  <EditableText as="p" id="about_p2" dangerously={true} defaultText={t.sections.aboutP2} isVisualBuilder={isVisualBuilder} style={{ color: 'var(--color-text-secondary)', fontSize: '1.05rem', lineHeight: 1.7 }} />
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                   <div style={{ display: 'flex', gap: '15px', alignItems: 'flex-start' }}>
                     <div style={{ background: 'rgba(6, 182, 212, 0.1)', padding: '12px', borderRadius: '50%', color: 'var(--color-cyan)' }}><ShieldCheck size={24}/></div>
                     <div>
-                      <h4 style={{ color: 'var(--color-text-primary)', fontSize: '1.1rem', marginBottom: '5px' }}>{t.sections.aboutF1Title}</h4>
-                      <p style={{ color: 'var(--color-text-secondary)', fontSize: '0.9rem', lineHeight: 1.5 }}>{t.sections.aboutF1Desc}</p>
+                      <EditableText as="h4" id="about_f1_title" defaultText={t.sections.aboutF1Title} isVisualBuilder={isVisualBuilder} style={{ color: 'var(--color-text-primary)', fontSize: '1.1rem', marginBottom: '5px' }} />
+                      <EditableText as="p" id="about_f1_desc" defaultText={t.sections.aboutF1Desc} isVisualBuilder={isVisualBuilder} style={{ color: 'var(--color-text-secondary)', fontSize: '0.9rem', lineHeight: 1.5 }} />
                     </div>
                   </div>
                   <div style={{ display: 'flex', gap: '15px', alignItems: 'flex-start' }}>
                     <div style={{ background: 'rgba(234, 179, 8, 0.1)', padding: '12px', borderRadius: '50%', color: 'var(--color-accent)' }}><Settings size={24}/></div>
                     <div>
-                      <h4 style={{ color: 'var(--color-text-primary)', fontSize: '1.1rem', marginBottom: '5px' }}>{t.sections.aboutF2Title}</h4>
-                      <p style={{ color: 'var(--color-text-secondary)', fontSize: '0.9rem', lineHeight: 1.5 }}>{t.sections.aboutF2Desc}</p>
+                      <EditableText as="h4" id="about_f2_title" defaultText={t.sections.aboutF2Title} isVisualBuilder={isVisualBuilder} style={{ color: 'var(--color-text-primary)', fontSize: '1.1rem', marginBottom: '5px' }} />
+                      <EditableText as="p" id="about_f2_desc" defaultText={t.sections.aboutF2Desc} isVisualBuilder={isVisualBuilder} style={{ color: 'var(--color-text-secondary)', fontSize: '0.9rem', lineHeight: 1.5 }} />
                     </div>
                   </div>
                 </div>
@@ -833,8 +834,8 @@ function App() {
             {/* 3. Services Section (Photo Cards) */}
             <section style={{ marginBottom: '50px' }}>
               <div style={{ textAlign: 'center', marginBottom: '30px' }}>
-                <span className="hero-subtitle">{t.sections.servicesLabel}</span>
-                <h2>{t.sections.servicesTitle}</h2>
+                <EditableText id="services_label" defaultText={t.sections.servicesLabel} isVisualBuilder={isVisualBuilder} className="hero-subtitle" />
+                <EditableText as="h2" id="services_title" defaultText={t.sections.servicesTitle} isVisualBuilder={isVisualBuilder} />
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '30px' }}>
                 {Object.entries(SERVICES_DATA).slice(0, 6).map(([key, item]) => {
@@ -860,8 +861,8 @@ function App() {
             {/* 4. Projects Section (Summarized) */}
             <section style={{ marginBottom: '50px', backgroundColor: 'var(--bg-dark-secondary)', padding: '40px', borderRadius: 'var(--border-radius-lg)', border: '1px solid var(--border-color)', boxShadow: '0 10px 40px rgba(0,0,0,0.15)' }}>
               <div style={{ textAlign: 'center', marginBottom: '30px' }}>
-                <span className="hero-subtitle" style={{ color: 'var(--color-cyan)' }}>ПОРТФОЛИО</span>
-                <h2>Выполненные Объекты</h2>
+                <EditableText id="portfolio_label" defaultText="ПОРТФОЛИО" isVisualBuilder={isVisualBuilder} className="hero-subtitle" style={{ color: 'var(--color-cyan)' }} />
+                <EditableText as="h2" id="portfolio_title" defaultText="Выполненные Объекты" isVisualBuilder={isVisualBuilder} />
               </div>
               <div style={{ display: 'flex', flexDirection: 'row', gap: '30px', alignItems: 'stretch' }} className="portfolio-split-view">
                 <div style={{ flex: '1 1 65%', height: '450px', borderRadius: 'var(--border-radius-md)', overflow: 'hidden', border: '1px solid rgba(6, 182, 212, 0.2)', boxShadow: '0 0 30px rgba(0,0,0,0.8)', position: 'relative' }}>
@@ -946,11 +947,9 @@ function App() {
             {/* 4.5. Approach Section (New) */}
             <section style={{ marginBottom: '80px', position: 'relative' }}>
               <div style={{ textAlign: 'center', marginBottom: '40px' }}>
-                <span className="hero-subtitle" style={{ color: 'var(--color-accent)', textShadow: '0 0 15px rgba(234, 179, 8, 0.6)' }}>ИНДИВИДУАЛЬНЫЙ ПОДХОД</span>
-                <h2 style={{ fontSize: '2.5rem', marginBottom: '20px', textShadow: '0 0 40px rgba(255,255,255,0.2)', maxWidth: '900px', margin: '0 auto 20px auto' }}>{t.sections.approachTitle}</h2>
-                <p style={{ color: 'var(--color-text-secondary)', fontSize: '1.05rem', lineHeight: 1.6, maxWidth: '800px', margin: '0 auto' }}>
-                  {t.sections.approachDesc}
-                </p>
+                <EditableText id="approach_label" defaultText="ИНДИВИДУАЛЬНЫЙ ПОДХОД" isVisualBuilder={isVisualBuilder} className="hero-subtitle" style={{ color: 'var(--color-accent)', textShadow: '0 0 15px rgba(234, 179, 8, 0.6)' }} />
+                <EditableText as="h2" id="approach_title" defaultText={t.sections.approachTitle} isVisualBuilder={isVisualBuilder} style={{ fontSize: '2.5rem', marginBottom: '20px', textShadow: '0 0 40px rgba(255,255,255,0.2)', maxWidth: '900px', margin: '0 auto 20px auto' }} />
+                <EditableText as="p" id="approach_desc" defaultText={t.sections.approachDesc} isVisualBuilder={isVisualBuilder} style={{ color: 'var(--color-text-secondary)', fontSize: '1.05rem', lineHeight: 1.6, maxWidth: '800px', margin: '0 auto' }} />
               </div>
 
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '30px', position: 'relative', zIndex: 2 }}>
