@@ -942,19 +942,32 @@ function App() {
                 <h2 style={{ fontSize: '3.2rem', textShadow: '0 0 40px rgba(255,255,255,0.2)' }}>Слово Основателя</h2>
               </div>
               <div className="bg-glow-orb-2" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '600px', height: '600px', background: 'radial-gradient(circle, var(--color-cyan) 0%, transparent 70%)', opacity: 0.05 }}></div>
-              <div className="glow-card-premium" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '0', alignItems: 'stretch', padding: '0', overflow: 'hidden', position: 'relative', zIndex: 2 }}>
-                <div style={{ position: 'relative', minHeight: '450px' }}>
-                  <img src="/images/director.png" alt="Шенвизов Рудольф Константинович" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }} />
+              <div className="glow-card-premium" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '0', alignItems: 'stretch', padding: '0', overflow: 'hidden', position: 'relative', zIndex: 2, background: 'linear-gradient(135deg, rgba(3, 5, 9, 0.95) 0%, rgba(10, 20, 35, 0.85) 100%)', border: '1px solid rgba(6, 182, 212, 0.2)', boxShadow: '0 0 50px rgba(0,0,0,0.8)' }}>
+                <div style={{ position: 'relative', minHeight: '500px', overflow: 'hidden' }}>
+                  <img src="/images/director.png" alt="Шенвизов Рудольф Константинович" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', filter: 'contrast(1.1) brightness(0.9)', maskImage: 'linear-gradient(to right, black 60%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to right, black 60%, transparent 100%)' }} />
+                  <div style={{ position: 'absolute', bottom: '-50px', left: '-50px', width: '200px', height: '200px', background: 'var(--color-cyan)', filter: 'blur(100px)', opacity: 0.3, zIndex: 0 }}></div>
                 </div>
-                <div style={{ padding: '50px 60px', display: 'flex', flexDirection: 'column', justifyContent: 'center', position: 'relative', borderLeft: '1px solid rgba(255,255,255,0.05)' }}>
-                  <div style={{ position: 'absolute', top: '20px', right: '40px', fontSize: '10rem', color: 'rgba(255,255,255,0.03)', fontFamily: 'serif', lineHeight: 1, pointerEvents: 'none' }}>"</div>
-                  <h3 style={{ fontSize: '2.4rem', marginBottom: '10px', color: 'var(--color-text-primary)' }}>Шенвизов Рудольф Константинович</h3>
-                  <div style={{ color: 'var(--color-cyan)', fontSize: '0.9rem', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: '30px', fontWeight: 600 }}>Основатель и Главный Геолог</div>
-                  <p style={{ color: 'var(--color-text-secondary)', fontSize: '1.15rem', lineHeight: 1.8, marginBottom: '40px', fontStyle: 'italic', position: 'relative', zIndex: 2, borderLeft: '4px solid var(--color-accent)', paddingLeft: '20px' }}>
-                    «Мы строим нашу работу на безупречной точности и строгом соответствии регламентам СП РК и ГОСТ. С 2019 года наша команда опытных буровых инженеров, геодезистов и лаборантов успешно реализует сложнейшие проекты по всему Казахстану, обеспечивая прочный фундамент для каждого объекта».
-                  </p>
-                  <div>
-                    <button className="btn btn-secondary" onClick={() => setActivePage('about')} style={{ borderColor: 'rgba(6, 182, 212, 0.3)', color: 'var(--color-cyan)' }}>Узнать больше о компании</button>
+                
+                <div style={{ padding: '60px', display: 'flex', flexDirection: 'column', justifyContent: 'center', position: 'relative' }}>
+                  <div style={{ position: 'absolute', top: '-10px', left: '20px', fontSize: '15rem', color: 'rgba(6, 182, 212, 0.05)', fontFamily: 'Georgia, serif', lineHeight: 1, pointerEvents: 'none', textShadow: '0 0 30px rgba(6, 182, 212, 0.2)' }}>“</div>
+                  
+                  <div style={{ position: 'relative', zIndex: 2 }}>
+                    <h3 style={{ fontSize: '2.8rem', marginBottom: '5px', color: 'var(--color-text-primary)', letterSpacing: '-0.02em', textShadow: '0 0 20px rgba(255,255,255,0.1)' }}>Шенвизов Рудольф</h3>
+                    <h3 style={{ fontSize: '2.2rem', marginBottom: '25px', color: 'var(--color-text-secondary)', fontWeight: 400 }}>Константинович</h3>
+                    
+                    <div style={{ display: 'inline-block', padding: '8px 16px', background: 'rgba(6, 182, 212, 0.1)', border: '1px solid rgba(6, 182, 212, 0.3)', borderRadius: '20px', color: 'var(--color-cyan)', fontSize: '0.85rem', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: '35px', fontWeight: 600, boxShadow: '0 0 15px rgba(6, 182, 212, 0.2)' }}>
+                      Основатель и Главный Геолог
+                    </div>
+                    
+                    <p style={{ color: 'var(--color-text-secondary)', fontSize: '1.15rem', lineHeight: 1.8, marginBottom: '40px', fontStyle: 'italic', borderLeft: '3px solid var(--color-cyan)', paddingLeft: '25px', position: 'relative' }}>
+                      Мы строим нашу работу на безупречной точности и строгом соответствии регламентам СП РК и ГОСТ. С 2019 года наша команда опытных буровых инженеров, геодезистов и лаборантов успешно реализует сложнейшие проекты по всему Казахстану, обеспечивая прочный фундамент для каждого объекта.
+                    </p>
+                    
+                    <div>
+                      <button className="btn btn-primary" onClick={() => setActivePage('about')} style={{ padding: '16px 40px', fontSize: '1.1rem', background: 'linear-gradient(45deg, var(--color-cyan), #0284c7)', border: 'none', color: '#fff', boxShadow: '0 10px 25px rgba(6, 182, 212, 0.4)' }}>
+                        Подробнее о компании
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -1060,21 +1073,31 @@ function App() {
               </p>
             </div>
 
-            <div className="glow-card-premium" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '0', alignItems: 'stretch', padding: '0', overflow: 'hidden', marginBottom: '60px' }}>
-              <div style={{ position: 'relative', minHeight: '450px' }}>
-                <img src="/images/director.png" alt="Шенвизов Рудольф Константинович" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }} />
+            <div className="glow-card-premium" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '0', alignItems: 'stretch', padding: '0', overflow: 'hidden', position: 'relative', zIndex: 2, background: 'linear-gradient(135deg, rgba(3, 5, 9, 0.95) 0%, rgba(10, 20, 35, 0.85) 100%)', border: '1px solid rgba(6, 182, 212, 0.2)', boxShadow: '0 0 50px rgba(0,0,0,0.8)', marginBottom: '60px' }}>
+                <div style={{ position: 'relative', minHeight: '500px', overflow: 'hidden' }}>
+                  <img src="/images/director.png" alt="Шенвизов Рудольф Константинович" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', filter: 'contrast(1.1) brightness(0.9)', maskImage: 'linear-gradient(to right, black 60%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to right, black 60%, transparent 100%)' }} />
+                  <div style={{ position: 'absolute', bottom: '-50px', left: '-50px', width: '200px', height: '200px', background: 'var(--color-cyan)', filter: 'blur(100px)', opacity: 0.3, zIndex: 0 }}></div>
+                </div>
+                
+                <div style={{ padding: '60px', display: 'flex', flexDirection: 'column', justifyContent: 'center', position: 'relative' }}>
+                  <div style={{ position: 'absolute', top: '-10px', left: '20px', fontSize: '15rem', color: 'rgba(6, 182, 212, 0.05)', fontFamily: 'Georgia, serif', lineHeight: 1, pointerEvents: 'none', textShadow: '0 0 30px rgba(6, 182, 212, 0.2)' }}>“</div>
+                  
+                  <div style={{ position: 'relative', zIndex: 2 }}>
+                    <h3 style={{ fontSize: '2.8rem', marginBottom: '5px', color: 'var(--color-text-primary)', letterSpacing: '-0.02em', textShadow: '0 0 20px rgba(255,255,255,0.1)' }}>Шенвизов Рудольф</h3>
+                    <h3 style={{ fontSize: '2.2rem', marginBottom: '25px', color: 'var(--color-text-secondary)', fontWeight: 400 }}>Константинович</h3>
+                    
+                    <div style={{ display: 'inline-block', padding: '8px 16px', background: 'rgba(6, 182, 212, 0.1)', border: '1px solid rgba(6, 182, 212, 0.3)', borderRadius: '20px', color: 'var(--color-cyan)', fontSize: '0.85rem', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: '35px', fontWeight: 600, boxShadow: '0 0 15px rgba(6, 182, 212, 0.2)' }}>
+                      Основатель и Главный Геолог
+                    </div>
+                    
+                    <p style={{ color: 'var(--color-text-secondary)', fontSize: '1.1rem', lineHeight: 1.8, position: 'relative', zIndex: 2 }}>
+                      Рудольф Константинович основал компанию в 2019 году в городе Алматы. Получив геологическое образование в Сибирском государственном университете (г. Томск, РФ), он собрал команду опытных буровых инженеров, геодезистов и лаборантов.
+                      <br /><br />
+                      Основным принципом работы компании является жесткое следование строительным регламентам СП РК и ГОСТ. Благодаря этому отчеты ТОО «СпецИнжГео» успешно и быстро проходят государственную вневедомственную экспертизу.
+                    </p>
+                  </div>
+                </div>
               </div>
-              <div style={{ padding: '50px 60px', display: 'flex', flexDirection: 'column', justifyContent: 'center', position: 'relative', borderLeft: '1px solid rgba(255,255,255,0.05)' }}>
-                <div style={{ position: 'absolute', top: '20px', right: '40px', fontSize: '10rem', color: 'rgba(255,255,255,0.03)', fontFamily: 'serif', lineHeight: 1, pointerEvents: 'none' }}>"</div>
-                <h3 style={{ fontSize: '2.4rem', marginBottom: '10px', color: 'var(--color-text-primary)' }}>Шенвизов Рудольф Константинович</h3>
-                <div style={{ color: 'var(--color-cyan)', fontSize: '0.9rem', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: '30px', fontWeight: 600 }}>Директор и главный геолог</div>
-                <p style={{ color: 'var(--color-text-secondary)', fontSize: '1.05rem', lineHeight: 1.8, position: 'relative', zIndex: 2 }}>
-                  Рудольф Константинович основал компанию в 2019 году в городе Алматы. Получив геологическое образование в Сибирском государственном университете (г. Томск, РФ), он собрал команду опытных буровых инженеров, геодезистов и лаборантов.
-                  <br /><br />
-                  Основным принципом работы компании является жесткое следование строительным регламентам СП РК и ГОСТ. Благодаря этому отчеты ТОО «СпецИнжГео» успешно и быстро проходят государственную вневедомственную экспертизу.
-                </p>
-              </div>
-            </div>
 
             <section style={{ marginBottom: '40px' }}>
               <h3 style={{ marginBottom: '20px' }}>Наши ценности и принципы</h3>
