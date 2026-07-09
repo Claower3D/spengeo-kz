@@ -5,7 +5,7 @@ import {
   Eye, Trash2, Calendar, FileText, Check, Database, 
   RefreshCw, BarChart2, UserCheck, Menu, X, ArrowUpRight,
   Printer, HardDrive, AlertTriangle, Layers, Clock, Settings,
-  BookOpen, FileSpreadsheet, Search, MessageCircle, Bot, ArrowUp, Sun, Moon, Briefcase
+  BookOpen, FileSpreadsheet, Search, MessageCircle, Bot, ArrowUp, Sun, Moon, Briefcase, Edit3
 } from 'lucide-react';
 import { MapContainer, TileLayer, Marker, Popup, Tooltip, useMap } from 'react-leaflet';
 import L from 'leaflet';
@@ -253,6 +253,16 @@ function App() {
   const t = translations[language];
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [certModal, setCertModal] = useState(null);
+
+  // Visual Builder States
+  const [isVisualBuilder, setIsVisualBuilder] = useState(false);
+  const [vbHeroTitle, setVbHeroTitle] = useState(localStorage.getItem('vb_heroTitle') || '');
+  const [vbHeroDesc, setVbHeroDesc] = useState(localStorage.getItem('vb_heroDesc') || '');
+
+  useEffect(() => {
+    if (vbHeroTitle) localStorage.setItem('vb_heroTitle', vbHeroTitle);
+    if (vbHeroDesc) localStorage.setItem('vb_heroDesc', vbHeroDesc);
+  }, [vbHeroTitle, vbHeroDesc]);
   
   // Map Sync states
   const [activeProjectCoords, setActiveProjectCoords] = useState(null);
@@ -592,9 +602,21 @@ function App() {
                 <div className="hero-content" style={{ display: 'grid', gridTemplateColumns: '1.2fr 0.8fr', gap: '50px', alignItems: 'center', minHeight: '55vh' }}>
                   <div>
                   <span className="hero-subtitle">{t.hero.subtitle}</span>
-                  <h1 style={{ fontSize: 'clamp(2.4rem, 5.5vw, 4rem)', color: '#fff', textShadow: '0 4px 20px rgba(0,0,0,0.8)' }}>{t.hero.title}</h1>
-                  <p style={{ color: '#f8fafc', fontSize: '1.1rem', marginBottom: '30px', maxWidth: '620px', textShadow: '0 2px 10px rgba(0,0,0,0.8)' }}>
-                    {t.hero.desc}
+                  <h1 
+                    style={{ fontSize: 'clamp(2.4rem, 5.5vw, 4rem)', color: '#fff', textShadow: '0 4px 20px rgba(0,0,0,0.8)', outline: isVisualBuilder ? '2px dashed var(--color-accent)' : 'none', padding: isVisualBuilder ? '5px' : 0, borderRadius: '8px', cursor: isVisualBuilder ? 'text' : 'default', transition: 'outline 0.3s ease' }}
+                    contentEditable={isVisualBuilder}
+                    suppressContentEditableWarning={true}
+                    onBlur={(e) => setVbHeroTitle(e.currentTarget.textContent)}
+                  >
+                    {vbHeroTitle || t.hero.title}
+                  </h1>
+                  <p 
+                    style={{ color: '#f8fafc', fontSize: '1.1rem', marginBottom: '30px', maxWidth: '620px', textShadow: '0 2px 10px rgba(0,0,0,0.8)', outline: isVisualBuilder ? '2px dashed var(--color-accent)' : 'none', padding: isVisualBuilder ? '5px' : 0, borderRadius: '8px', cursor: isVisualBuilder ? 'text' : 'default', transition: 'outline 0.3s ease' }}
+                    contentEditable={isVisualBuilder}
+                    suppressContentEditableWarning={true}
+                    onBlur={(e) => setVbHeroDesc(e.currentTarget.textContent)}
+                  >
+                    {vbHeroDesc || t.hero.desc}
                   </p>
                   <div style={{ display: 'flex', gap: '15px' }}>
                     <button className="btn btn-primary" onClick={() => setActivePage('calculator')}>
@@ -1826,6 +1848,9 @@ function App() {
                   <h2>Панель обработки заявок</h2>
                 </div>
                 <div style={{ display: 'flex', gap: '10px' }}>
+                  <button className="btn btn-primary" onClick={() => { setIsVisualBuilder(true); setActivePage('home'); }} style={{ padding: '8px 16px', fontSize: '0.85rem' }}>
+                    <Edit3 size={14} /> Визуал Билдер
+                  </button>
                   <button className="btn btn-secondary" onClick={fetchInquiries} style={{ padding: '8px 16px', fontSize: '0.85rem' }}>
                     <RefreshCw size={14} /> Обновить БД
                   </button>
@@ -2084,6 +2109,21 @@ function App() {
               <MessageCircle size={20} />
             </button>
           </form>
+        </div>
+      )}
+
+      {/* Floating Visual Builder Toolbar */}
+      {isVisualBuilder && (
+        <div style={{ position: 'fixed', bottom: 30, left: '50%', transform: 'translateX(-50%)', background: 'var(--bg-card)', border: '1px solid var(--color-accent)', color: 'var(--color-text-primary)', padding: '15px 25px', borderRadius: '30px', zIndex: 9999, display: 'flex', gap: '20px', alignItems: 'center', boxShadow: '0 10px 40px rgba(245, 158, 11, 0.3)', backdropFilter: 'blur(10px)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <Edit3 size={20} color="var(--color-accent)" />
+            <span style={{ fontWeight: 'bold' }}>VISUAL BUILDER ACTIVE</span>
+          </div>
+          <div style={{ width: '1px', height: '20px', background: 'var(--border-color)' }}></div>
+          <span style={{ fontSize: '0.9rem', color: 'var(--color-text-secondary)' }}>Кликните на текст, чтобы изменить</span>
+          <button onClick={() => setIsVisualBuilder(false)} className="btn btn-primary" style={{ padding: '8px 20px', fontSize: '0.9rem', minWidth: '120px' }}>
+            Сохранить и выйти
+          </button>
         </div>
       )}
 
