@@ -354,10 +354,10 @@ function App() {
   };
 
   useEffect(() => {
-    if (isAdminLoggedIn) {
+    if (activePage === 'admin') {
       fetchInquiries();
     }
-  }, [isAdminLoggedIn]);
+  }, [activePage]);
 
   const fetchInquiries = async () => {
     logEvent('Connecting to inquiries JSON endpoint...', 'info');
@@ -1804,57 +1804,21 @@ function App() {
         {/* ==================== PAGE: ADMIN ==================== */}
         {activePage === 'admin' && (
           <div className="page-wrapper">
-            {!isAdminLoggedIn ? (
-              <div className="form-card" style={{ maxWidth: '400px', marginTop: '60px' }}>
-                <div style={{ textAlign: 'center', marginBottom: '30px' }}>
-                  <Lock size={40} color="var(--color-accent)" style={{ marginBottom: '15px' }} />
-                  <h3>Вход в панель ТОО «СпецИнжГео»</h3>
-                  <p style={{ color: 'var(--color-text-secondary)', fontSize: '0.85rem' }}>Требуется авторизация</p>
+            <div>
+              <div className="admin-header">
+                <div>
+                  <span className="hero-subtitle">ADMIN CONTROL PANEL</span>
+                  <h2>Панель обработки заявок</h2>
                 </div>
-
-                <form onSubmit={handleAdminLogin}>
-                  <div className="form-group">
-                    <label className="form-label">Ключ доступа (пароль)</label>
-                    <input 
-                      type="password" 
-                      className="form-input" 
-                      value={adminPass}
-                      onChange={(e) => setAdminPass(e.target.value)}
-                      placeholder="Введите пароль..."
-                      required 
-                    />
-                  </div>
-
-                  <button type="submit" className="btn btn-primary" style={{ width: '100%' }}>
-                    Авторизоваться
+                <div style={{ display: 'flex', gap: '10px' }}>
+                  <button className="btn btn-secondary" onClick={fetchInquiries} style={{ padding: '8px 16px', fontSize: '0.85rem' }}>
+                    <RefreshCw size={14} /> Обновить БД
                   </button>
-
-                  {adminError && (
-                    <div className="status-msg status-error" style={{ fontSize: '0.85rem' }}>
-                      <AlertTriangle size={14} /> {adminError}
-                    </div>
-                  )}
-                  <div style={{ marginTop: '20px', textAlign: 'center' }}>
-                    <span style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)' }}>Подсказка: введите <code>admin</code></span>
-                  </div>
-                </form>
-              </div>
-            ) : (
-              <div>
-                <div className="admin-header">
-                  <div>
-                    <span className="hero-subtitle">ADMIN CONTROL PANEL</span>
-                    <h2>Панель обработки заявок</h2>
-                  </div>
-                  <div style={{ display: 'flex', gap: '10px' }}>
-                    <button className="btn btn-secondary" onClick={fetchInquiries} style={{ padding: '8px 16px', fontSize: '0.85rem' }}>
-                      <RefreshCw size={14} /> Обновить БД
-                    </button>
-                    <button className="btn btn-secondary" onClick={() => { setIsAdminLoggedIn(false); setAdminPass(''); }} style={{ padding: '8px 16px', fontSize: '0.85rem' }}>
-                      Выйти
-                    </button>
-                  </div>
+                  <button className="btn btn-secondary" onClick={() => setActivePage('home')} style={{ padding: '8px 16px', fontSize: '0.85rem' }}>
+                    На главную
+                  </button>
                 </div>
+              </div>
 
                 <div className="admin-grid">
                   <div className="admin-sidebar">
@@ -1928,9 +1892,8 @@ function App() {
                       )}
                     </div>
                   </div>
-                </div>
               </div>
-            )}
+            </div>
           </div>
         )}
 
@@ -2004,6 +1967,7 @@ function App() {
                 <li><a href="#" onClick={(e) => { e.preventDefault(); setActivePage('about'); logEvent('Footer navigation: About'); }}>О компании</a></li>
                 <li><a href="#" onClick={(e) => { e.preventDefault(); setActivePage('services'); logEvent('Footer navigation: Services'); }}>Услуги изысканий</a></li>
                 <li><a href="#" onClick={(e) => { e.preventDefault(); setActivePage('projects'); logEvent('Footer navigation: Projects'); }}>Наши проекты</a></li>
+                <li><a href="#" onClick={(e) => { e.preventDefault(); setActivePage('admin'); logEvent('Footer navigation: Admin'); }} style={{ color: 'var(--color-cyan)', fontWeight: 600 }}>Админ-панель</a></li>
               </ul>
             </div>
 
