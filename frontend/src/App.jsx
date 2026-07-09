@@ -936,13 +936,13 @@ function App() {
             </section>
 
             {/* 5. Director / About Section */}
-            <section className="director-section" style={{ marginBottom: '80px', position: 'relative' }}>
+            <section style={{ marginBottom: '80px', position: 'relative' }}>
               <div style={{ textAlign: 'center', marginBottom: '40px', position: 'relative', zIndex: 2 }}>
                 <span className="hero-subtitle" style={{ color: 'var(--color-cyan)', textShadow: '0 0 15px rgba(6, 182, 212, 0.6)' }}>РУКОВОДСТВО КОМПАНИИ</span>
                 <h2 style={{ fontSize: '3.2rem', textShadow: '0 0 40px rgba(255,255,255,0.2)' }}>Слово Основателя</h2>
               </div>
               <div className="bg-glow-orb-2" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '600px', height: '600px', background: 'radial-gradient(circle, var(--color-cyan) 0%, transparent 70%)', opacity: 0.05 }}></div>
-              <div className="glow-card-premium" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '0', alignItems: 'stretch', padding: '0', overflow: 'hidden', position: 'relative', zIndex: 2 }}>
+              <div className="glow-card-premium" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '0', alignItems: 'stretch', padding: '0', overflow: 'hidden', position: 'relative', zIndex: 2 }}>
                 <div style={{ position: 'relative', minHeight: '450px' }}>
                   <img src="/images/director.png" alt="Шенвизов Рудольф Константинович" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }} />
                 </div>
@@ -1060,7 +1060,7 @@ function App() {
               </p>
             </div>
 
-            <div className="glow-card-premium" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '0', alignItems: 'stretch', padding: '0', overflow: 'hidden', marginBottom: '60px' }}>
+            <div className="glow-card-premium" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '0', alignItems: 'stretch', padding: '0', overflow: 'hidden', marginBottom: '60px' }}>
               <div style={{ position: 'relative', minHeight: '450px' }}>
                 <img src="/images/director.png" alt="Шенвизов Рудольф Константинович" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }} />
               </div>
