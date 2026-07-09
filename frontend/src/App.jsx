@@ -936,21 +936,25 @@ function App() {
             </section>
 
             {/* 5. Director / About Section */}
-            <section className="director-section" style={{ marginBottom: '50px' }}>
-              <div className="director-card-premium">
-                <div className="director-photo-container">
-                  <img src="/images/director.png" alt="Шенвизов Рудольф Константинович" />
-                  <div className="director-photo-overlay"></div>
+            <section className="director-section" style={{ marginBottom: '80px', position: 'relative' }}>
+              <div style={{ textAlign: 'center', marginBottom: '40px', position: 'relative', zIndex: 2 }}>
+                <span className="hero-subtitle" style={{ color: 'var(--color-cyan)', textShadow: '0 0 15px rgba(6, 182, 212, 0.6)' }}>РУКОВОДСТВО КОМПАНИИ</span>
+                <h2 style={{ fontSize: '3.2rem', textShadow: '0 0 40px rgba(255,255,255,0.2)' }}>Слово Основателя</h2>
+              </div>
+              <div className="bg-glow-orb-2" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '600px', height: '600px', background: 'radial-gradient(circle, var(--color-cyan) 0%, transparent 70%)', opacity: 0.05 }}></div>
+              <div className="glow-card-premium" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '0', alignItems: 'stretch', padding: '0', overflow: 'hidden', position: 'relative', zIndex: 2 }}>
+                <div style={{ position: 'relative', minHeight: '450px' }}>
+                  <img src="/images/director.png" alt="Шенвизов Рудольф Константинович" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }} />
                 </div>
-                <div className="director-info-container">
-                  <div className="director-quote-mark">"</div>
-                  <h3 className="director-name-premium">Шенвизов Рудольф Константинович</h3>
-                  <div className="director-role-premium">Основатель и Главный Геолог</div>
-                  <p className="director-bio-premium">
+                <div style={{ padding: '50px 60px', display: 'flex', flexDirection: 'column', justifyContent: 'center', position: 'relative', borderLeft: '1px solid rgba(255,255,255,0.05)' }}>
+                  <div style={{ position: 'absolute', top: '20px', right: '40px', fontSize: '10rem', color: 'rgba(255,255,255,0.03)', fontFamily: 'serif', lineHeight: 1, pointerEvents: 'none' }}>"</div>
+                  <h3 style={{ fontSize: '2.4rem', marginBottom: '10px', color: 'var(--color-text-primary)' }}>Шенвизов Рудольф Константинович</h3>
+                  <div style={{ color: 'var(--color-cyan)', fontSize: '0.9rem', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: '30px', fontWeight: 600 }}>Основатель и Главный Геолог</div>
+                  <p style={{ color: 'var(--color-text-secondary)', fontSize: '1.15rem', lineHeight: 1.8, marginBottom: '40px', fontStyle: 'italic', position: 'relative', zIndex: 2, borderLeft: '4px solid var(--color-accent)', paddingLeft: '20px' }}>
                     «Мы строим нашу работу на безупречной точности и строгом соответствии регламентам СП РК и ГОСТ. С 2019 года наша команда опытных буровых инженеров, геодезистов и лаборантов успешно реализует сложнейшие проекты по всему Казахстану, обеспечивая прочный фундамент для каждого объекта».
                   </p>
                   <div>
-                    <button className="btn btn-secondary" onClick={() => setActivePage('about')}>Узнать больше о компании</button>
+                    <button className="btn btn-secondary" onClick={() => setActivePage('about')} style={{ borderColor: 'rgba(6, 182, 212, 0.3)', color: 'var(--color-cyan)' }}>Узнать больше о компании</button>
                   </div>
                 </div>
               </div>
@@ -1056,16 +1060,15 @@ function App() {
               </p>
             </div>
 
-            <div className="director-card-premium" style={{ marginBottom: '60px' }}>
-              <div className="director-photo-container">
-                <img src="/images/director.png" alt="Шенвизов Рудольф Константинович" />
-                <div className="director-photo-overlay"></div>
+            <div className="glow-card-premium" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '0', alignItems: 'stretch', padding: '0', overflow: 'hidden', marginBottom: '60px' }}>
+              <div style={{ position: 'relative', minHeight: '450px' }}>
+                <img src="/images/director.png" alt="Шенвизов Рудольф Константинович" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }} />
               </div>
-              <div className="director-info-container">
-                <div className="director-quote-mark">"</div>
-                <h3 className="director-name-premium">Шенвизов Рудольф Константинович</h3>
-                <div className="director-role-premium">Директор и главный геолог</div>
-                <p className="director-bio-premium" style={{ fontSize: '1rem' }}>
+              <div style={{ padding: '50px 60px', display: 'flex', flexDirection: 'column', justifyContent: 'center', position: 'relative', borderLeft: '1px solid rgba(255,255,255,0.05)' }}>
+                <div style={{ position: 'absolute', top: '20px', right: '40px', fontSize: '10rem', color: 'rgba(255,255,255,0.03)', fontFamily: 'serif', lineHeight: 1, pointerEvents: 'none' }}>"</div>
+                <h3 style={{ fontSize: '2.4rem', marginBottom: '10px', color: 'var(--color-text-primary)' }}>Шенвизов Рудольф Константинович</h3>
+                <div style={{ color: 'var(--color-cyan)', fontSize: '0.9rem', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: '30px', fontWeight: 600 }}>Директор и главный геолог</div>
+                <p style={{ color: 'var(--color-text-secondary)', fontSize: '1.05rem', lineHeight: 1.8, position: 'relative', zIndex: 2 }}>
                   Рудольф Константинович основал компанию в 2019 году в городе Алматы. Получив геологическое образование в Сибирском государственном университете (г. Томск, РФ), он собрал команду опытных буровых инженеров, геодезистов и лаборантов.
                   <br /><br />
                   Основным принципом работы компании является жесткое следование строительным регламентам СП РК и ГОСТ. Благодаря этому отчеты ТОО «СпецИнжГео» успешно и быстро проходят государственную вневедомственную экспертизу.
