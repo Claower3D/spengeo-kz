@@ -43,7 +43,22 @@ export const translations = {
       equipmentTitle: 'Техническое Оснащение',
       clientsTitle: 'Наши Клиенты',
       licensesTitle: 'Лицензии и Сертификаты',
-      contactTitle: 'Оставьте заявку на расчет стоимости'
+      contactTitle: 'Оставьте заявку на расчет стоимости',
+      approachTitle: 'Подход к работе: "Выгода для клиента — качество от экспертов"',
+      approachDesc: 'Компания «СпецИнжГео» предоставляет комплексные инженерные изыскания «под ключ» по всей территории Республики Казахстан. Наш подход сочетает в себе максимальную выгоду для заказчика и высокие стандарты качества, подтвержденные многолетним опытом и профессиональной экспертизой.',
+      approach1Title: 'Комплексный подход «под ключ»',
+      approach1Text: 'Мы берем на себя все этапы инженерных изысканий — от предварительных консультаций до подготовки итоговой документации. Это избавляет клиента от необходимости привлекать множество подрядчиков, экономит время и средства, а также гарантирует целостность и согласованность результатов.',
+      approach2Title: 'Выгода для клиента:',
+      approach2L1: '<strong>Экономия времени и бюджета</strong> — за счет оптимизации процессов и отсутствия лишних звеньев в цепочке.',
+      approach2L2: '<strong>Гарантия соответствия нормативам</strong> — все работы ведутся в строгом соответствии со СНиП, СП и другими стандартами РК.',
+      approach2L3: '<strong>Индивидуальный подход</strong> — адаптируем решения под задачи конкретного проекта, будь то жилое строительство, промышленный объект или инфраструктура.',
+      approach2L4: '<strong>Оперативность</strong> — гибкая логистика и мобильные бригады позволяют нам работать в любом регионе страны, включая труднодоступные районы.',
+      approach3Title: 'Качество как основа',
+      approach3Text: 'Мы используем современное оборудование, новейшие методы исследований и цифровую обработку данных. Команда инженеров, геологов и изыскателей проходит постоянное повышение квалификации. Это обеспечивает:',
+      approach3L1: '<strong>Точность данных</strong> — минимизация рисков при проектировании и строительстве.',
+      approach3L2: '<strong>Надежность решений</strong> — позволяет избежать ошибок, ведущих к дополнительным расходам.',
+      approach3L3: '<strong>Долгосрочное сотрудничество</strong> — наша репутация строится на качестве и доверии.',
+      approachBtn: 'ЗАКАЗАТЬ УСЛУГУ'
     }
   },
   en: {
@@ -90,7 +105,22 @@ export const translations = {
       equipmentTitle: 'Technical Equipment',
       clientsTitle: 'Our Clients',
       licensesTitle: 'Licenses & Certificates',
-      contactTitle: 'Leave a Request for Cost Calculation'
+      contactTitle: 'Leave a Request for Cost Calculation',
+      approachTitle: 'Our Approach: "Value for the Client — Quality from Experts"',
+      approachDesc: 'SpenGeo LLP provides comprehensive turnkey engineering surveys throughout the Republic of Kazakhstan. Our approach combines maximum benefit for the client and high quality standards, proven by years of experience and professional expertise.',
+      approach1Title: 'Comprehensive Turnkey Approach',
+      approach1Text: 'We take on all stages of engineering surveys — from preliminary consultations to the preparation of final documentation. This saves the client from having to engage multiple contractors, saves time and money, and also ensures the integrity and consistency of the results.',
+      approach2Title: 'Benefits for the Client:',
+      approach2L1: '<strong>Saving time and budget</strong> — through process optimization and the absence of unnecessary links in the chain.',
+      approach2L2: '<strong>Guarantee of regulatory compliance</strong> — all work is carried out in strict accordance with SNiP, SP, and other RK standards.',
+      approach2L3: '<strong>Individual approach</strong> — we adapt solutions to the tasks of a specific project, be it residential construction, an industrial facility, or infrastructure.',
+      approach2L4: '<strong>Promptness</strong> — flexible logistics and mobile teams allow us to work in any region of the country, including hard-to-reach areas.',
+      approach3Title: 'Quality as a Foundation',
+      approach3Text: 'We use modern equipment, the latest research methods, and digital data processing. The team of engineers, geologists, and surveyors undergoes continuous professional development. This ensures:',
+      approach3L1: '<strong>Data accuracy</strong> — minimization of risks during design and construction.',
+      approach3L2: '<strong>Reliability of solutions</strong> — allows avoiding mistakes leading to additional costs.',
+      approach3L3: '<strong>Long-term cooperation</strong> — our reputation is built on quality and trust.',
+      approachBtn: 'ORDER SERVICE'
     }
   },
   kz: {
@@ -137,7 +167,22 @@ export const translations = {
       equipmentTitle: 'Техникалық жабдықталуы',
       clientsTitle: 'Біздің клиенттер',
       licensesTitle: 'Лицензиялар мен сертификаттар',
-      contactTitle: 'Құнын есептеуге өтінім қалдырыңыз'
+      contactTitle: 'Құнын есептеуге өтінім қалдырыңыз',
+      approachTitle: 'Жұмыс тәсілі: "Клиент үшін пайда — сарапшылардан сапа"',
+      approachDesc: '«СпецИнжГео» компаниясы Қазақстан Республикасының барлық аумағында «кілтке дейін» кешенді инженерлік ізденістер ұсынады. Біздің тәсіліміз тапсырыс беруші үшін максималды пайда мен көп жылдық тәжірибе және кәсіби сараптамамен расталған жоғары сапа стандарттарын біріктіреді.',
+      approach1Title: '«Кілтке дейін» кешенді тәсілі',
+      approach1Text: 'Біз инженерлік ізденістердің барлық кезеңдерін — алдын ала кеңес беруден бастап қорытынды құжаттаманы дайындауға дейін өз мойнымызға аламыз. Бұл клиентті көптеген мердігерлерді тарту қажеттілігінен босатады, уақыт пен қаражатты үнемдейді, сондай-ақ нәтижелердің тұтастығы мен келісімділігіне кепілдік береді.',
+      approach2Title: 'Клиент үшін пайда:',
+      approach2L1: '<strong>Уақыт пен бюджетті үнемдеу</strong> — процестерді оңтайландыру және тізбектегі артық буындардың болмауы есебінен.',
+      approach2L2: '<strong>Нормативтерге сәйкестік кепілдігі</strong> — барлық жұмыстар ҚНжЕ, ҚН және ҚР басқа да стандарттарына қатаң сәйкестікте жүргізіледі.',
+      approach2L3: '<strong>Жеке тәсіл</strong> — біз шешімдерді тұрғын үй құрылысы, өнеркәсіптік нысан немесе инфрақұрылым болсын, нақты жобаның міндеттеріне бейімдейміз.',
+      approach2L4: '<strong>Жеделдік</strong> — икемді логистика және мобильді бригадалар бізге еліміздің кез келген өңірінде, соның ішінде жетуі қиын аудандарда жұмыс істеуге мүмкіндік береді.',
+      approach3Title: 'Сапа негіз ретінде',
+      approach3Text: 'Біз заманауи жабдықтарды, ең жаңа зерттеу әдістерін және деректерді цифрлық өңдеуді қолданамыз. Инженерлер, геологтар және ізденушілер командасы үнемі біліктілігін арттырып отырады. Бұл мыналарды қамтамасыз етеді:',
+      approach3L1: '<strong>Деректердің дәлдігі</strong> — жобалау және құрылыс кезіндегі тәуекелдерді азайту.',
+      approach3L2: '<strong>Шешімдердің сенімділігі</strong> — қосымша шығындарға әкелетін қателіктерді болдырмауға мүмкіндік береді.',
+      approach3L3: '<strong>Ұзақ мерзімді ынтымақтастық</strong> — біздің беделіміз сапа мен сенімге негізделген.',
+      approachBtn: 'ҚЫЗМЕТКЕ ТАПСЫРЫС БЕРУ'
     }
   }
 };

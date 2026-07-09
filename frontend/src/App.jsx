@@ -5,7 +5,7 @@ import {
   Eye, Trash2, Calendar, FileText, Check, Database, 
   RefreshCw, BarChart2, UserCheck, Menu, X, ArrowUpRight,
   Printer, HardDrive, AlertTriangle, Layers, Clock, Settings,
-  BookOpen, FileSpreadsheet, Search, MessageCircle, Bot, ArrowUp, Sun, Moon
+  BookOpen, FileSpreadsheet, Search, MessageCircle, Bot, ArrowUp, Sun, Moon, Briefcase
 } from 'lucide-react';
 import { MapContainer, TileLayer, Marker, Popup, Tooltip, useMap } from 'react-leaflet';
 import L from 'leaflet';
@@ -835,6 +835,70 @@ function App() {
               </div>
               <div style={{ textAlign: 'center', marginTop: '40px' }}>
                 <button className="btn btn-primary" onClick={() => setActivePage('projects')}>Смотреть все 50+ проектов</button>
+              </div>
+            </section>
+
+            {/* 4.5. Approach Section (New) */}
+            <section style={{ marginBottom: '60px', position: 'relative', background: 'var(--bg-card)', padding: '60px 40px', borderRadius: 'var(--border-radius-lg)', border: '1px solid var(--border-color)', overflow: 'hidden' }}>
+              <img src="/images/logo-original.svg" alt="Stamp" style={{ position: 'absolute', top: '50%', right: '-50px', transform: 'translateY(-50%) rotate(-15deg)', width: '600px', opacity: 0.05, pointerEvents: 'none' }} />
+              
+              <div style={{ position: 'relative', zIndex: 2, maxWidth: '900px', margin: '0 auto' }}>
+                <h2 style={{ textAlign: 'center', fontSize: '2.2rem', marginBottom: '20px', color: 'var(--color-text-primary)' }}>{t.sections.approachTitle}</h2>
+                <p style={{ textAlign: 'center', color: 'var(--color-text-secondary)', fontSize: '1.05rem', lineHeight: 1.6, marginBottom: '50px' }}>
+                  {t.sections.approachDesc}
+                </p>
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '30px' }}>
+                  {/* Item 1 */}
+                  <div style={{ display: 'flex', gap: '20px', alignItems: 'flex-start' }}>
+                    <div style={{ color: 'var(--color-cyan)', marginTop: '5px' }}><Check size={28} /></div>
+                    <div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
+                        <Search size={20} color="var(--color-accent)" />
+                        <h3 style={{ fontSize: '1.3rem', margin: 0, color: 'var(--color-text-primary)' }}>{t.sections.approach1Title}</h3>
+                      </div>
+                      <p style={{ color: 'var(--color-text-secondary)', fontSize: '0.95rem', lineHeight: 1.6 }}>{t.sections.approach1Text}</p>
+                    </div>
+                  </div>
+
+                  {/* Item 2 */}
+                  <div style={{ display: 'flex', gap: '20px', alignItems: 'flex-start' }}>
+                    <div style={{ color: 'var(--color-cyan)', marginTop: '5px' }}><Check size={28} /></div>
+                    <div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
+                        <Briefcase size={20} color="var(--color-accent)" />
+                        <h3 style={{ fontSize: '1.3rem', margin: 0, color: 'var(--color-text-primary)' }}>{t.sections.approach2Title}</h3>
+                      </div>
+                      <ul style={{ color: 'var(--color-text-secondary)', fontSize: '0.95rem', lineHeight: 1.6, margin: 0, paddingLeft: '20px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                        <li dangerouslySetInnerHTML={{ __html: t.sections.approach2L1 }}></li>
+                        <li dangerouslySetInnerHTML={{ __html: t.sections.approach2L2 }}></li>
+                        <li dangerouslySetInnerHTML={{ __html: t.sections.approach2L3 }}></li>
+                        <li dangerouslySetInnerHTML={{ __html: t.sections.approach2L4 }}></li>
+                      </ul>
+                    </div>
+                  </div>
+
+                  {/* Item 3 */}
+                  <div style={{ display: 'flex', gap: '20px', alignItems: 'flex-start' }}>
+                    <div style={{ color: 'var(--color-cyan)', marginTop: '5px' }}><Check size={28} /></div>
+                    <div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
+                        <ShieldCheck size={20} color="var(--color-accent)" />
+                        <h3 style={{ fontSize: '1.3rem', margin: 0, color: 'var(--color-text-primary)' }}>{t.sections.approach3Title}</h3>
+                      </div>
+                      <p style={{ color: 'var(--color-text-secondary)', fontSize: '0.95rem', lineHeight: 1.6, marginBottom: '15px' }}>{t.sections.approach3Text}</p>
+                      <ul style={{ color: 'var(--color-text-secondary)', fontSize: '0.95rem', lineHeight: 1.6, margin: 0, paddingLeft: '20px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                        <li dangerouslySetInnerHTML={{ __html: t.sections.approach3L1 }}></li>
+                        <li dangerouslySetInnerHTML={{ __html: t.sections.approach3L2 }}></li>
+                        <li dangerouslySetInnerHTML={{ __html: t.sections.approach3L3 }}></li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+                <div style={{ textAlign: 'center', marginTop: '50px' }}>
+                  <button className="btn btn-primary" onClick={() => setActivePage('calculator')}>{t.sections.approachBtn}</button>
+                </div>
               </div>
             </section>
 
