@@ -608,6 +608,24 @@ function App() {
               </div>
             </section>
 
+            {/* 1.5. Clients / Partners (Moved above stats) */}
+            <section style={{ marginBottom: '60px', textAlign: 'center', position: 'relative', overflow: 'visible', padding: '40px 0', width: '100vw', marginLeft: 'calc(-50vw + 50%)', marginRight: 'calc(-50vw + 50%)' }}>
+               <div className="bg-glow-orb" style={{ top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '1000px', height: '400px', opacity: 0.08, background: 'radial-gradient(ellipse, var(--color-cyan) 0%, transparent 70%)' }}></div>
+               <span className="hero-subtitle" style={{ color: 'var(--color-accent)', textShadow: '0 0 15px rgba(234, 179, 8, 0.6)' }}>НАМ ДОВЕРЯЮТ</span>
+               <h2 style={{ fontSize: '3.2rem', marginBottom: '40px', textShadow: '0 0 40px rgba(255,255,255,0.2)' }}>{t.sections.clientsTitle}</h2>
+               
+               <div className="marquee-container" style={{ position: 'relative', zIndex: 2, marginTop: '20px' }}>
+                 <div className="marquee-content">
+                   {/* Double array for seamless infinite scroll */}
+                   {[...['BI Group', 'Air Astana', 'QazaqGaz', 'Mega Center', 'Bazis-A', 'RAMS Qazaqstan', 'KazMinerals'], ...['BI Group', 'Air Astana', 'QazaqGaz', 'Mega Center', 'Bazis-A', 'RAMS Qazaqstan', 'KazMinerals']].map((client, idx) => (
+                     <div key={idx} className="client-card-premium">
+                       <span className="client-name-gradient">{client}</span>
+                     </div>
+                   ))}
+                 </div>
+               </div>
+            </section>
+
             {/* Quick KPI stats dashboard */}
             <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '30px', marginBottom: '60px', position: 'relative' }}>
               <div className="bg-glow-orb" style={{ top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '800px', height: '300px', opacity: 0.1, background: 'radial-gradient(ellipse, var(--color-cyan) 0%, transparent 70%)' }}></div>
@@ -651,24 +669,6 @@ function App() {
                 <div style={{ fontSize: '3.2rem', fontWeight: 800, color: 'var(--color-cyan)', fontFamily: 'var(--font-mono)', lineHeight: 1, marginBottom: '15px', textShadow: '0 0 20px rgba(6, 182, 212, 0.4)' }}>{t.stats.fleetValue}</div>
                 <p style={{ fontSize: '0.95rem', color: 'var(--color-text-secondary)', margin: 0, lineHeight: 1.6, position: 'relative', zIndex: 2 }}>{t.stats.fleetDesc}</p>
               </div>
-            </section>
-
-            {/* 1.5. Clients / Partners (Moved up) */}
-            <section style={{ marginBottom: '80px', textAlign: 'center', position: 'relative', overflow: 'hidden', padding: '40px 0' }}>
-               <div className="bg-glow-orb" style={{ top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '1000px', height: '400px', opacity: 0.08, background: 'radial-gradient(ellipse, var(--color-cyan) 0%, transparent 70%)' }}></div>
-               <span className="hero-subtitle" style={{ color: 'var(--color-accent)', textShadow: '0 0 15px rgba(234, 179, 8, 0.6)' }}>НАМ ДОВЕРЯЮТ</span>
-               <h2 style={{ fontSize: '3.2rem', marginBottom: '40px', textShadow: '0 0 40px rgba(255,255,255,0.2)' }}>{t.sections.clientsTitle}</h2>
-               
-               <div className="marquee-container" style={{ position: 'relative', zIndex: 2, marginTop: '20px' }}>
-                 <div className="marquee-content">
-                   {/* Double array for seamless infinite scroll */}
-                   {[...['BI Group', 'Air Astana', 'QazaqGaz', 'Mega Center', 'Bazis-A', 'RAMS Qazaqstan', 'KazMinerals'], ...['BI Group', 'Air Astana', 'QazaqGaz', 'Mega Center', 'Bazis-A', 'RAMS Qazaqstan', 'KazMinerals']].map((client, idx) => (
-                     <div key={idx} className="client-card-premium">
-                       <span className="client-name-gradient">{client}</span>
-                     </div>
-                   ))}
-                 </div>
-               </div>
             </section>
 
             {/* 2.5 About Company Overview */}

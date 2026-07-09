@@ -1633,11 +1633,7 @@ input[type="range"]::-webkit-slider-thumb:hover {
   overflow: hidden;
   white-space: nowrap;
   position: relative;
-  width: 100vw;
-  left: 50%;
-  right: 50%;
-  margin-left: -50vw;
-  margin-right: -50vw;
+  width: 100%;
   padding: 30px 0;
   display: flex;
   mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
