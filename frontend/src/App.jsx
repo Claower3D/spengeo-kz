@@ -2010,6 +2010,25 @@ function App() {
         </div>
       </footer>
 
+      {/* Full-width Map After Footer */}
+      <section style={{ width: '100%', height: '400px', position: 'relative', zIndex: 1, borderTop: '1px solid rgba(6, 182, 212, 0.1)' }}>
+        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '100px', background: 'linear-gradient(to bottom, var(--bg-dark), transparent)', pointerEvents: 'none', zIndex: 1000 }}></div>
+        <MapContainer center={[43.2389, 76.8897]} zoom={13} scrollWheelZoom={false} style={{ height: '100%', width: '100%', background: '#030509' }}>
+          <TileLayer
+            url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+          />
+          <Marker position={[43.2389, 76.8897]} icon={customGlowIcon}>
+            <Popup className="premium-popup">
+              <div style={{ padding: '5px', textAlign: 'center' }}>
+                <strong style={{ color: 'var(--color-cyan)', fontSize: '1.1rem' }}>ТОО «СпецИнжГео»</strong><br/>
+                <span style={{ color: '#aaa' }}>г. Алматы, пр-т Абая, 150</span>
+              </div>
+            </Popup>
+          </Marker>
+        </MapContainer>
+      </section>
+
       {/* Floating Action Buttons */}
       <a href="https://wa.me/77752182806" target="_blank" rel="noopener noreferrer" className="fixed-action-btn whatsapp-btn" title="Написать в WhatsApp">
         <MessageCircle size={28} />
