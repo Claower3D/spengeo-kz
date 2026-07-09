@@ -839,67 +839,60 @@ function App() {
             </section>
 
             {/* 4.5. Approach Section (New) */}
-            <section style={{ marginBottom: '60px', position: 'relative', background: 'var(--bg-card)', padding: '60px 40px', borderRadius: 'var(--border-radius-lg)', border: '1px solid var(--border-color)', overflow: 'hidden' }}>
-              <img src="/images/logo-original.svg" alt="Stamp" style={{ position: 'absolute', top: '50%', right: '-50px', transform: 'translateY(-50%) rotate(-15deg)', width: '600px', opacity: 0.05, pointerEvents: 'none' }} />
-              
-              <div style={{ position: 'relative', zIndex: 2, maxWidth: '900px', margin: '0 auto' }}>
-                <h2 style={{ textAlign: 'center', fontSize: '2.2rem', marginBottom: '20px', color: 'var(--color-text-primary)' }}>{t.sections.approachTitle}</h2>
-                <p style={{ textAlign: 'center', color: 'var(--color-text-secondary)', fontSize: '1.05rem', lineHeight: 1.6, marginBottom: '50px' }}>
+            <section style={{ marginBottom: '80px', position: 'relative' }}>
+              <div style={{ textAlign: 'center', marginBottom: '40px' }}>
+                <span className="hero-subtitle" style={{ color: 'var(--color-accent)', textShadow: '0 0 15px rgba(234, 179, 8, 0.6)' }}>ИНДИВИДУАЛЬНЫЙ ПОДХОД</span>
+                <h2 style={{ fontSize: '2.5rem', marginBottom: '20px', textShadow: '0 0 40px rgba(255,255,255,0.2)', maxWidth: '900px', margin: '0 auto 20px auto' }}>{t.sections.approachTitle}</h2>
+                <p style={{ color: 'var(--color-text-secondary)', fontSize: '1.05rem', lineHeight: 1.6, maxWidth: '800px', margin: '0 auto' }}>
                   {t.sections.approachDesc}
                 </p>
+              </div>
 
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '30px' }}>
-                  {/* Item 1 */}
-                  <div style={{ display: 'flex', gap: '20px', alignItems: 'flex-start' }}>
-                    <div style={{ color: 'var(--color-cyan)', marginTop: '5px' }}><Check size={28} /></div>
-                    <div>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
-                        <Search size={20} color="var(--color-accent)" />
-                        <h3 style={{ fontSize: '1.3rem', margin: 0, color: 'var(--color-text-primary)' }}>{t.sections.approach1Title}</h3>
-                      </div>
-                      <p style={{ color: 'var(--color-text-secondary)', fontSize: '0.95rem', lineHeight: 1.6 }}>{t.sections.approach1Text}</p>
-                    </div>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '30px', position: 'relative', zIndex: 2 }}>
+                {/* Card 1 */}
+                <div className="glow-card-premium" style={{ padding: '40px 30px' }}>
+                  <div className="license-icon-glow" style={{ marginBottom: '25px', display: 'inline-flex', padding: '15px', background: 'rgba(6, 182, 212, 0.1)', borderRadius: '50%' }}>
+                    <Search size={36} color="var(--color-cyan)" />
                   </div>
-
-                  {/* Item 2 */}
-                  <div style={{ display: 'flex', gap: '20px', alignItems: 'flex-start' }}>
-                    <div style={{ color: 'var(--color-cyan)', marginTop: '5px' }}><Check size={28} /></div>
-                    <div>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
-                        <Briefcase size={20} color="var(--color-accent)" />
-                        <h3 style={{ fontSize: '1.3rem', margin: 0, color: 'var(--color-text-primary)' }}>{t.sections.approach2Title}</h3>
-                      </div>
-                      <ul style={{ color: 'var(--color-text-secondary)', fontSize: '0.95rem', lineHeight: 1.6, margin: 0, paddingLeft: '20px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                        <li dangerouslySetInnerHTML={{ __html: t.sections.approach2L1 }}></li>
-                        <li dangerouslySetInnerHTML={{ __html: t.sections.approach2L2 }}></li>
-                        <li dangerouslySetInnerHTML={{ __html: t.sections.approach2L3 }}></li>
-                        <li dangerouslySetInnerHTML={{ __html: t.sections.approach2L4 }}></li>
-                      </ul>
-                    </div>
-                  </div>
-
-                  {/* Item 3 */}
-                  <div style={{ display: 'flex', gap: '20px', alignItems: 'flex-start' }}>
-                    <div style={{ color: 'var(--color-cyan)', marginTop: '5px' }}><Check size={28} /></div>
-                    <div>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
-                        <ShieldCheck size={20} color="var(--color-accent)" />
-                        <h3 style={{ fontSize: '1.3rem', margin: 0, color: 'var(--color-text-primary)' }}>{t.sections.approach3Title}</h3>
-                      </div>
-                      <p style={{ color: 'var(--color-text-secondary)', fontSize: '0.95rem', lineHeight: 1.6, marginBottom: '15px' }}>{t.sections.approach3Text}</p>
-                      <ul style={{ color: 'var(--color-text-secondary)', fontSize: '0.95rem', lineHeight: 1.6, margin: 0, paddingLeft: '20px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                        <li dangerouslySetInnerHTML={{ __html: t.sections.approach3L1 }}></li>
-                        <li dangerouslySetInnerHTML={{ __html: t.sections.approach3L2 }}></li>
-                        <li dangerouslySetInnerHTML={{ __html: t.sections.approach3L3 }}></li>
-                      </ul>
-                    </div>
-                  </div>
+                  <h3 style={{ fontSize: '1.4rem', marginBottom: '15px', color: 'var(--color-text-primary)' }}>{t.sections.approach1Title}</h3>
+                  <p style={{ color: 'var(--color-text-secondary)', fontSize: '0.95rem', lineHeight: 1.7 }}>{t.sections.approach1Text}</p>
                 </div>
 
-                <div style={{ textAlign: 'center', marginTop: '50px' }}>
-                  <button className="btn btn-primary" onClick={() => setActivePage('calculator')}>{t.sections.approachBtn}</button>
+                {/* Card 2 */}
+                <div className="glow-card-premium" style={{ padding: '40px 30px', borderLeft: '3px solid var(--color-accent)', background: 'linear-gradient(135deg, rgba(234, 179, 8, 0.05) 0%, rgba(3, 5, 9, 0) 100%)' }}>
+                  <div className="license-icon-glow" style={{ marginBottom: '25px', display: 'inline-flex', padding: '15px', background: 'rgba(234, 179, 8, 0.1)', borderRadius: '50%' }}>
+                    <Briefcase size={36} color="var(--color-accent)" />
+                  </div>
+                  <h3 style={{ fontSize: '1.4rem', marginBottom: '15px', color: 'var(--color-text-primary)' }}>{t.sections.approach2Title}</h3>
+                  <ul style={{ color: 'var(--color-text-secondary)', fontSize: '0.95rem', lineHeight: 1.7, paddingLeft: '20px', display: 'flex', flexDirection: 'column', gap: '12px', margin: 0 }}>
+                    <li dangerouslySetInnerHTML={{ __html: t.sections.approach2L1 }}></li>
+                    <li dangerouslySetInnerHTML={{ __html: t.sections.approach2L2 }}></li>
+                    <li dangerouslySetInnerHTML={{ __html: t.sections.approach2L3 }}></li>
+                    <li dangerouslySetInnerHTML={{ __html: t.sections.approach2L4 }}></li>
+                  </ul>
+                </div>
+
+                {/* Card 3 */}
+                <div className="glow-card-premium" style={{ padding: '40px 30px' }}>
+                  <div className="license-icon-glow" style={{ marginBottom: '25px', display: 'inline-flex', padding: '15px', background: 'rgba(6, 182, 212, 0.1)', borderRadius: '50%' }}>
+                    <ShieldCheck size={36} color="var(--color-cyan)" />
+                  </div>
+                  <h3 style={{ fontSize: '1.4rem', marginBottom: '15px', color: 'var(--color-text-primary)' }}>{t.sections.approach3Title}</h3>
+                  <p style={{ color: 'var(--color-text-secondary)', fontSize: '0.95rem', lineHeight: 1.7, marginBottom: '20px' }}>{t.sections.approach3Text}</p>
+                  <ul style={{ color: 'var(--color-text-secondary)', fontSize: '0.95rem', lineHeight: 1.7, paddingLeft: '20px', display: 'flex', flexDirection: 'column', gap: '12px', margin: 0 }}>
+                    <li dangerouslySetInnerHTML={{ __html: t.sections.approach3L1 }}></li>
+                    <li dangerouslySetInnerHTML={{ __html: t.sections.approach3L2 }}></li>
+                    <li dangerouslySetInnerHTML={{ __html: t.sections.approach3L3 }}></li>
+                  </ul>
                 </div>
               </div>
+
+              <div style={{ textAlign: 'center', marginTop: '50px', position: 'relative', zIndex: 2 }}>
+                <button className="btn btn-primary" style={{ padding: '15px 45px', fontSize: '1.1rem', boxShadow: '0 0 30px rgba(6, 182, 212, 0.4)' }} onClick={() => setActivePage('calculator')}>{t.sections.approachBtn}</button>
+              </div>
+
+              {/* Watermark Logo */}
+              <img src="/images/logo-original.svg" alt="Stamp Watermark" style={{ position: 'absolute', bottom: '-10%', right: '-5%', transform: 'rotate(-15deg)', width: '600px', opacity: 0.03, pointerEvents: 'none', filter: 'grayscale(100%) blur(2px)' }} />
             </section>
 
             {/* 5. Director / About Section */}
