@@ -960,18 +960,28 @@ function App() {
             <section style={{ marginBottom: '50px', position: 'relative' }}>
               <div style={{ textAlign: 'center', marginBottom: '40px' }}>
                 <span className="hero-subtitle" style={{ color: 'var(--color-cyan)', textShadow: '0 0 15px rgba(6, 182, 212, 0.6)' }}>ОФИЦИАЛЬНЫЙ СТАТУС</span>
-                <h2 style={{ fontSize: '3.2rem', textShadow: '0 0 40px rgba(255,255,255,0.2)' }}>Лицензии и Сертификаты</h2>
+                <h2 style={{ fontSize: '3.2rem', textShadow: '0 0 40px rgba(255,255,255,0.2)' }}>{t.sections.licensesTitle}</h2>
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '30px', position: 'relative', zIndex: 2 }}>
                 {DOCUMENTS_DATA.slice(0, 3).map(doc => (
-                  <div key={doc.id} className="glow-card-premium" style={{ padding: '40px 30px', textAlign: 'center' }}>
-                    <div className="license-icon-glow">
-                      {doc.id === 'lic-gsl' && '🛡️'}
-                      {doc.id === 'accreditation' && '🔬'}
-                      {doc.id.startsWith('iso') && '📜'}
+                  <div key={doc.id} className="glow-card-premium" style={{ padding: '40px 30px', textAlign: 'center', position: 'relative', overflow: 'hidden', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    
+                    {/* Background faint huge icon */}
+                    <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', opacity: 0.03, pointerEvents: 'none' }}>
+                      {doc.id === 'lic-gsl' && <ShieldCheck size={250} />}
+                      {doc.id === 'accreditation' && <Award size={250} />}
+                      {doc.id.startsWith('iso') && <FileText size={250} />}
                     </div>
-                    <h3 style={{ fontSize: '1.3rem', marginBottom: '15px', color: 'var(--color-text-primary)', fontWeight: 800 }}>{doc.title}</h3>
-                    <span className="spec-label" style={{ color: 'var(--color-accent)', fontSize: '0.9rem', letterSpacing: '0.15em', textShadow: '0 0 10px rgba(234, 179, 8, 0.4)' }}>{doc.subtitle}</span>
+                    
+                    {/* Glowing front icon */}
+                    <div style={{ background: doc.id === 'lic-gsl' ? 'rgba(239, 68, 68, 0.1)' : doc.id === 'accreditation' ? 'rgba(6, 182, 212, 0.1)' : 'rgba(234, 179, 8, 0.1)', padding: '20px', borderRadius: '50%', marginBottom: '25px', display: 'inline-flex', position: 'relative', zIndex: 2 }}>
+                      {doc.id === 'lic-gsl' && <ShieldCheck size={40} color="#ef4444" />}
+                      {doc.id === 'accreditation' && <Award size={40} color="var(--color-cyan)" />}
+                      {doc.id.startsWith('iso') && <FileText size={40} color="var(--color-accent)" />}
+                    </div>
+                    
+                    <h3 style={{ fontSize: '1.3rem', marginBottom: '15px', color: 'var(--color-text-primary)', fontWeight: 800, position: 'relative', zIndex: 2, lineHeight: 1.4 }}>{doc.title}</h3>
+                    <span className="spec-label" style={{ color: doc.id === 'lic-gsl' ? '#ef4444' : doc.id === 'accreditation' ? 'var(--color-cyan)' : 'var(--color-accent)', fontSize: '0.9rem', letterSpacing: '0.15em', textShadow: `0 0 10px ${doc.id === 'lic-gsl' ? 'rgba(239, 68, 68, 0.4)' : doc.id === 'accreditation' ? 'rgba(6, 182, 212, 0.4)' : 'rgba(234, 179, 8, 0.4)'}`, position: 'relative', zIndex: 2 }}>{doc.subtitle}</span>
                   </div>
                 ))}
               </div>
