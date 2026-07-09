@@ -1,0 +1,35 @@
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Внешний толстый круг -->
+  <circle cx="100" cy="100" r="94" fill="none" stroke="#ffffff" stroke-width="8" />
+  
+  <!-- Внутренний тонкий круг -->
+  <circle cx="100" cy="100" r="62" fill="none" stroke="#ffffff" stroke-width="2" />
+  
+  <defs>
+    <!-- Пути для текста -->
+    <path id="top-arch" d="M 18,100 A 82,82 0 0,1 182,100" />
+    <path id="bottom-arch" d="M 175,100 A 75,75 0 0,1 25,100" />
+  </defs>
+  
+  <!-- Верхний текст -->
+  <text font-family="Arial Black, Impact, sans-serif" font-weight="900" font-size="28" fill="#ffffff" letter-spacing="4">
+    <textPath href="#top-arch" startOffset="50%" text-anchor="middle">СПЕЦИНЖГЕО</textPath>
+  </text>
+  
+  <!-- Нижний текст -->
+  <text font-family="Arial, sans-serif" font-weight="bold" font-size="22" fill="#ffffff" letter-spacing="6">
+    <textPath href="#bottom-arch" startOffset="50%" text-anchor="middle">Караганда</textPath>
+  </text>
+
+  <!-- Центральная фигура (Буровой компас / долото) -->
+  <g transform="translate(100, 100) rotate(55)">
+    <!-- Основное острие -->
+    <path d="M 0,-55 L 14,14 A 18 18 0 0 1 -14 14 Z" fill="#ffffff" />
+    
+    <!-- Левый плавник/хвост -->
+    <path d="M -12,20 L -35,35 L -4,28 Z" fill="#ffffff" />
+    
+    <!-- Правый плавник/хвост -->
+    <path d="M 12,20 L 35,35 L 4,28 Z" fill="currentColor" />
+  </g>
+</svg>

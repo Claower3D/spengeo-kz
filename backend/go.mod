@@ -1,0 +1,3 @@
+module spengeo/backend
+
+go 1.26.1
