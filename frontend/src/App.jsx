@@ -494,84 +494,88 @@ function App() {
       <div className="bg-glow-orb bg-glow-orb-1"></div>
       <div className="bg-glow-orb bg-glow-orb-2"></div>
 
-      {/* High-Tech Top Status Bar */}
-      <div className="status-bar">
-        <div className="container status-bar-content">
-          <div className="status-indicator">
-            <div className="status-dot"></div>
-            <span>ТОО СПЕЦИНЖГЕО // СТАТУС СИСТЕМЫ: АКТИВЕН</span>
+      {activePage !== 'admin' && (
+        <>
+          {/* High-Tech Top Status Bar */}
+          <div className="status-bar">
+            <div className="container status-bar-content">
+              <div className="status-indicator">
+                <div className="status-dot"></div>
+                <span>ТОО СПЕЦИНЖГЕО // СТАТУС СИСТЕМЫ: АКТИВЕН</span>
+              </div>
+              <div>
+                <span>БЭКЕНД: GOLANG (PORT 8083) | ФРОНТЕНД: REACT (PORT 5174) | ЛИЦЕНЗИЯ: ГСЛ №19004562</span>
+              </div>
+            </div>
           </div>
-          <div>
-            <span>БЭКЕНД: GOLANG (PORT 8083) | ФРОНТЕНД: REACT (PORT 5174) | ЛИЦЕНЗИЯ: ГСЛ №19004562</span>
-          </div>
-        </div>
-      </div>
 
-      {/* Modern Grid Navigation Bar */}
-      <header className="header">
-        <div className="container nav-container">
-          <a href="#" className="logo" onClick={() => setActivePage('home')} style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <img src="/images/logo-original.svg" alt="SpenGeo Logo" style={{ height: '45px', width: 'auto' }} />
-            <span>Спец<span>Инж</span>Гео</span>
-          </a>
+          {/* Modern Grid Navigation Bar */}
+          <header className="header">
+            <div className="container nav-container">
+              <a href="#" className="logo" onClick={() => setActivePage('home')} style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <img src="/images/logo-original.svg" alt="SpenGeo Logo" style={{ height: '45px', width: 'auto' }} />
+                <span>Спец<span>Инж</span>Гео</span>
+              </a>
 
-          <nav className="desktop-nav">
-            <ul className="nav-links">
-              <li>
-                <button type="button" className={`nav-btn ${activePage === 'about' ? 'active' : ''}`} onClick={() => { setActivePage('about'); logEvent('Opened company details.'); }}>
-                  {t.nav.about}
-                </button>
-              </li>
-              <li>
-                <button type="button" className={`nav-btn ${activePage === 'services' ? 'active' : ''}`} onClick={() => { setActivePage('services'); logEvent('Opened services terminal.'); }}>
-                  {t.nav.services}
-                </button>
-              </li>
-              <li>
-                <button type="button" className={`nav-btn ${activePage === 'projects' ? 'active' : ''}`} onClick={() => { setActivePage('projects'); logEvent('Opened project archives.'); }}>
-                  {t.nav.projects}
-                </button>
-              </li>
-              <li>
-                <button type="button" className={`nav-btn ${activePage === 'equipment' ? 'active' : ''}`} onClick={() => { setActivePage('equipment'); logEvent('Opened equipment viewer.'); }}>
-                  {t.nav.equipment}
-                </button>
-              </li>
-              <li>
-                <button type="button" className={`nav-btn ${activePage === 'calculator' ? 'active' : ''}`} onClick={() => { setActivePage('calculator'); logEvent('Opened estimator engine.'); }}>
-                  {t.nav.calculator}
-                </button>
-              </li>
-              <li>
-                <button type="button" className={`nav-btn ${activePage === 'contacts' ? 'active' : ''}`} onClick={() => { setActivePage('contacts'); logEvent('Opened contacts.'); }}>
-                  {t.nav.contacts}
-                </button>
-              </li>
-            </ul>
-          </nav>
+              <nav className="desktop-nav">
+                <ul className="nav-links">
+                  <li>
+                    <button type="button" className={`nav-btn ${activePage === 'about' ? 'active' : ''}`} onClick={() => { setActivePage('about'); logEvent('Opened company details.'); }}>
+                      {t.nav.about}
+                    </button>
+                  </li>
+                  <li>
+                    <button type="button" className={`nav-btn ${activePage === 'services' ? 'active' : ''}`} onClick={() => { setActivePage('services'); logEvent('Opened services terminal.'); }}>
+                      {t.nav.services}
+                    </button>
+                  </li>
+                  <li>
+                    <button type="button" className={`nav-btn ${activePage === 'projects' ? 'active' : ''}`} onClick={() => { setActivePage('projects'); logEvent('Opened project archives.'); }}>
+                      {t.nav.projects}
+                    </button>
+                  </li>
+                  <li>
+                    <button type="button" className={`nav-btn ${activePage === 'equipment' ? 'active' : ''}`} onClick={() => { setActivePage('equipment'); logEvent('Opened equipment viewer.'); }}>
+                      {t.nav.equipment}
+                    </button>
+                  </li>
+                  <li>
+                    <button type="button" className={`nav-btn ${activePage === 'calculator' ? 'active' : ''}`} onClick={() => { setActivePage('calculator'); logEvent('Opened estimator engine.'); }}>
+                      {t.nav.calculator}
+                    </button>
+                  </li>
+                  <li>
+                    <button type="button" className={`nav-btn ${activePage === 'contacts' ? 'active' : ''}`} onClick={() => { setActivePage('contacts'); logEvent('Opened contacts.'); }}>
+                      {t.nav.contacts}
+                    </button>
+                  </li>
+                </ul>
+              </nav>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexShrink: 0 }}>
-            <select 
-              value={language} 
-              onChange={(e) => setLanguage(e.target.value)}
-              style={{ background: 'var(--bg-dark)', color: 'var(--color-text-primary)', border: '1px solid var(--border-color)', borderRadius: '6px', padding: '6px 12px', outline: 'none', cursor: 'pointer', fontFamily: 'inherit', fontWeight: 'bold' }}
-            >
-              <option value="ru">RU</option>
-              <option value="en">EN</option>
-              <option value="kz">KZ</option>
-            </select>
-            <button onClick={toggleTheme} style={{ background: 'none', border: 'none', color: 'var(--color-cyan)', cursor: 'pointer', display: 'flex', alignItems: 'center' }} title="Переключить тему">
-              {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
-            </button>
-            <button className="nav-btn" onClick={() => setActivePage('admin')} style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-              <Lock size={14} color="var(--color-cyan)" /> {t.nav.login}
-            </button>
-            <a href="tel:+77752182806" className="header-phone-btn" style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'var(--color-cyan)', color: '#07090e', padding: '8px 16px', borderRadius: '30px', textDecoration: 'none', fontWeight: 'bold', whiteSpace: 'nowrap', fontSize: '0.95rem' }}>
-              <Phone size={16} /> +7 775 218 28 06
-            </a>
-          </div>
-        </div>
-      </header>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexShrink: 0 }}>
+                <select 
+                  value={language} 
+                  onChange={(e) => setLanguage(e.target.value)}
+                  style={{ background: 'var(--bg-dark)', color: 'var(--color-text-primary)', border: '1px solid var(--border-color)', borderRadius: '6px', padding: '6px 12px', outline: 'none', cursor: 'pointer', fontFamily: 'inherit', fontWeight: 'bold' }}
+                >
+                  <option value="ru">RU</option>
+                  <option value="en">EN</option>
+                  <option value="kz">KZ</option>
+                </select>
+                <button onClick={toggleTheme} style={{ background: 'none', border: 'none', color: 'var(--color-cyan)', cursor: 'pointer', display: 'flex', alignItems: 'center' }} title="Переключить тему">
+                  {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+                </button>
+                <button className="nav-btn" onClick={() => setActivePage('admin')} style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                  <Lock size={14} color="var(--color-cyan)" /> {t.nav.login}
+                </button>
+                <a href="tel:+77752182806" className="header-phone-btn" style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'var(--color-cyan)', color: '#07090e', padding: '8px 16px', borderRadius: '30px', textDecoration: 'none', fontWeight: 'bold', whiteSpace: 'nowrap', fontSize: '0.95rem' }}>
+                  <Phone size={16} /> +7 775 218 28 06
+                </a>
+              </div>
+            </div>
+          </header>
+        </>
+      )}
 
       {/* Pages Container */}
       <main className="container" style={{ minHeight: 'calc(100vh - 120px)', paddingBlock: '50px' }}>
