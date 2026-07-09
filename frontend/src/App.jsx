@@ -609,30 +609,48 @@ function App() {
             </section>
 
             {/* Quick KPI stats dashboard */}
-            <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '30px', marginBottom: '40px' }}>
-              <HudCard style={{ padding: '25px' }}>
-                <span className="spec-label">{t.stats.wells}</span>
-                <div style={{ fontSize: '2.3rem', fontWeight: 800, color: 'var(--color-accent)', fontFamily: 'var(--font-mono)' }}>1,420+</div>
-                <p style={{ fontSize: '0.85rem', color: 'var(--color-text-secondary)', marginTop: '5px' }}>{t.stats.wellsDesc}</p>
-              </HudCard>
+            <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '30px', marginBottom: '60px', position: 'relative' }}>
+              <div className="bg-glow-orb" style={{ top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '800px', height: '300px', opacity: 0.1, background: 'radial-gradient(ellipse, var(--color-cyan) 0%, transparent 70%)' }}></div>
+              
+              <div className="glow-card-premium" style={{ padding: '35px 25px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', position: 'relative', overflow: 'hidden' }}>
+                <div style={{ position: 'absolute', right: '-20px', top: '-20px', opacity: 0.03 }}><Hammer size={150} /></div>
+                <div style={{ background: 'rgba(234, 179, 8, 0.1)', padding: '12px', borderRadius: '12px', marginBottom: '20px' }}>
+                  <Hammer size={24} color="var(--color-accent)" />
+                </div>
+                <span className="spec-label" style={{ marginBottom: '10px' }}>{t.stats.wells}</span>
+                <div style={{ fontSize: '3.2rem', fontWeight: 800, color: 'var(--color-accent)', fontFamily: 'var(--font-mono)', lineHeight: 1, marginBottom: '15px', textShadow: '0 0 20px rgba(234, 179, 8, 0.4)' }}>1,420+</div>
+                <p style={{ fontSize: '0.95rem', color: 'var(--color-text-secondary)', margin: 0, lineHeight: 1.6, position: 'relative', zIndex: 2 }}>{t.stats.wellsDesc}</p>
+              </div>
 
-              <HudCard style={{ padding: '25px' }}>
-                <span className="spec-label">{t.stats.geo}</span>
-                <div style={{ fontSize: '2.3rem', fontWeight: 800, color: 'var(--color-cyan)', fontFamily: 'var(--font-mono)' }}>{t.stats.geoValue}</div>
-                <p style={{ fontSize: '0.85rem', color: 'var(--color-text-secondary)', marginTop: '5px' }}>{t.stats.geoDesc}</p>
-              </HudCard>
+              <div className="glow-card-premium" style={{ padding: '35px 25px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', position: 'relative', overflow: 'hidden' }}>
+                <div style={{ position: 'absolute', right: '-20px', top: '-20px', opacity: 0.03 }}><MapPin size={150} /></div>
+                <div style={{ background: 'rgba(6, 182, 212, 0.1)', padding: '12px', borderRadius: '12px', marginBottom: '20px' }}>
+                  <MapPin size={24} color="var(--color-cyan)" />
+                </div>
+                <span className="spec-label" style={{ marginBottom: '10px' }}>{t.stats.geo}</span>
+                <div style={{ fontSize: '3.2rem', fontWeight: 800, color: 'var(--color-cyan)', fontFamily: 'var(--font-mono)', lineHeight: 1, marginBottom: '15px', textShadow: '0 0 20px rgba(6, 182, 212, 0.4)' }}>{t.stats.geoValue}</div>
+                <p style={{ fontSize: '0.95rem', color: 'var(--color-text-secondary)', margin: 0, lineHeight: 1.6, position: 'relative', zIndex: 2 }}>{t.stats.geoDesc}</p>
+              </div>
 
-              <HudCard style={{ padding: '25px' }}>
-                <span className="spec-label">{t.stats.standards}</span>
-                <div style={{ fontSize: '2.3rem', fontWeight: 800, color: 'var(--color-accent)', fontFamily: 'var(--font-mono)' }}>100% СНиП</div>
-                <p style={{ fontSize: '0.85rem', color: 'var(--color-text-secondary)', marginTop: '5px' }}>{t.stats.standardsDesc}</p>
-              </HudCard>
+              <div className="glow-card-premium" style={{ padding: '35px 25px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', position: 'relative', overflow: 'hidden' }}>
+                <div style={{ position: 'absolute', right: '-20px', top: '-20px', opacity: 0.03 }}><Award size={150} /></div>
+                <div style={{ background: 'rgba(234, 179, 8, 0.1)', padding: '12px', borderRadius: '12px', marginBottom: '20px' }}>
+                  <Award size={24} color="var(--color-accent)" />
+                </div>
+                <span className="spec-label" style={{ marginBottom: '10px' }}>{t.stats.standards}</span>
+                <div style={{ fontSize: '3.2rem', fontWeight: 800, color: 'var(--color-accent)', fontFamily: 'var(--font-mono)', lineHeight: 1, marginBottom: '15px', textShadow: '0 0 20px rgba(234, 179, 8, 0.4)' }}>100%</div>
+                <p style={{ fontSize: '0.95rem', color: 'var(--color-text-secondary)', margin: 0, lineHeight: 1.6, position: 'relative', zIndex: 2 }}>{t.stats.standardsDesc}</p>
+              </div>
 
-              <HudCard style={{ padding: '25px' }}>
-                <span className="spec-label">{t.stats.fleet}</span>
-                <div style={{ fontSize: '2.3rem', fontWeight: 800, color: 'var(--color-cyan)', fontFamily: 'var(--font-mono)' }}>{t.stats.fleetValue}</div>
-                <p style={{ fontSize: '0.85rem', color: 'var(--color-text-secondary)', marginTop: '5px' }}>{t.stats.fleetDesc}</p>
-              </HudCard>
+              <div className="glow-card-premium" style={{ padding: '35px 25px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', position: 'relative', overflow: 'hidden' }}>
+                <div style={{ position: 'absolute', right: '-20px', top: '-20px', opacity: 0.03 }}><Settings size={150} /></div>
+                <div style={{ background: 'rgba(6, 182, 212, 0.1)', padding: '12px', borderRadius: '12px', marginBottom: '20px' }}>
+                  <Settings size={24} color="var(--color-cyan)" />
+                </div>
+                <span className="spec-label" style={{ marginBottom: '10px' }}>{t.stats.fleet}</span>
+                <div style={{ fontSize: '3.2rem', fontWeight: 800, color: 'var(--color-cyan)', fontFamily: 'var(--font-mono)', lineHeight: 1, marginBottom: '15px', textShadow: '0 0 20px rgba(6, 182, 212, 0.4)' }}>{t.stats.fleetValue}</div>
+                <p style={{ fontSize: '0.95rem', color: 'var(--color-text-secondary)', margin: 0, lineHeight: 1.6, position: 'relative', zIndex: 2 }}>{t.stats.fleetDesc}</p>
+              </div>
             </section>
 
             {/* 1.5. Clients / Partners (Moved up) */}
