@@ -17,6 +17,8 @@ export const translations = {
       btnServices: 'Наши услуги'
     },
     stats: {
+      title: 'Результаты в Цифрах',
+      subtitle: 'ОФИЦИАЛЬНАЯ СТАТИСТИКА',
       wells: 'Пробурено выработок',
       wellsDesc: 'Скважин разного диаметра во всех типах грунтов',
       geo: 'География работ',
@@ -79,6 +81,8 @@ export const translations = {
       btnServices: 'Our Services'
     },
     stats: {
+      title: 'Results in Numbers',
+      subtitle: 'OFFICIAL STATISTICS',
       wells: 'Wells Drilled',
       wellsDesc: 'Wells of various diameters in all types of soils',
       geo: 'Geography of Operations',
@@ -141,6 +145,8 @@ export const translations = {
       btnServices: 'Біздің қызметтер'
     },
     stats: {
+      title: 'Сандардағы Нәтижелер',
+      subtitle: 'РЕСМИ СТАТИСТИКА',
       wells: 'Бұрғыланған ұңғымалар',
       wellsDesc: 'Барлық топырақ түрлеріндегі әртүрлі диаметрлі ұңғымалар',
       geo: 'Жұмыс географиясы',

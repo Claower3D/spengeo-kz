@@ -627,6 +627,10 @@ function App() {
             </section>
 
             {/* Quick KPI stats dashboard */}
+            <div style={{ textAlign: 'center', marginBottom: '40px', position: 'relative', zIndex: 2 }}>
+               <span className="hero-subtitle" style={{ color: 'var(--color-cyan)', textShadow: '0 0 15px rgba(6, 182, 212, 0.6)' }}>{t.stats.subtitle}</span>
+               <h2 style={{ fontSize: '3.2rem', textShadow: '0 0 40px rgba(255,255,255,0.2)' }}>{t.stats.title}</h2>
+            </div>
             <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '30px', marginBottom: '60px', position: 'relative' }}>
               <div className="bg-glow-orb" style={{ top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '800px', height: '300px', opacity: 0.1, background: 'radial-gradient(ellipse, var(--color-cyan) 0%, transparent 70%)' }}></div>
               
@@ -672,7 +676,7 @@ function App() {
             </section>
 
             {/* 2.5 About Company Overview */}
-            <section style={{ marginBottom: '40px', display: 'flex', flexDirection: 'column', gap: '20px', padding: '40px', background: 'linear-gradient(135deg, rgba(6, 182, 212, 0.05) 0%, rgba(3, 5, 9, 0) 100%)', borderRadius: 'var(--border-radius-lg)', borderLeft: '4px solid var(--color-cyan)', position: 'relative', overflow: 'hidden' }}>
+            <section className="glow-card-premium" style={{ marginBottom: '60px', display: 'flex', flexDirection: 'column', gap: '20px', padding: '50px', position: 'relative', overflow: 'hidden' }}>
               <div className="bg-glow-orb-1" style={{ position: 'absolute', top: '-100px', right: '-100px', width: '300px', height: '300px', background: 'radial-gradient(circle, var(--color-accent) 0%, transparent 70%)', opacity: 0.05 }}></div>
               <div>
                 <span className="spec-label" style={{ color: 'var(--color-accent)', fontSize: '1rem' }}>{t.sections.aboutLabel}</span>
@@ -706,11 +710,11 @@ function App() {
             <section style={{ marginBottom: '50px', display: 'flex', flexDirection: 'column', gap: '40px' }}>
               
               {/* Block 1: Heavy Equipment (Image Left, Text Right) */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '50px', alignItems: 'center' }}>
-                <div className="feature-img-hover feature-img-cyan" style={{ borderRadius: 'var(--border-radius-lg)', overflow: 'hidden', border: '1px solid rgba(6, 182, 212, 0.3)', boxShadow: '0 0 40px rgba(0,0,0,0.5)', height: '350px' }}>
+              <div className="glow-card-premium" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '0', alignItems: 'center', padding: '0', overflow: 'hidden' }}>
+                <div style={{ height: '350px' }}>
                   <img src="/images/rig.png" alt="Буровая техника Bauer" style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={(e) => { e.target.src='/images/hero.png' }} />
                 </div>
-                <div>
+                <div style={{ padding: '40px' }}>
                   <span className="spec-label" style={{ color: 'var(--color-cyan)', fontSize: '0.9rem' }}>МАТЕРИАЛЬНАЯ БАЗА</span>
                   <h3 style={{ fontSize: '2rem', marginBottom: '20px', lineHeight: 1.2 }}>Мощный парк<br/>буровой техники</h3>
                   <p style={{ color: 'var(--color-text-secondary)', fontSize: '1.05rem', lineHeight: 1.6, marginBottom: '20px' }}>
@@ -724,8 +728,8 @@ function App() {
               </div>
 
               {/* Block 2: Laboratory (Text Left, Image Right) */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '50px', alignItems: 'center' }} className="feature-reverse">
-                <div className="feature-text">
+              <div className="glow-card-premium" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '0', alignItems: 'center', padding: '0', overflow: 'hidden' }} className="feature-reverse">
+                <div style={{ padding: '40px' }} className="feature-text">
                   <span className="spec-label" style={{ color: 'var(--color-accent)', fontSize: '0.9rem' }}>ТОЧНОСТЬ ДАННЫХ</span>
                   <h3 style={{ fontSize: '2rem', marginBottom: '20px', lineHeight: 1.2 }}>Собственная грунтовая<br/>лаборатория</h3>
                   <p style={{ color: 'var(--color-text-secondary)', fontSize: '1.05rem', lineHeight: 1.6, marginBottom: '20px' }}>
@@ -736,17 +740,17 @@ function App() {
                     <li><CheckCircle size={16} color="var(--color-accent)" style={{ display: 'inline', marginRight: '8px', verticalAlign: 'middle' }}/> Химический анализ воды и грунтов</li>
                   </ul>
                 </div>
-                <div className="feature-img feature-img-hover feature-img-accent" style={{ borderRadius: 'var(--border-radius-lg)', overflow: 'hidden', border: '1px solid rgba(234, 179, 8, 0.3)', boxShadow: '0 0 40px rgba(0,0,0,0.5)', height: '350px' }}>
+                <div style={{ height: '350px' }}>
                   <img src="/images/lab.png" alt="Грунтовая лаборатория" style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={(e) => { e.target.src='/images/hero.png' }} />
                 </div>
               </div>
 
               {/* Block 3: Geodesy (Image Left, Text Right) */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '50px', alignItems: 'center' }}>
-                <div className="feature-img-hover feature-img-cyan" style={{ borderRadius: 'var(--border-radius-lg)', overflow: 'hidden', border: '1px solid rgba(6, 182, 212, 0.3)', boxShadow: '0 0 40px rgba(0,0,0,0.5)', height: '350px' }}>
+              <div className="glow-card-premium" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '0', alignItems: 'center', padding: '0', overflow: 'hidden' }}>
+                <div style={{ height: '350px' }}>
                   <img src="/images/geodesy.png" alt="Геодезия и топосъемка" style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={(e) => { e.target.src='/images/hero.png' }} />
                 </div>
-                <div>
+                <div style={{ padding: '40px' }}>
                   <span className="spec-label" style={{ color: 'var(--color-cyan)', fontSize: '0.9rem' }}>ИНЖЕНЕРНАЯ ГЕОДЕЗИЯ</span>
                   <h3 style={{ fontSize: '2rem', marginBottom: '20px', lineHeight: 1.2 }}>Миллиметровая точность<br/>съемки</h3>
                   <p style={{ color: 'var(--color-text-secondary)', fontSize: '1.05rem', lineHeight: 1.6, marginBottom: '20px' }}>
