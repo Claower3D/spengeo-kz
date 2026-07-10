@@ -2084,5 +2084,44 @@ input[type="range"]::-webkit-slider-thumb:hover {
   img[alt="Stamp Watermark"] {
     display: none !important;
   }
+
+  /* Hero buttons wrap */
+  .hero-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+  }
+  .hero-buttons button {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  /* Floating buttons */
+  .fixed-action-btn {
+    width: 45px !important;
+    height: 45px !important;
+    bottom: 20px !important;
+  }
+  .whatsapp-btn {
+    left: 20px !important;
+  }
+  .assistant-btn {
+    right: 20px !important;
+  }
+  .scroll-top-btn {
+    left: auto !important;
+    right: 20px !important;
+    bottom: 75px !important;
+    transform: translateY(10px) !important;
+  }
+  .scroll-top-btn.visible {
+    transform: translateY(0) !important;
+  }
+}
+
+.hero-buttons {
+  display: flex;
+  gap: 15px;
 }
 

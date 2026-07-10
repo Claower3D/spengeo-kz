@@ -685,7 +685,7 @@ function App() {
                   >
                     {vbHeroDesc || t.hero.desc}
                   </p>
-                  <div style={{ display: 'flex', gap: '15px' }}>
+                  <div className="hero-buttons">
                     <button className="btn btn-primary" onClick={() => setActivePage('calculator')}>
                       {t.hero.btnCalc} <ArrowUpRight size={18} />
                     </button>
