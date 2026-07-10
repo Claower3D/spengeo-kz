@@ -199,11 +199,11 @@ h1, h2, h3, h4 {
   z-index: -2;
   background-color: #030509;
   background-image: 
-    linear-gradient(rgba(3, 5, 9, 0.4) 0%, rgba(3, 5, 9, 0.85) 100%),
-    url('/images/geodesy_bg.png');
+    linear-gradient(to bottom, rgba(3, 5, 9, 0.5) 0%, rgba(3, 5, 9, 0.7) 70vw, #030509 95vw, #030509 100%),
+    url('/images/drilling_strata_bg.png');
   background-size: 100% 100%, 100vw auto;
   background-position: top center;
-  background-repeat: no-repeat, repeat-y;
+  background-repeat: no-repeat, no-repeat;
 }
 
 /* Subtle Vignette for Contrast */
