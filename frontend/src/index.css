@@ -253,8 +253,8 @@ h1, h2, h3, h4 {
   background-image: 
     linear-gradient(to bottom, 
       #030509 0%, 
-      rgba(3, 5, 9, 0.9) 150px, 
-      rgba(3, 5, 9, 0.9) calc(100% - 150px), 
+      rgba(3, 5, 9, 0.95) 150px, 
+      rgba(3, 5, 9, 0.95) calc(100% - 150px), 
       #030509 100%
     ),
     url('/images/geology_bg_2.png');
