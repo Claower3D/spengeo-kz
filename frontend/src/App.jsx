@@ -958,8 +958,8 @@ function App() {
                   <div className="license-icon-glow" style={{ marginBottom: '25px', display: 'inline-flex', padding: '15px', background: 'rgba(6, 182, 212, 0.1)', borderRadius: '50%' }}>
                     <Search size={36} color="var(--color-cyan)" />
                   </div>
-                  <h3 style={{ fontSize: '1.4rem', marginBottom: '15px', color: 'var(--color-text-primary)' }}>{t.sections.approach1Title}</h3>
-                  <p style={{ color: 'var(--color-text-secondary)', fontSize: '0.95rem', lineHeight: 1.7 }}>{t.sections.approach1Text}</p>
+                  <EditableText as="h3" id="app_c1_t" defaultText={t.sections.approach1Title} isVisualBuilder={isVisualBuilder} style={{ fontSize: '1.4rem', marginBottom: '15px', color: 'var(--color-text-primary)' }} />
+                  <EditableText as="p" id="app_c1_d" defaultText={t.sections.approach1Text} isVisualBuilder={isVisualBuilder} style={{ color: 'var(--color-text-secondary)', fontSize: '0.95rem', lineHeight: 1.7 }} />
                 </div>
 
                 {/* Card 2 */}
@@ -967,12 +967,12 @@ function App() {
                   <div className="license-icon-glow" style={{ marginBottom: '25px', display: 'inline-flex', padding: '15px', background: 'rgba(234, 179, 8, 0.1)', borderRadius: '50%' }}>
                     <Briefcase size={36} color="var(--color-accent)" />
                   </div>
-                  <h3 style={{ fontSize: '1.4rem', marginBottom: '15px', color: 'var(--color-text-primary)' }}>{t.sections.approach2Title}</h3>
+                  <EditableText as="h3" id="app_c2_t" defaultText={t.sections.approach2Title} isVisualBuilder={isVisualBuilder} style={{ fontSize: '1.4rem', marginBottom: '15px', color: 'var(--color-text-primary)' }} />
                   <ul style={{ color: 'var(--color-text-secondary)', fontSize: '0.95rem', lineHeight: 1.7, paddingLeft: '20px', display: 'flex', flexDirection: 'column', gap: '12px', margin: 0 }}>
-                    <li dangerouslySetInnerHTML={{ __html: t.sections.approach2L1 }}></li>
-                    <li dangerouslySetInnerHTML={{ __html: t.sections.approach2L2 }}></li>
-                    <li dangerouslySetInnerHTML={{ __html: t.sections.approach2L3 }}></li>
-                    <li dangerouslySetInnerHTML={{ __html: t.sections.approach2L4 }}></li>
+                    <EditableText as="li" id="app_c2_l1" dangerously={true} defaultText={t.sections.approach2L1} isVisualBuilder={isVisualBuilder} />
+                    <EditableText as="li" id="app_c2_l2" dangerously={true} defaultText={t.sections.approach2L2} isVisualBuilder={isVisualBuilder} />
+                    <EditableText as="li" id="app_c2_l3" dangerously={true} defaultText={t.sections.approach2L3} isVisualBuilder={isVisualBuilder} />
+                    <EditableText as="li" id="app_c2_l4" dangerously={true} defaultText={t.sections.approach2L4} isVisualBuilder={isVisualBuilder} />
                   </ul>
                 </div>
 
@@ -981,12 +981,12 @@ function App() {
                   <div className="license-icon-glow" style={{ marginBottom: '25px', display: 'inline-flex', padding: '15px', background: 'rgba(6, 182, 212, 0.1)', borderRadius: '50%' }}>
                     <ShieldCheck size={36} color="var(--color-cyan)" />
                   </div>
-                  <h3 style={{ fontSize: '1.4rem', marginBottom: '15px', color: 'var(--color-text-primary)' }}>{t.sections.approach3Title}</h3>
-                  <p style={{ color: 'var(--color-text-secondary)', fontSize: '0.95rem', lineHeight: 1.7, marginBottom: '20px' }}>{t.sections.approach3Text}</p>
+                  <EditableText as="h3" id="app_c3_t" defaultText={t.sections.approach3Title} isVisualBuilder={isVisualBuilder} style={{ fontSize: '1.4rem', marginBottom: '15px', color: 'var(--color-text-primary)' }} />
+                  <EditableText as="p" id="app_c3_d" defaultText={t.sections.approach3Text} isVisualBuilder={isVisualBuilder} style={{ color: 'var(--color-text-secondary)', fontSize: '0.95rem', lineHeight: 1.7, marginBottom: '20px' }} />
                   <ul style={{ color: 'var(--color-text-secondary)', fontSize: '0.95rem', lineHeight: 1.7, paddingLeft: '20px', display: 'flex', flexDirection: 'column', gap: '12px', margin: 0 }}>
-                    <li dangerouslySetInnerHTML={{ __html: t.sections.approach3L1 }}></li>
-                    <li dangerouslySetInnerHTML={{ __html: t.sections.approach3L2 }}></li>
-                    <li dangerouslySetInnerHTML={{ __html: t.sections.approach3L3 }}></li>
+                    <EditableText as="li" id="app_c3_l1" dangerously={true} defaultText={t.sections.approach3L1} isVisualBuilder={isVisualBuilder} />
+                    <EditableText as="li" id="app_c3_l2" dangerously={true} defaultText={t.sections.approach3L2} isVisualBuilder={isVisualBuilder} />
+                    <EditableText as="li" id="app_c3_l3" dangerously={true} defaultText={t.sections.approach3L3} isVisualBuilder={isVisualBuilder} />
                   </ul>
                 </div>
               </div>
@@ -1002,8 +1002,8 @@ function App() {
             {/* 5. Director / About Section */}
             <section style={{ marginBottom: '80px', position: 'relative' }}>
               <div style={{ textAlign: 'center', marginBottom: '40px', position: 'relative', zIndex: 2 }}>
-                <span className="hero-subtitle" style={{ color: 'var(--color-cyan)', textShadow: '0 0 15px rgba(6, 182, 212, 0.6)' }}>РУКОВОДСТВО КОМПАНИИ</span>
-                <h2 style={{ fontSize: '3.2rem', textShadow: '0 0 40px rgba(255,255,255,0.2)' }}>Слово Основателя</h2>
+                <EditableText id="founder_label" defaultText="РУКОВОДСТВО КОМПАНИИ" isVisualBuilder={isVisualBuilder} className="hero-subtitle" style={{ color: 'var(--color-cyan)', textShadow: '0 0 15px rgba(6, 182, 212, 0.6)' }} />
+                <EditableText as="h2" id="founder_title" defaultText="Слово Основателя" isVisualBuilder={isVisualBuilder} style={{ fontSize: '3.2rem', textShadow: '0 0 40px rgba(255,255,255,0.2)' }} />
               </div>
               <div className="bg-glow-orb-2" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '600px', height: '600px', background: 'radial-gradient(circle, var(--color-cyan) 0%, transparent 70%)', opacity: 0.05 }}></div>
               <div className="glow-card-premium" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '0', alignItems: 'stretch', padding: '0', overflow: 'hidden', position: 'relative', zIndex: 2, background: 'linear-gradient(135deg, rgba(3, 5, 9, 0.95) 0%, rgba(10, 20, 35, 0.85) 100%)', border: '1px solid rgba(6, 182, 212, 0.2)', boxShadow: '0 0 50px rgba(0,0,0,0.8)' }}>
@@ -1016,16 +1016,12 @@ function App() {
                   <div style={{ position: 'absolute', top: '-10px', left: '20px', fontSize: '15rem', color: 'rgba(6, 182, 212, 0.05)', fontFamily: 'Georgia, serif', lineHeight: 1, pointerEvents: 'none', textShadow: '0 0 30px rgba(6, 182, 212, 0.2)' }}>“</div>
                   
                   <div style={{ position: 'relative', zIndex: 2 }}>
-                    <h3 style={{ fontSize: '2.8rem', marginBottom: '5px', color: 'var(--color-text-primary)', letterSpacing: '-0.02em', textShadow: '0 0 20px rgba(255,255,255,0.1)' }}>Шенвизов Рудольф</h3>
-                    <h3 style={{ fontSize: '2.2rem', marginBottom: '25px', color: 'var(--color-text-secondary)', fontWeight: 400 }}>Константинович</h3>
+                    <EditableText as="h3" id="f_name" defaultText="Шенвизов Рудольф" isVisualBuilder={isVisualBuilder} style={{ fontSize: '2.8rem', marginBottom: '5px', color: 'var(--color-text-primary)', letterSpacing: '-0.02em', textShadow: '0 0 20px rgba(255,255,255,0.1)' }} />
+                    <EditableText as="h3" id="f_patr" defaultText="Константинович" isVisualBuilder={isVisualBuilder} style={{ fontSize: '2.2rem', marginBottom: '25px', color: 'var(--color-text-secondary)', fontWeight: 400 }} />
                     
-                    <div style={{ display: 'inline-block', padding: '8px 16px', background: 'rgba(6, 182, 212, 0.1)', border: '1px solid rgba(6, 182, 212, 0.3)', borderRadius: '20px', color: 'var(--color-cyan)', fontSize: '0.85rem', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: '35px', fontWeight: 600, boxShadow: '0 0 15px rgba(6, 182, 212, 0.2)' }}>
-                      Основатель и Главный Геолог
-                    </div>
+                    <EditableText as="div" id="f_role" defaultText="Основатель и Главный Геолог" isVisualBuilder={isVisualBuilder} style={{ display: 'inline-block', padding: '8px 16px', background: 'rgba(6, 182, 212, 0.1)', border: '1px solid rgba(6, 182, 212, 0.3)', borderRadius: '20px', color: 'var(--color-cyan)', fontSize: '0.85rem', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: '35px', fontWeight: 600, boxShadow: '0 0 15px rgba(6, 182, 212, 0.2)' }} />
                     
-                    <p style={{ color: 'var(--color-text-secondary)', fontSize: '1.15rem', lineHeight: 1.8, marginBottom: '40px', fontStyle: 'italic', borderLeft: '3px solid var(--color-cyan)', paddingLeft: '25px', position: 'relative' }}>
-                      Мы строим нашу работу на безупречной точности и строгом соответствии регламентам СП РК и ГОСТ. С 2019 года наша команда опытных буровых инженеров, геодезистов и лаборантов успешно реализует сложнейшие проекты по всему Казахстану, обеспечивая прочный фундамент для каждого объекта.
-                    </p>
+                    <EditableText as="p" id="f_quote" defaultText="Мы строим нашу работу на безупречной точности и строгом соответствии регламентам СП РК и ГОСТ. С 2019 года наша команда опытных буровых инженеров, геодезистов и лаборантов успешно реализует сложнейшие проекты по всему Казахстану, обеспечивая прочный фундамент для каждого объекта." isVisualBuilder={isVisualBuilder} style={{ color: 'var(--color-text-secondary)', fontSize: '1.15rem', lineHeight: 1.8, marginBottom: '40px', fontStyle: 'italic', borderLeft: '3px solid var(--color-cyan)', paddingLeft: '25px', position: 'relative' }} />
                     
                     <div>
                       <button className="btn btn-primary" onClick={() => setActivePage('about')} style={{ padding: '16px 40px', fontSize: '1.1rem', background: 'linear-gradient(45deg, var(--color-cyan), #0284c7)', border: 'none', color: '#fff', boxShadow: '0 10px 25px rgba(6, 182, 212, 0.4)' }}>
@@ -1040,8 +1036,8 @@ function App() {
             {/* 7. Licenses Overview */}
             <section style={{ marginBottom: '50px', position: 'relative' }}>
               <div style={{ textAlign: 'center', marginBottom: '40px' }}>
-                <span className="hero-subtitle" style={{ color: 'var(--color-cyan)', textShadow: '0 0 15px rgba(6, 182, 212, 0.6)' }}>ОФИЦИАЛЬНЫЙ СТАТУС</span>
-                <h2 style={{ fontSize: '3.2rem', textShadow: '0 0 40px rgba(255,255,255,0.2)' }}>{t.sections.licensesTitle}</h2>
+                <EditableText id="lic_label" defaultText="ОФИЦИАЛЬНЫЙ СТАТУС" isVisualBuilder={isVisualBuilder} className="hero-subtitle" style={{ color: 'var(--color-cyan)', textShadow: '0 0 15px rgba(6, 182, 212, 0.6)' }} />
+                <EditableText as="h2" id="lic_title" defaultText={t.sections.licensesTitle} isVisualBuilder={isVisualBuilder} style={{ fontSize: '3.2rem', textShadow: '0 0 40px rgba(255,255,255,0.2)' }} />
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '30px', position: 'relative', zIndex: 2 }}>
                 {DOCUMENTS_DATA.slice(0, 3).map(doc => (
@@ -1076,9 +1072,9 @@ function App() {
               <div className="bg-glow-orb-2" style={{ position: 'absolute', top: '50%', left: '0', transform: 'translate(-50%, -50%)', width: '400px', height: '400px', background: 'radial-gradient(circle, var(--color-cyan) 0%, transparent 70%)', opacity: 0.1 }}></div>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '50px', position: 'relative', zIndex: 2, alignItems: 'center' }}>
                 <div>
-                  <span className="spec-label" style={{ color: 'var(--color-cyan)', fontSize: '1rem' }}>ГОТОВЫ НАЧАТЬ?</span>
-                  <h2 style={{ fontSize: '2.5rem', marginBottom: '20px', lineHeight: 1.2 }}>Оставьте заявку на<br/><span style={{ color: 'var(--color-accent)' }}>расчет стоимости</span></h2>
-                  <p style={{ color: 'var(--color-text-secondary)', fontSize: '1.1rem', lineHeight: 1.6, marginBottom: '30px' }}>Наши инженеры свяжутся с вами в течение 15 минут, изучат исходные данные и предоставят прозрачную смету строго по сборнику цен.</p>
+                  <EditableText id="form_label" defaultText="ГОТОВЫ НАЧАТЬ?" isVisualBuilder={isVisualBuilder} className="spec-label" style={{ color: 'var(--color-cyan)', fontSize: '1rem' }} />
+                  <EditableText as="h2" id="form_title" dangerously={true} defaultText="Оставьте заявку на<br/><span style='color: var(--color-accent)'>расчет стоимости</span>" isVisualBuilder={isVisualBuilder} style={{ fontSize: '2.5rem', marginBottom: '20px', lineHeight: 1.2 }} />
+                  <EditableText as="p" id="form_desc" defaultText="Наши инженеры свяжутся с вами в течение 15 минут, изучат исходные данные и предоставят прозрачную смету строго по сборнику цен." isVisualBuilder={isVisualBuilder} style={{ color: 'var(--color-text-secondary)', fontSize: '1.1rem', lineHeight: 1.6, marginBottom: '30px' }} />
                   
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
