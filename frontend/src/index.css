@@ -1817,9 +1817,17 @@ input[type="range"]::-webkit-slider-thumb:hover {
 
 /* 1. Breathing Neon Buttons */
 .btn-primary {
-  animation: btn-glow-pulse 2.5s infinite;
+  animation: btn-glow-pulse-accent 2.5s infinite;
 }
-@keyframes btn-glow-pulse {
+.btn-cyan {
+  animation: btn-glow-pulse-cyan 2.5s infinite;
+}
+@keyframes btn-glow-pulse-accent {
+  0% { box-shadow: 0 0 10px rgba(245, 158, 11, 0.3); }
+  50% { box-shadow: 0 0 25px rgba(245, 158, 11, 0.7), 0 0 40px rgba(245, 158, 11, 0.3); }
+  100% { box-shadow: 0 0 10px rgba(245, 158, 11, 0.3); }
+}
+@keyframes btn-glow-pulse-cyan {
   0% { box-shadow: 0 0 10px rgba(6, 182, 212, 0.3); }
   50% { box-shadow: 0 0 25px rgba(6, 182, 212, 0.7), 0 0 40px rgba(6, 182, 212, 0.3); }
   100% { box-shadow: 0 0 10px rgba(6, 182, 212, 0.3); }
