@@ -1944,3 +1944,145 @@ input[type="range"]::-webkit-slider-thumb:hover {
   box-shadow: 0 10px 25px rgba(234, 179, 8, 0.4);
 }
 
+/* ==============================================================
+   MOBILE RESPONSIVENESS & ADAPTATION
+   ============================================================== */
+
+/* Base hide for mobile menu button on desktop */
+.mobile-menu-btn {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+}
+
+@media (max-width: 1024px) {
+  .desktop-nav {
+    display: none;
+  }
+  .header-actions {
+    display: none !important;
+  }
+  .mobile-menu-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .status-bar {
+    display: none; /* Hide top bar on mobile for cleaner look */
+  }
+  .nav-container {
+    justify-content: space-between;
+  }
+  
+  /* Mobile Nav Panel Styling */
+  .mobile-nav-panel {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--bg-dark);
+    border-bottom: 1px solid var(--border-color);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+    z-index: 9999;
+    animation: slideDown 0.3s ease forwards;
+  }
+
+  @keyframes slideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .mobile-nav-links {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 20px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .mobile-nav-links button {
+    background: none;
+    border: none;
+    color: var(--color-text-primary);
+    font-size: 1.2rem;
+    font-weight: 600;
+    width: 100%;
+    text-align: left;
+    padding: 10px 0;
+    cursor: pointer;
+    font-family: var(--font-sans);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  
+  .mobile-nav-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Typography Scale Down */
+  h1 { font-size: 2.5rem !important; }
+  h2 { font-size: 2rem !important; }
+  h3 { font-size: 1.5rem !important; }
+  
+  .hero-subtitle { font-size: 0.8rem !important; letter-spacing: 0.1em !important; }
+  
+  /* Container & Paddings */
+  .container { padding-inline: 15px !important; }
+  .glow-card-premium { padding: 25px 20px !important; }
+  
+  /* Grid Adjustments */
+  .hero-grid, .about-grid, .stats-grid {
+    grid-template-columns: 1fr !important;
+  }
+  
+  /* Stats Grid Fix */
+  .stats-grid {
+    gap: 20px !important;
+  }
+  .stats-grid > div {
+    border-right: none !important;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 20px;
+    text-align: center;
+  }
+  .stats-grid > div:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  /* Director Image Fix */
+  .director-info-container, .glow-card-premium {
+    grid-template-columns: 1fr !important;
+  }
+  
+  .portfolio-split-view > div {
+    height: 300px !important; /* Smaller map on mobile */
+  }
+
+  /* Visual Builder Toolbar Mobile */
+  .visual-builder-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    bottom: 10px !important;
+    left: 10px !important;
+    right: 10px !important;
+    transform: none !important;
+    border-radius: 12px;
+  }
+  
+  /* Hide watermark on mobile so it doesn't cause overflow */
+  img[alt="Stamp Watermark"] {
+    display: none !important;
+  }
+}
+

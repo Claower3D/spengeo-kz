@@ -597,7 +597,7 @@ function App() {
                 </ul>
               </nav>
 
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexShrink: 0 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexShrink: 0 }} className="header-actions">
                 <select 
                   value={language} 
                   onChange={(e) => setLanguage(e.target.value)}
@@ -617,7 +617,39 @@ function App() {
                   <Phone size={16} /> +7 775 218 28 06
                 </a>
               </div>
+              
+              <button className="mobile-menu-btn" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+                {isMobileMenuOpen ? <X size={28} color="var(--color-cyan)"/> : <Menu size={28} color="var(--color-cyan)"/>}
+              </button>
             </div>
+            
+            {/* Mobile Navigation Panel */}
+            {isMobileMenuOpen && (
+              <div className="mobile-nav-panel">
+                <ul className="mobile-nav-links">
+                  <li><button type="button" onClick={() => { setActivePage('about'); setIsMobileMenuOpen(false); }}>{t.nav.about}</button></li>
+                  <li><button type="button" onClick={() => { setActivePage('services'); setIsMobileMenuOpen(false); }}>{t.nav.services}</button></li>
+                  <li><button type="button" onClick={() => { setActivePage('projects'); setIsMobileMenuOpen(false); }}>{t.nav.projects}</button></li>
+                  <li><button type="button" onClick={() => { setActivePage('equipment'); setIsMobileMenuOpen(false); }}>{t.nav.equipment}</button></li>
+                  <li><button type="button" onClick={() => { setActivePage('calculator'); setIsMobileMenuOpen(false); }}>{t.nav.calculator}</button></li>
+                  <li><button type="button" onClick={() => { setActivePage('contacts'); setIsMobileMenuOpen(false); }}>{t.nav.contacts}</button></li>
+                  <li><button type="button" onClick={() => { setActivePage('admin'); setIsMobileMenuOpen(false); }} style={{ color: 'var(--color-cyan)' }}><Lock size={16} style={{display:'inline', marginRight:'5px'}} /> {t.nav.login}</button></li>
+                </ul>
+                <div className="mobile-nav-footer">
+                  <select value={language} onChange={(e) => setLanguage(e.target.value)} style={{ background: 'rgba(255,255,255,0.05)', color: 'var(--color-text-primary)', border: '1px solid var(--border-color)', borderRadius: '6px', padding: '10px', outline: 'none', cursor: 'pointer', fontFamily: 'inherit', fontWeight: 'bold' }}>
+                    <option value="ru">RU</option>
+                    <option value="en">EN</option>
+                    <option value="kz">KZ</option>
+                  </select>
+                  <button onClick={toggleTheme} style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border-color)', borderRadius: '6px', padding: '10px', color: 'var(--color-cyan)', cursor: 'pointer' }}>
+                    {theme === 'dark' ? <Sun size={24} /> : <Moon size={24} />}
+                  </button>
+                </div>
+                <a href="tel:+77752182806" style={{ display: 'block', textAlign: 'center', marginTop: '20px', background: 'var(--color-cyan)', color: '#07090e', padding: '15px', borderRadius: '8px', textDecoration: 'none', fontWeight: 'bold' }}>
+                  <Phone size={18} style={{verticalAlign:'middle', marginRight:'8px'}}/> Позвонить сейчас
+                </a>
+              </div>
+            )}
           </header>
         </>
       )}
