@@ -232,60 +232,54 @@ h1, h2, h3, h4 {
 
 /* 1. Crust Layer (Geodesy & Surface) */
 .crust-layer {
-  background-image: url('/images/geodesy_surface_bg.png');
-}
-.crust-layer::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: linear-gradient(to bottom, 
-    rgba(3, 5, 9, 0.95) 0%, 
-    rgba(3, 5, 9, 0.9) 300px, 
-    rgba(3, 5, 9, 0.9) 80%, 
-    #030509 100%
-  );
-  pointer-events: none;
-  z-index: -1;
+  background-image: 
+    linear-gradient(to bottom, 
+      rgba(3, 5, 9, 0.95) 0%, 
+      rgba(3, 5, 9, 0.9) 300px, 
+      rgba(3, 5, 9, 0.9) 80%, 
+      #030509 100%
+    ),
+    url('/images/geodesy_surface_bg.png');
+  background-attachment: scroll, fixed;
+  background-size: 100% 100%, cover;
+  background-position: center, center;
+  background-repeat: no-repeat, no-repeat;
 }
 
 /* 2. Aquifers Layer (Caves & Subterranean Water) */
 .aquifers-layer {
   padding-top: 80px;
   padding-bottom: 80px;
-  background-image: url('/images/geology_bg_2.png');
-}
-.aquifers-layer::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: linear-gradient(to bottom, 
-    #030509 0%, 
-    rgba(3, 5, 9, 0.9) 150px, 
-    rgba(3, 5, 9, 0.9) calc(100% - 150px), 
-    #030509 100%
-  );
-  pointer-events: none;
-  z-index: -1;
+  background-image: 
+    linear-gradient(to bottom, 
+      #030509 0%, 
+      rgba(3, 5, 9, 0.9) 150px, 
+      rgba(3, 5, 9, 0.9) calc(100% - 150px), 
+      #030509 100%
+    ),
+    url('/images/geology_bg_2.png');
+  background-attachment: scroll, fixed;
+  background-size: 100% 100%, cover;
+  background-position: center, center;
+  background-repeat: no-repeat, no-repeat;
 }
 
 /* 3. Mantle Layer (Magma, Deep Cavern, and Contacts) */
 .mantle-layer {
   padding-top: 80px;
   padding-bottom: 80px;
-  background-image: url('/images/geology_bg_3.png');
-}
-.mantle-layer::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: linear-gradient(to bottom, 
-    #030509 0%, 
-    rgba(3, 5, 9, 0.9) 150px, 
-    rgba(3, 5, 9, 0.9) calc(100% - 250px), 
-    #030509 100%
-  );
-  pointer-events: none;
-  z-index: -1;
+  background-image: 
+    linear-gradient(to bottom, 
+      #030509 0%, 
+      rgba(3, 5, 9, 0.9) 150px, 
+      rgba(3, 5, 9, 0.9) calc(100% - 250px), 
+      #030509 100%
+    ),
+    url('/images/geology_bg_3.png');
+  background-attachment: scroll, fixed;
+  background-size: 100% 100%, cover;
+  background-position: center, center;
+  background-repeat: no-repeat, no-repeat;
 }
 
 /* Mobile fallback for fixed backgrounds */
