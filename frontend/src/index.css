@@ -136,13 +136,16 @@
   padding: 0;
 }
 
-body {
-  font-family: var(--font-sans);
+html, body {
+  margin: 0;
+  padding: 0;
   background-color: var(--bg-dark);
   color: var(--color-text-primary);
-  line-height: 1.6;
+  font-family: var(--font-sans);
+  line-height: 1.5;
   overflow-x: hidden;
-  -webkit-font-smoothing: antialiased;
+  scroll-behavior: smooth;
+  width: 100%;
 }
 
 ::-webkit-scrollbar {
@@ -2099,20 +2102,20 @@ input[type="range"]::-webkit-slider-thumb:hover {
   
   /* Floating buttons */
   .fixed-action-btn {
-    width: 45px !important;
-    height: 45px !important;
-    bottom: 20px !important;
+    width: 50px !important;
+    height: 50px !important;
+    bottom: 25px !important;
   }
   .whatsapp-btn {
-    left: 20px !important;
+    left: 25px !important;
   }
   .assistant-btn {
-    right: 20px !important;
+    right: 25px !important;
   }
   .scroll-top-btn {
     left: auto !important;
-    right: 20px !important;
-    bottom: 75px !important;
+    right: 25px !important;
+    bottom: 90px !important;
     transform: translateY(10px) !important;
   }
   .scroll-top-btn.visible {
