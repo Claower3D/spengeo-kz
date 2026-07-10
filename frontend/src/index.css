@@ -148,6 +148,11 @@ html, body {
   width: 100%;
 }
 
+#root {
+  isolation: isolate;
+  min-height: 100vh;
+}
+
 ::-webkit-scrollbar {
   width: 8px;
 }
