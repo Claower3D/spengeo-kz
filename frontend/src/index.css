@@ -189,7 +189,7 @@ h1, h2, h3, h4 {
   color: var(--color-text-primary);
 }
 
-/* Premium Geodesy Theme Background (Stitched Story) */
+/* Premium Geodesy Theme Background (Fullscreen) */
 .blueprint-bg {
   position: absolute;
   top: 0;
@@ -199,30 +199,23 @@ h1, h2, h3, h4 {
   z-index: -2;
   background-color: #030509;
   background-image: 
-    /* Overlay gradient to blend edges and ensure text readability */
+    /* Gradient overlay for readability and fade-to-black at the very bottom */
     linear-gradient(to bottom, 
-      rgba(3, 5, 9, 0.8) 0%, 
-      rgba(3, 5, 9, 0.5) 100vh, 
-      rgba(3, 5, 9, 0.6) calc(100vh + 100vw), 
-      rgba(3, 5, 9, 0.7) calc(100vh + 170vw), 
-      #030509 calc(100vh + 195vw)
+      rgba(3, 5, 9, 0.9) 0%, 
+      rgba(3, 5, 9, 0.6) 100vh, 
+      rgba(3, 5, 9, 0.8) calc(100vh + 180vw), 
+      #030509 calc(100vh + 250vw)
     ),
-    /* Image 2 (Deep underground strata & aquifers) */
-    url('/images/drilling_story_bg_2.png'),
-    /* Image 1 (Surface equipment & shallow tunnels) */
-    url('/images/drilling_story_bg.png');
+    url('/images/geology_fullscreen_bg.png');
   background-size: 
     100% 100%, 
-    100vw auto, 
     100vw auto;
   background-position: 
     top center, 
-    center calc(100vh + 100vw - 2px), /* Overlap slightly to prevent 1px seam gap */
     center 100vh;
   background-repeat: 
     no-repeat, 
-    no-repeat, 
-    no-repeat;
+    repeat-y;
 }
 
 /* Subtle Vignette for Contrast */
