@@ -199,21 +199,40 @@ h1, h2, h3, h4 {
   z-index: -2;
   background-color: #030509;
   background-image: 
-    /* Gradient overlay for readability and fade-to-black at the very bottom */
+    /* 1. Main readability gradient & fade to black at bottom */
     linear-gradient(to bottom, 
-      rgba(3, 5, 9, 0.9) 0%, 
-      rgba(3, 5, 9, 0.6) 100vh, 
+      rgba(3, 5, 9, 0.95) 0%, 
+      rgba(3, 5, 9, 0.5) 100vh, 
       rgba(3, 5, 9, 0.8) calc(100vh + 180vw), 
       #030509 calc(100vh + 250vw)
     ),
+    /* 2. Soft shadow "fog" to seamlessly hide the FIRST seam (at 100vw) */
+    linear-gradient(to bottom, 
+      transparent calc(100vh + 80vw), 
+      #030509 calc(100vh + 100vw), 
+      transparent calc(100vh + 120vw)
+    ),
+    /* 3. Soft shadow "fog" to seamlessly hide the SECOND seam (at 200vw) */
+    linear-gradient(to bottom, 
+      transparent calc(100vh + 180vw), 
+      #030509 calc(100vh + 200vw), 
+      transparent calc(100vh + 220vw)
+    ),
+    /* 4. The repeating background image */
     url('/images/geology_fullscreen_bg.png');
   background-size: 
+    100% 100%, 
+    100% 100%, 
     100% 100%, 
     100vw auto;
   background-position: 
     top center, 
+    top center, 
+    top center, 
     center 100vh;
   background-repeat: 
+    no-repeat, 
+    no-repeat, 
     no-repeat, 
     repeat-y;
 }
