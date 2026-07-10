@@ -2113,13 +2113,13 @@ input[type="range"]::-webkit-slider-thumb:hover {
     right: 25px !important;
   }
   .scroll-top-btn {
-    left: auto !important;
-    right: 25px !important;
-    bottom: 90px !important;
-    transform: translateY(10px) !important;
+    left: 50% !important;
+    right: auto !important;
+    bottom: 25px !important;
+    transform: translateX(-50%) translateY(10px) !important;
   }
   .scroll-top-btn.visible {
-    transform: translateY(0) !important;
+    transform: translateX(-50%) translateY(0) !important;
   }
 }
 
