@@ -14,7 +14,37 @@ export const translations = {
       title: 'Инженерные изыскания на прочном основании',
       desc: 'Проводим полный комплекс полевых геологических, геодезических изысканий, статического зондирования CPT и лабораторных тестов по всей территории Республики Казахстан.',
       btnCalc: 'Калькулятор сметы и КП',
-      btnServices: 'Наши услуги'
+      btnServices: 'Наши услуги',
+      slides: [
+        {
+          subtitle: 'ТОО «СпецИнжГео» // ЛАБОРАТОРИЯ & БУРЕНИЕ',
+          title: 'Инженерно-геологические изыскания',
+          desc: 'Собственный буровой флот Bauer и аккредитованная грунтовая лаборатория. Исследуем грунты на глубину до 80 метров для любых типов сооружений.',
+          badge: 'ГЕОЛОГИЯ',
+          techText: 'DRILL_SYS_OK // BAUER_BG'
+        },
+        {
+          subtitle: 'ТОО «СпецИнжГео» // ТАХЕОМЕТРЫ & GNSS',
+          title: 'Высокоточная геодезия и топография',
+          desc: 'Создание геоподосновы, топографическая съемка масштаба 1:500, фасадная съемка и 3D-моделирование рельефа с миллиметровой точностью.',
+          badge: 'ГЕОДЕЗИЯ',
+          techText: 'GNSS_RTK_ACTIVE // GPS_OK'
+        },
+        {
+          subtitle: 'ТОО «СпецИнжГео» // СТАТИЧЕСКОЕ ЗОНДИРОВАНИЕ CPT',
+          title: 'Испытания грунтов методом CPT',
+          desc: 'Получение непрерывных профилей прочности грунта в реальном времени. Самый надежный метод определения несущей способности свай.',
+          badge: 'CPT_TESTING',
+          techText: 'CPT_SENSOR_ON // 200_KN'
+        },
+        {
+          subtitle: 'ТОО «СпецИнжГео» // РГП ГОСЭКСПЕРТИЗА',
+          title: 'Гарантия прохождения Госэкспертизы',
+          desc: 'Полное техническое сопровождение проектов. Сопровождаем технические отчеты до получения положительного заключения экспертов.',
+          badge: 'ЭКСПЕРТИЗА',
+          techText: 'EXPERT_SYS_CONNECTED // 200_OK'
+        }
+      ]
     },
     stats: {
       title: 'Результаты в Цифрах',
@@ -78,7 +108,37 @@ export const translations = {
       title: 'Engineering Surveys on a Solid Foundation',
       desc: 'We conduct a full range of field geological, geodetic surveys, CPT static sounding, and laboratory tests throughout the Republic of Kazakhstan.',
       btnCalc: 'Estimate Calculator & Proposal',
-      btnServices: 'Our Services'
+      btnServices: 'Our Services',
+      slides: [
+        {
+          subtitle: 'SpenGeo LLP // LABORATORY & DRILLING',
+          title: 'Engineering Geological Surveys',
+          desc: 'Own Bauer drilling fleet and accredited soil laboratory. We investigate soils up to 80 meters deep for all types of structures.',
+          badge: 'GEOLOGY',
+          techText: 'DRILL_SYS_OK // BAUER_BG'
+        },
+        {
+          subtitle: 'SpenGeo LLP // TACHEOMETERS & GNSS',
+          title: 'High-Precision Geodesy & Topography',
+          desc: 'Creation of geobasis, 1:500 scale topographic survey, facade survey, and 3D terrain modeling with millimeter accuracy.',
+          badge: 'GEODESY',
+          techText: 'GNSS_RTK_ACTIVE // GPS_OK'
+        },
+        {
+          subtitle: 'SpenGeo LLP // CPT STATIC PENETRATION',
+          title: 'Soil Testing by CPT Method',
+          desc: 'Obtaining continuous soil strength profiles in real-time. The most reliable method for determining pile bearing capacity.',
+          badge: 'CPT_TESTING',
+          techText: 'CPT_SENSOR_ON // 200_KN'
+        },
+        {
+          subtitle: 'SpenGeo LLP // STATE EXPERTISE',
+          title: 'State Expertise Guarantee',
+          desc: 'Full technical support for projects. We support technical reports until obtaining a positive expert conclusion.',
+          badge: 'EXPERTISE',
+          techText: 'EXPERT_SYS_CONNECTED // 200_OK'
+        }
+      ]
     },
     stats: {
       title: 'Results in Numbers',
@@ -142,7 +202,37 @@ export const translations = {
       title: 'Берік іргетастағы инженерлік ізденістер',
       desc: 'Біз Қазақстан Республикасының барлық аумағында далалық геологиялық, геодезиялық ізденістердің, CPT статикалық зондтаудың және зертханалық сынақтардың толық кешенін жүргіземіз.',
       btnCalc: 'Смета және Ұсыныс калькуляторы',
-      btnServices: 'Біздің қызметтер'
+      btnServices: 'Біздің қызметтер',
+      slides: [
+        {
+          subtitle: '«СпецИнжГео» ЖШС // ЗЕРТХАНА & БҰРҒЫЛАУ',
+          title: 'Инженерлік-геологиялық ізденістер',
+          desc: 'Жеке Bauer бұрғылау паркі мен аккредиттелген топырақ зертханасы. Кез келген нысандар үшін топырақты 80 метр тереңдікке дейін зерттейміз.',
+          badge: 'ГЕОЛОГИЯ',
+          techText: 'DRILL_SYS_OK // BAUER_BG'
+        },
+        {
+          subtitle: '«СпецИнжГео» ЖШС // ТАХЕОМЕТРЛЕР & GNSS',
+          title: 'Жоғары дәлдіктегі геодезия және топография',
+          desc: 'Геодезиялық негіз құру, 1:500 масштабтағы топографиялық түсірілім және миллиметрлік дәлдікпен рельефті 3D модельдеу.',
+          badge: 'ГЕОДЕЗИЯ',
+          techText: 'GNSS_RTK_ACTIVE // GPS_OK'
+        },
+        {
+          subtitle: '«СпецИнжГео» ЖШС // CPT СТАТИКАЛЫҚ ЗОНДТАУ',
+          title: 'Топырақты CPT әдісімен сынау',
+          desc: 'Нақты уақыт режимінде топырақ беріктігінің үздіксіз профильдерін алу. Қадалардың көтеру қабілетін анықтаудың ең сенімді әдісі.',
+          badge: 'CPT_TESTING',
+          techText: 'CPT_SENSOR_ON // 200_KN'
+        },
+        {
+          subtitle: '«СпецИнжГео» ЖШС // МЕМЛЕКЕТТІК САРАПТАМА',
+          title: 'Мемсараптамадан өту кепілдігі',
+          desc: 'Жобаларды толық техникалық сүйемелдеу. Техникалық есептерді сарапшылардың оң қорытындысын алғанға дейін сүйемелдейміз.',
+          badge: 'САРАПТАМА',
+          techText: 'EXPERT_SYS_CONNECTED // 200_OK'
+        }
+      ]
     },
     stats: {
       title: 'Сандардағы Нәтижелер',

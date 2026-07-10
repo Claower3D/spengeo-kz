@@ -2254,3 +2254,110 @@ input[type="range"]::-webkit-slider-thumb:hover {
   gap: 15px;
 }
 
+/* Futuristic Hero Slider CSS */
+@keyframes hero-fade-in-up {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+    filter: blur(5px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+.hero-slide-animation {
+  animation: hero-fade-in-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.hero-slide-indicators {
+  display: flex;
+  gap: 20px;
+  margin-top: 40px;
+  z-index: 10;
+  position: relative;
+  max-width: 750px;
+}
+
+.hero-indicator-btn {
+  flex: 1;
+  background: transparent;
+  border: none;
+  padding: 8px 0;
+  cursor: pointer;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  opacity: 0.4;
+  transition: opacity 0.3s ease;
+}
+
+.hero-indicator-btn:hover, .hero-indicator-btn.active {
+  opacity: 1;
+}
+
+.hero-indicator-number {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  transition: color 0.3s ease;
+}
+
+.hero-indicator-label {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 0.78rem;
+  color: #fff;
+  letter-spacing: 0.05em;
+}
+
+.hero-indicator-bar-bg {
+  width: 100%;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  overflow: hidden;
+  position: relative;
+  margin-top: 6px;
+}
+
+.hero-indicator-bar-fill {
+  display: block;
+  height: 100%;
+}
+
+.hero-nav-arrows {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.hero-nav-arrow-btn {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hero-nav-arrow-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: scale(1.05);
+}
+
+@media (max-width: 991px) {
+  .hero-slide-indicators {
+    display: none; /* Hide indicators on tablet/mobile to keep space clean */
+  }
+}
+

@@ -271,6 +271,8 @@ function EditableText({ id, defaultText, isVisualBuilder, dangerously = false, a
   );
 }
 
+const HERO_ICONS = [Layers, Compass, Cpu, ShieldCheck];
+
 function App() {
   const [activePage, setActivePage] = useState(() => {
     const path = window.location.pathname.replace(/^\//, '');
@@ -289,6 +291,18 @@ function App() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [certModal, setCertModal] = useState(null);
 
+  // Hero Carousel State
+  const [currentHeroSlide, setCurrentHeroSlide] = useState(0);
+  const [isHeroHovered, setIsHeroHovered] = useState(false);
+
+  useEffect(() => {
+    if (activePage !== 'home' || isVisualBuilder || isHeroHovered) return;
+    const timer = setInterval(() => {
+      setCurrentHeroSlide((prev) => (prev + 1) % 4);
+    }, 7000);
+    return () => clearInterval(timer);
+  }, [activePage, isVisualBuilder, isHeroHovered]);
+
   // Visual Builder States
   const [isVisualBuilder, setIsVisualBuilder] = useState(false);
   const [vbHeroTitle, setVbHeroTitle] = useState(localStorage.getItem('vb_heroTitle') || '');
@@ -299,6 +313,17 @@ function App() {
     if (vbHeroDesc) localStorage.setItem('vb_heroDesc', vbHeroDesc);
   }, [vbHeroTitle, vbHeroDesc]);
   
+  const activeSlide = t.hero.slides && t.hero.slides[currentHeroSlide] ? t.hero.slides[currentHeroSlide] : {
+    subtitle: t.hero.subtitle,
+    title: vbHeroTitle || t.hero.title,
+    desc: vbHeroDesc || t.hero.desc,
+    badge: 'ИЗЫСКАНИЯ',
+    techText: 'SYS_CONNECTED\nAPI_OK // 8083'
+  };
+  const ActiveIcon = HERO_ICONS[currentHeroSlide] || Cpu;
+  const activeIconColor = currentHeroSlide % 2 === 0 ? 'var(--color-accent)' : 'var(--color-cyan)';
+  const activeTextColor = currentHeroSlide % 2 === 0 ? 'var(--color-cyan)' : 'var(--color-accent)';
+
   // Map Sync states
   const [activeProjectCoords, setActiveProjectCoords] = useState(null);
   const [activeMapZoom, setActiveMapZoom] = useState(5);
@@ -661,7 +686,11 @@ function App() {
         {activePage === 'home' && (
           <div className="page-wrapper">
             <div className="geological-layer crust-layer">
-              <section className="hero-section full-width-bleed">
+              <section 
+                className="hero-section full-width-bleed"
+                onMouseEnter={() => setIsHeroHovered(true)}
+                onMouseLeave={() => setIsHeroHovered(false)}
+              >
               <video 
                 className="hero-video-bg" 
                 autoPlay 
@@ -681,48 +710,132 @@ function App() {
               <div className="hero-overlay"></div>
               <div className="hero-content-container">
                 <div className="hero-content" style={{ display: 'grid', gridTemplateColumns: '1.2fr 0.8fr', gap: '50px', alignItems: 'center', minHeight: '55vh' }}>
-                  <div>
-                  <span className="hero-subtitle">{t.hero.subtitle}</span>
-                  <h1 
-                    style={{ fontSize: 'clamp(2.4rem, 5.5vw, 4rem)', color: '#fff', textShadow: '0 4px 20px rgba(0,0,0,0.8)', outline: isVisualBuilder ? '2px dashed var(--color-accent)' : 'none', padding: isVisualBuilder ? '5px' : 0, borderRadius: '8px', cursor: isVisualBuilder ? 'text' : 'default', transition: 'outline 0.3s ease' }}
-                    contentEditable={isVisualBuilder}
-                    suppressContentEditableWarning={true}
-                    onBlur={(e) => setVbHeroTitle(e.currentTarget.textContent)}
-                  >
-                    {vbHeroTitle || t.hero.title}
-                  </h1>
-                  <p 
-                    style={{ color: '#f8fafc', fontSize: '1.1rem', marginBottom: '30px', maxWidth: '620px', textShadow: '0 2px 10px rgba(0,0,0,0.8)', outline: isVisualBuilder ? '2px dashed var(--color-accent)' : 'none', padding: isVisualBuilder ? '5px' : 0, borderRadius: '8px', cursor: isVisualBuilder ? 'text' : 'default', transition: 'outline 0.3s ease' }}
-                    contentEditable={isVisualBuilder}
-                    suppressContentEditableWarning={true}
-                    onBlur={(e) => setVbHeroDesc(e.currentTarget.textContent)}
-                  >
-                    {vbHeroDesc || t.hero.desc}
-                  </p>
-                  <div className="hero-buttons">
-                    <button className="btn btn-primary" onClick={() => setActivePage('calculator')}>
-                      {t.hero.btnCalc} <ArrowUpRight size={18} />
-                    </button>
-                    <button className="btn btn-secondary" onClick={() => setActivePage('services')} style={{ background: 'rgba(255,255,255,0.05)', borderColor: 'rgba(255,255,255,0.2)' }}>
-                      {t.hero.btnServices}
-                    </button>
+                  
+                  {/* Left Side: Animated Slide Contents */}
+                  <div key={currentHeroSlide} className="hero-slide-animation">
+                    <span className="hero-subtitle">{activeSlide.subtitle}</span>
+                    <h1 
+                      style={{ 
+                        fontSize: 'clamp(2.2rem, 5vw, 3.8rem)', 
+                        color: '#fff', 
+                        textShadow: '0 4px 20px rgba(0,0,0,0.8)', 
+                        outline: isVisualBuilder ? '2px dashed var(--color-accent)' : 'none', 
+                        padding: isVisualBuilder ? '5px' : 0, 
+                        borderRadius: '8px', 
+                        cursor: isVisualBuilder ? 'text' : 'default', 
+                        transition: 'outline 0.3s ease' 
+                      }}
+                      contentEditable={isVisualBuilder}
+                      suppressContentEditableWarning={true}
+                      onBlur={(e) => {
+                        if (t.hero.slides && t.hero.slides[currentHeroSlide]) {
+                          t.hero.slides[currentHeroSlide].title = e.currentTarget.textContent;
+                        }
+                      }}
+                    >
+                      {activeSlide.title}
+                    </h1>
+                    <p 
+                      style={{ 
+                        color: '#f8fafc', 
+                        fontSize: '1.05rem', 
+                        marginBottom: '30px', 
+                        maxWidth: '620px', 
+                        textShadow: '0 2px 10px rgba(0,0,0,0.8)', 
+                        outline: isVisualBuilder ? '2px dashed var(--color-accent)' : 'none', 
+                        padding: isVisualBuilder ? '5px' : 0, 
+                        borderRadius: '8px', 
+                        cursor: isVisualBuilder ? 'text' : 'default', 
+                        transition: 'outline 0.3s ease' 
+                      }}
+                      contentEditable={isVisualBuilder}
+                      suppressContentEditableWarning={true}
+                      onBlur={(e) => {
+                        if (t.hero.slides && t.hero.slides[currentHeroSlide]) {
+                          t.hero.slides[currentHeroSlide].desc = e.currentTarget.textContent;
+                        }
+                      }}
+                    >
+                      {activeSlide.desc}
+                    </p>
+                    
+                    <div style={{ display: 'flex', gap: '20px', alignItems: 'center', flexWrap: 'wrap' }}>
+                      <div className="hero-buttons">
+                        <button className="btn btn-primary" onClick={() => setActivePage('calculator')}>
+                          {t.hero.btnCalc} <ArrowUpRight size={18} />
+                        </button>
+                        <button className="btn btn-secondary" onClick={() => setActivePage('services')} style={{ background: 'rgba(255,255,255,0.05)', borderColor: 'rgba(255,255,255,0.2)' }}>
+                          {t.hero.btnServices}
+                        </button>
+                      </div>
+                      
+                      {/* Arrow Navigation */}
+                      <div className="hero-nav-arrows">
+                        <button 
+                          className="hero-nav-arrow-btn" 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setCurrentHeroSlide(prev => (prev - 1 + 4) % 4);
+                          }}
+                          aria-label="Previous Slide"
+                        >
+                          <ChevronRight size={18} style={{ transform: 'rotate(180deg)' }} />
+                        </button>
+                        <button 
+                          className="hero-nav-arrow-btn" 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setCurrentHeroSlide(prev => (prev + 1) % 4);
+                          }}
+                          aria-label="Next Slide"
+                        >
+                          <ChevronRight size={18} />
+                        </button>
+                      </div>
+                    </div>
                   </div>
-                </div>
 
-                <div className="tech-graphic-container">
-                  <div className="tech-ring" style={{ width: '360px', height: '360px' }}>
-                    <div className="tech-ring-inner" style={{ width: '270px', height: '270px' }}></div>
-                  </div>
-                  <div className="tech-drill-icon" style={{ width: '160px', height: '160px', background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(10px)' }}>
-                    <div style={{ textAlign: 'center' }}>
-                      <Cpu size={50} color="var(--color-accent)" style={{ marginBottom: '8px' }} />
-                      <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.72rem', color: '#06b6d4', letterSpacing: '0.12em' }}>
-                        SYS_CONNECTED<br />API_OK // 8083
+                  {/* Right Side: Interactive HUD graphic linked to slide */}
+                  <div className="tech-graphic-container" key={`graphic-${currentHeroSlide}`}>
+                    <div className="tech-ring" style={{ width: '360px', height: '360px', borderColor: activeIconColor + '22' }}>
+                      <div className="tech-ring-inner" style={{ width: '270px', height: '270px', borderColor: activeTextColor + '22' }}></div>
+                    </div>
+                    <div className="tech-drill-icon" style={{ width: '160px', height: '160px', background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(10px)', borderColor: activeIconColor + '33' }}>
+                      <div style={{ textAlign: 'center' }}>
+                        <ActiveIcon size={50} color={activeIconColor} style={{ marginBottom: '8px', filter: `drop-shadow(0 0 10px ${activeIconColor})` }} />
+                        <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.68rem', color: activeTextColor, letterSpacing: '0.12em', whiteSpace: 'pre-line', lineHeight: '1.4' }}>
+                          {activeSlide.techText}
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
+
+                {/* Progress Indicators */}
+                {t.hero.slides && (
+                  <div className="hero-slide-indicators">
+                    {t.hero.slides.map((slide, idx) => (
+                      <button
+                        key={idx}
+                        className={`hero-indicator-btn ${currentHeroSlide === idx ? 'active' : ''}`}
+                        onClick={() => setCurrentHeroSlide(idx)}
+                      >
+                        <span className="hero-indicator-number" style={{ color: currentHeroSlide === idx ? activeIconColor : 'var(--color-text-secondary)' }}>0{idx + 1}</span>
+                        <span className="hero-indicator-label">{slide.badge}</span>
+                        <span className="hero-indicator-bar-bg">
+                          <span 
+                            className="hero-indicator-bar-fill"
+                            style={{
+                              width: currentHeroSlide === idx ? '100%' : '0%',
+                              background: `linear-gradient(to right, ${activeIconColor}, ${activeTextColor})`,
+                              transition: currentHeroSlide === idx && !isHeroHovered && !isVisualBuilder ? 'width 7s linear' : 'none'
+                            }}
+                          ></span>
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
             </section>
 
