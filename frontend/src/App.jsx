@@ -661,7 +661,20 @@ function App() {
         {activePage === 'home' && (
           <div className="page-wrapper">
             <section className="hero-section full-width-bleed">
-              <video className="hero-video-bg" autoPlay loop muted playsInline poster="/images/hero.png">
+              <video 
+                className="hero-video-bg" 
+                autoPlay 
+                muted 
+                playsInline 
+                poster="/images/hero.png"
+                onEnded={(e) => {
+                  e.target.currentTime = 5.5;
+                  e.target.play();
+                }}
+                onLoadedMetadata={(e) => {
+                  e.target.currentTime = 5.5;
+                }}
+              >
                 <source src="/videos/hero.mp4" type="video/mp4" />
               </video>
               <div className="hero-overlay"></div>
