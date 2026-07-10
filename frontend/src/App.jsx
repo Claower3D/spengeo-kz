@@ -291,6 +291,16 @@ function App() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [certModal, setCertModal] = useState(null);
 
+  // Visual Builder States
+  const [isVisualBuilder, setIsVisualBuilder] = useState(false);
+  const [vbHeroTitle, setVbHeroTitle] = useState(localStorage.getItem('vb_heroTitle') || '');
+  const [vbHeroDesc, setVbHeroDesc] = useState(localStorage.getItem('vb_heroDesc') || '');
+
+  useEffect(() => {
+    if (vbHeroTitle) localStorage.setItem('vb_heroTitle', vbHeroTitle);
+    if (vbHeroDesc) localStorage.setItem('vb_heroDesc', vbHeroDesc);
+  }, [vbHeroTitle, vbHeroDesc]);
+
   // Hero Carousel State
   const [currentHeroSlide, setCurrentHeroSlide] = useState(0);
   const [isHeroHovered, setIsHeroHovered] = useState(false);
@@ -302,16 +312,6 @@ function App() {
     }, 7000);
     return () => clearInterval(timer);
   }, [activePage, isVisualBuilder, isHeroHovered]);
-
-  // Visual Builder States
-  const [isVisualBuilder, setIsVisualBuilder] = useState(false);
-  const [vbHeroTitle, setVbHeroTitle] = useState(localStorage.getItem('vb_heroTitle') || '');
-  const [vbHeroDesc, setVbHeroDesc] = useState(localStorage.getItem('vb_heroDesc') || '');
-
-  useEffect(() => {
-    if (vbHeroTitle) localStorage.setItem('vb_heroTitle', vbHeroTitle);
-    if (vbHeroDesc) localStorage.setItem('vb_heroDesc', vbHeroDesc);
-  }, [vbHeroTitle, vbHeroDesc]);
   
   const activeSlide = t.hero.slides && t.hero.slides[currentHeroSlide] ? t.hero.slides[currentHeroSlide] : {
     subtitle: t.hero.subtitle,
