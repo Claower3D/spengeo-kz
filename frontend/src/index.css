@@ -189,7 +189,7 @@ h1, h2, h3, h4 {
   color: var(--color-text-primary);
 }
 
-/* Premium Geodesy Theme Background (Fullscreen) */
+/* Premium Geodesy Theme Background (Fullscreen Grid) */
 .blueprint-bg {
   position: absolute;
   top: 0;
@@ -199,43 +199,87 @@ h1, h2, h3, h4 {
   z-index: -2;
   background-color: #030509;
   background-image: 
-    /* 1. Main readability gradient & fade to black at bottom */
+    linear-gradient(to bottom, rgba(3, 5, 9, 0.92) 0%, rgba(3, 5, 9, 0.88) 100%),
+    linear-gradient(rgba(6, 182, 212, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(6, 182, 212, 0.03) 1px, transparent 1px);
+  background-size: 100% 100%, 40px 40px, 40px 40px;
+  background-position: top center, center center, center center;
+}
+
+/* Geological Static Parallax Story Backgrounds */
+.geological-layer {
+  position: relative;
+  width: 100vw;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  overflow: visible;
+}
+
+.geological-layer-content {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 24px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* 1. Crust Layer (Geodesy & Surface) */
+.crust-layer {
+  background-image: 
     linear-gradient(to bottom, 
       rgba(3, 5, 9, 0.95) 0%, 
-      rgba(3, 5, 9, 0.5) 100vh, 
-      rgba(3, 5, 9, 0.8) calc(100vh + 180vw), 
-      #030509 calc(100vh + 250vw)
+      rgba(3, 5, 9, 0.9) 300px, 
+      rgba(3, 5, 9, 0.9) 80%, 
+      #030509 100%
     ),
-    /* 2. Soft shadow "fog" to seamlessly hide the FIRST seam (at 100vw) */
-    linear-gradient(to bottom, 
-      transparent calc(100vh + 80vw), 
-      #030509 calc(100vh + 100vw), 
-      transparent calc(100vh + 120vw)
-    ),
-    /* 3. Soft shadow "fog" to seamlessly hide the SECOND seam (at 200vw) */
-    linear-gradient(to bottom, 
-      transparent calc(100vh + 180vw), 
-      #030509 calc(100vh + 200vw), 
-      transparent calc(100vh + 220vw)
-    ),
-    /* 4. The repeating background image */
-    url('/images/geology_fullscreen_bg.png');
-  background-size: 
-    100% 100%, 
-    100% 100%, 
-    100% 100%, 
-    100vw auto;
-  background-position: 
-    top center, 
-    top center, 
-    top center, 
-    center 100vh;
-  background-repeat: 
-    no-repeat, 
-    no-repeat, 
-    no-repeat, 
-    repeat-y;
+    url('/images/geodesy_surface_bg.png');
 }
+
+/* 2. Aquifers Layer (Caves & Subterranean Water) */
+.aquifers-layer {
+  padding-top: 80px;
+  padding-bottom: 80px;
+  background-image: 
+    linear-gradient(to bottom, 
+      #030509 0%, 
+      rgba(3, 5, 9, 0.9) 150px, 
+      rgba(3, 5, 9, 0.9) calc(100% - 150px), 
+      #030509 100%
+    ),
+    url('/images/geology_bg_2.png');
+  border-top: 1px solid rgba(6, 182, 212, 0.1);
+  border-bottom: 1px solid rgba(6, 182, 212, 0.1);
+}
+
+/* 3. Mantle Layer (Magma, Deep Cavern, and Contacts) */
+.mantle-layer {
+  padding-top: 80px;
+  padding-bottom: 80px;
+  background-image: 
+    linear-gradient(to bottom, 
+      #030509 0%, 
+      rgba(3, 5, 9, 0.9) 150px, 
+      rgba(3, 5, 9, 0.9) calc(100% - 250px), 
+      #030509 100%
+    ),
+    url('/images/geology_bg_3.png');
+  border-top: 1px solid rgba(245, 158, 11, 0.1);
+}
+
+/* Mobile fallback for fixed backgrounds */
+@media (max-width: 768px) {
+  .geological-layer {
+    background-attachment: scroll !important;
+  }
+}
+
+
 
 /* Subtle Vignette for Contrast */
 .blueprint-bg::after {
