@@ -1119,7 +1119,9 @@ function App() {
 <div className="service-bento-grid">
   {/* 1. Geology - Wide */}
   <div className="service-bento-card wide" onClick={() => {setActiveServiceTab('geology'); setActivePage('services');}}>
-    <div className="service-bento-bg" style={{ backgroundImage: "url('/images/services/geology.jpg')" }}></div><div className="service-bento-overlay"></div>
+    <div className="service-bento-bg">
+      <img src="/images/services/geology.jpg" onError={(e) => { e.target.src='/images/hero.png'; e.target.style.filter='brightness(0.7)'; }} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center right' }} alt="Service" />
+    </div><div className="service-bento-overlay"></div>
     <div className="service-bento-content">
       <h3 className="service-bento-title">Инженерно-геологические изыскания</h3>
       <ul className="service-bento-list">
@@ -1141,7 +1143,9 @@ function App() {
 
   {/* 2. Geodesy - Normal */}
   <div className="service-bento-card" onClick={() => {setActiveServiceTab('geodesy'); setActivePage('services');}}>
-    <div className="service-bento-bg" style={{ backgroundImage: "url('/images/services/geodesy.jpg')" }}></div><div className="service-bento-overlay"></div>
+    <div className="service-bento-bg">
+      <img src="/images/services/geodesy.jpg" onError={(e) => { e.target.src='/images/hero.png'; e.target.style.filter='brightness(0.7)'; }} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center right' }} alt="Service" />
+    </div><div className="service-bento-overlay"></div>
     <div className="service-bento-content">
       <h3 className="service-bento-title">Геодезия и топосъемка</h3>
       <ul className="service-bento-list">
@@ -1162,7 +1166,9 @@ function App() {
 
   {/* 3. CPT - Normal */}
   <div className="service-bento-card" onClick={() => {setActiveServiceTab('cpt'); setActivePage('services');}}>
-    <div className="service-bento-bg" style={{ backgroundImage: "url('/images/services/cpt.jpg')" }}></div><div className="service-bento-overlay"></div>
+    <div className="service-bento-bg">
+      <img src="/images/services/cpt.jpg" onError={(e) => { e.target.src='/images/hero.png'; e.target.style.filter='brightness(0.7)'; }} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center right' }} alt="Service" />
+    </div><div className="service-bento-overlay"></div>
     <div className="service-bento-content">
       <h3 className="service-bento-title">CPT Зондирование</h3>
       <ul className="service-bento-list">
@@ -1183,7 +1189,9 @@ function App() {
 
   {/* 4. Piles - Normal */}
   <div className="service-bento-card" onClick={() => {setActiveServiceTab('piles'); setActivePage('services');}}>
-    <div className="service-bento-bg" style={{ backgroundImage: "url('/images/services/piles.jpg')" }}></div><div className="service-bento-overlay"></div>
+    <div className="service-bento-bg">
+      <img src="/images/services/piles.jpg" onError={(e) => { e.target.src='/images/hero.png'; e.target.style.filter='brightness(0.7)'; }} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center right' }} alt="Service" />
+    </div><div className="service-bento-overlay"></div>
     <div className="service-bento-content">
       <h3 className="service-bento-title">Испытания свай</h3>
       <ul className="service-bento-list">
@@ -1204,7 +1212,9 @@ function App() {
 
   {/* 5. Plates - Normal */}
   <div className="service-bento-card" onClick={() => {setActiveServiceTab('plates'); setActivePage('services');}}>
-    <div className="service-bento-bg" style={{ backgroundImage: "url('/images/services/plates.jpg')" }}></div><div className="service-bento-overlay"></div>
+    <div className="service-bento-bg">
+      <img src="/images/services/plates.jpg" onError={(e) => { e.target.src='/images/hero.png'; e.target.style.filter='brightness(0.7)'; }} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center right' }} alt="Service" />
+    </div><div className="service-bento-overlay"></div>
     <div className="service-bento-content">
       <h3 className="service-bento-title">Штамповые испытания</h3>
       <ul className="service-bento-list">
@@ -1225,7 +1235,9 @@ function App() {
 
   {/* 6. Laboratory - Full Width */}
   <div className="service-bento-card full" onClick={() => {setActiveServiceTab('laboratory'); setActivePage('services');}}>
-    <div className="service-bento-bg" style={{ backgroundImage: "url('/images/services/laboratory.jpg')" }}></div><div className="service-bento-overlay"></div>
+    <div className="service-bento-bg">
+      <img src="/images/services/laboratory.jpg" onError={(e) => { e.target.src='/images/hero.png'; e.target.style.filter='brightness(0.7)'; }} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center right' }} alt="Service" />
+    </div><div className="service-bento-overlay"></div>
     <div className="service-bento-content">
       <h3 className="service-bento-title">Лаборатория грунтов</h3>
       <ul className="service-bento-list">
