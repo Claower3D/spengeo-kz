@@ -296,7 +296,7 @@ h1, h2, h3, h4 {
       rgba(3, 5, 9, 0.9) 80%, 
       #030509 100%
     ),
-    url('/images/geodesy_surface_bg.png');
+    url('/images/geodesy_surface_bg.png') !important;
   background-attachment: scroll, fixed;
   background-size: 100% 100%, cover;
   background-position: center, center;
@@ -314,7 +314,7 @@ h1, h2, h3, h4 {
       rgba(3, 5, 9, 0.8) calc(100% - 150px), 
       #030509 100%
     ),
-    url('/images/geology_bg_2.png');
+    url('/images/geology_bg_2.png') !important;
   background-attachment: scroll, fixed;
   background-size: 100% 100%, cover;
   background-position: center, center;
@@ -332,7 +332,7 @@ h1, h2, h3, h4 {
       rgba(3, 5, 9, 0.9) calc(100% - 250px), 
       #030509 100%
     ),
-    url('/images/geology_bg_3.png');
+    url('/images/geology_bg_3.png') !important;
   background-attachment: scroll, fixed;
   background-size: 100% 100%, cover;
   background-position: center, center;
@@ -2941,7 +2941,7 @@ input[type="range"]::-webkit-slider-thumb:hover {
       rgba(248, 250, 252, 0.92) 80%, 
       var(--bg-dark) 100%
     ),
-    url('/images/geodesy_surface_bg.png');
+    url('/images/geodesy_surface_bg.png') !important;
 }
 
 :is([data-theme="white"], [data-theme="light-gray"]) .aquifers-layer {
@@ -2952,7 +2952,7 @@ input[type="range"]::-webkit-slider-thumb:hover {
       rgba(248, 250, 252, 0.95) calc(100% - 150px), 
       var(--bg-dark) 100%
     ),
-    url('/images/geology_bg_2.png');
+    url('/images/geology_bg_2.png') !important;
 }
 
 :is([data-theme="white"], [data-theme="light-gray"]) .mantle-layer {
@@ -2963,7 +2963,7 @@ input[type="range"]::-webkit-slider-thumb:hover {
       rgba(248, 250, 252, 0.96) calc(100% - 250px), 
       var(--bg-dark) 100%
     ),
-    url('/images/geology_bg_3.png');
+    url('/images/geology_bg_3.png') !important;
 }
 
 :is([data-theme="white"], [data-theme="light-gray"]) .page-wrapper {
@@ -3376,7 +3376,7 @@ html { scroll-behavior: smooth; }
       rgba(248, 250, 252, 0.95) 80%, 
       #f8fafc 100%
     ),
-    url('/images/geodesy_surface_bg.png');
+    url('/images/geodesy_surface_bg.png') !important;
 }
 
 [data-theme="white"] .aquifers-layer {
@@ -3387,7 +3387,7 @@ html { scroll-behavior: smooth; }
       rgba(248, 250, 252, 0.95) calc(100% - 150px), 
       #f8fafc 100%
     ),
-    url('/images/geology_bg_2.png');
+    url('/images/geology_bg_2.png') !important;
 }
 
 [data-theme="white"] .mantle-layer {
@@ -3398,5 +3398,10 @@ html { scroll-behavior: smooth; }
       rgba(248, 250, 252, 0.95) calc(100% - 250px), 
       #f8fafc 100%
     ),
-    url('/images/geology_bg_3.png');
+    url('/images/geology_bg_3.png') !important;
+}
+
+
+[data-theme="white"] .geological-layer {
+  background-color: #f8fafc !important;
 }
