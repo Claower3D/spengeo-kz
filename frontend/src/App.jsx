@@ -416,9 +416,10 @@ function App() {
   const [showScrollTop, setShowScrollTop] = useState(false);
 
   // Theme state
-  const [theme, setTheme] = useState('dark');
+  const [theme, setTheme] = useState('white');
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
   }, [theme]);
   
   const toggleTheme = () => {
