@@ -1354,7 +1354,7 @@ function App() {
                 </div>
 
                 {/* Projects List Area (Right) */}
-                <div style={{ flex: '1 1 35%', display: 'flex', flexDirection: 'column', gap: '15px', height: '600px', overflowY: 'auto', paddingRight: '10px' }} className="projects-list-scroll">
+                <div style={{ flex: '1 1 35%', display: 'flex', flexDirection: 'column', gap: '15px', height: '600px', overflowY: 'auto', padding: '25px', background: theme === 'dark' ? 'var(--bg-dark)' : 'rgba(255,255,255,0.95)', borderRadius: '24px', border: theme === 'dark' ? '1px solid rgba(255,255,255,0.05)' : '1px solid rgba(0,0,0,0.05)', boxShadow: theme === 'dark' ? '0 20px 50px rgba(0,0,0,0.3)' : '0 10px 30px rgba(0,0,0,0.05)' }} className="projects-list-scroll">
                   {DETAILED_PROJECTS.map(proj => {
                     const isActive = activeProjectCoords === proj.coords;
                     return (
