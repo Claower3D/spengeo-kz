@@ -1099,38 +1099,91 @@ function App() {
                 <EditableText id="services_label_v3" defaultText={t.sections.servicesLabel} isVisualBuilder={isVisualBuilder} className="hero-subtitle" />
                 <EditableText as="h2" id="services_title_v3" defaultText={t.sections.servicesTitle} isVisualBuilder={isVisualBuilder} />
               </div>
-              <div className="bento-grid">
-                {Object.entries(SERVICES_DATA).slice(0, 6).map(([key, item]) => {
-                  return (
-                    <div key={key} className="bento-item" onClick={() => {setActiveServiceTab(key); setActivePage('services');}}>
-                      <div className="bento-item-bg">
-                         <img src={`/images/services/${key}.jpg`} alt={item.title} style={{width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'right'}} onError={(e) => { e.target.src='/images/hero.png' }} />
-                      </div>
-                      <div className="bento-item-overlay"></div>
-                      <div className="bento-item-content">
-                        <h3 className="bento-title">{item.title}</h3>
-                        <p className="bento-desc">{item.desc.substring(0, 80)}...</p>
-                        
-                        <div className="bento-logo">
-                           <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="2" style={{ width: '100%', height: '100%', color: '#07090e' }}>
-                             <circle cx="50" cy="50" r="45" strokeDasharray="5 5" />
-                             <path d="M30 70 L70 30" strokeWidth="4" />
-                             <path d="M50 30 L70 30 L70 50" strokeWidth="4" />
-                           </svg>
-                        </div>
-                      </div>
-                    </div>
-                  )
-                })}
-              </div>
-            
+              
+<div className="service-bento-grid">
+  {/* 1. Geology - Wide */}
+  <div className="service-bento-card wide" onClick={() => {setActiveServiceTab('geology'); setActivePage('services');}}>
+    <div className="service-bento-bg" style={{ backgroundImage: "url('/images/services/geology.jpg')" }}></div>
+    <div className="service-bento-content">
+      <h3 className="service-bento-title">Инженерно-геологические изыскания</h3>
+      <ul className="service-bento-list">
+        <li>Бурение изыскательских скважин</li>
+        <li>Отбор монолитов и проб вод</li>
+        <li>Описание грунтового массива</li>
+        <li>Изучение опасных процессов</li>
+      </ul>
+    </div>
+  </div>
+
+  {/* 2. Geodesy - Normal */}
+  <div className="service-bento-card" onClick={() => {setActiveServiceTab('geodesy'); setActivePage('services');}}>
+    <div className="service-bento-bg" style={{ backgroundImage: "url('/images/services/geodesy.jpg')" }}></div>
+    <div className="service-bento-content">
+      <h3 className="service-bento-title">Геодезия и топосъемка</h3>
+      <ul className="service-bento-list">
+        <li>Топосъемка масштабов 1:500</li>
+        <li>Съемка коммуникаций</li>
+        <li>Вынос осей в натуру</li>
+      </ul>
+    </div>
+  </div>
+
+  {/* 3. CPT - Normal */}
+  <div className="service-bento-card" onClick={() => {setActiveServiceTab('cpt'); setActivePage('services');}}>
+    <div className="service-bento-bg" style={{ backgroundImage: "url('/images/services/cpt.jpg')" }}></div>
+    <div className="service-bento-content">
+      <h3 className="service-bento-title">CPT Зондирование</h3>
+      <ul className="service-bento-list">
+        <li>Вдавливание конуса</li>
+        <li>Измерение сопротивления</li>
+        <li>Расчленение разреза</li>
+      </ul>
+    </div>
+  </div>
+
+  {/* 4. Piles - Normal */}
+  <div className="service-bento-card" onClick={() => {setActiveServiceTab('piles'); setActivePage('services');}}>
+    <div className="service-bento-bg" style={{ backgroundImage: "url('/images/services/piles.jpg')" }}></div>
+    <div className="service-bento-content">
+      <h3 className="service-bento-title">Испытания свай</h3>
+      <ul className="service-bento-list">
+        <li>Статическая нагрузка</li>
+        <li>Выдергивающая нагрузка</li>
+        <li>Динамические испытания</li>
+      </ul>
+    </div>
+  </div>
+
+  {/* 5. Plates - Normal */}
+  <div className="service-bento-card" onClick={() => {setActiveServiceTab('plates'); setActivePage('services');}}>
+    <div className="service-bento-bg" style={{ backgroundImage: "url('/images/services/plates.jpg')" }}></div>
+    <div className="service-bento-content">
+      <h3 className="service-bento-title">Штамповые испытания</h3>
+      <ul className="service-bento-list">
+        <li>Плоские круглые штампы</li>
+        <li>Испытания в скважинах</li>
+        <li>Модуль деформации</li>
+      </ul>
+    </div>
+  </div>
+
+  {/* 6. Laboratory - Full Width */}
+  <div className="service-bento-card full" onClick={() => {setActiveServiceTab('laboratory'); setActivePage('services');}}>
+    <div className="service-bento-bg" style={{ backgroundImage: "url('/images/services/laboratory.jpg')" }}></div>
+    <div className="service-bento-content">
+      <h3 className="service-bento-title">Лаборатория грунтов</h3>
+      <ul className="service-bento-list">
+        <li>Физико-механические свойства</li>
+        <li>Химический анализ воды</li>
+        <li>Коррозионная агрессивность</li>
+        <li>Компрессионное сжатие</li>
+      </ul>
+    </div>
+  </div>
+</div>
             </section>
-
-            
-
             </div>
             </div>
-
             <div className="geological-layer mantle-layer">
               <div className="geological-layer-content">
                 {/* 4. Projects Section (Summarized) */}
