@@ -1,99 +1,14 @@
 const fs = require('fs');
-
-// 1. Update index.css
-let css = fs.readFileSync('c:/Users/SystemX/Documents/строй/frontend/src/index.css', 'utf8');
-const bentoCSS = `
-/* ==========================================================================
-   BENTO GRID SYSTEM
-   ========================================================================== */
-.bento-grid {
-  display: grid !important;
-  grid-template-columns: repeat(4, 1fr) !important;
-  grid-auto-rows: minmax(220px, auto);
-  gap: 20px !important;
-}
-
-.bento-card {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  position: relative;
-  overflow: hidden;
-  padding: 40px 30px !important;
-}
-
-.bento-large {
-  grid-column: span 2;
-  grid-row: span 2;
-  background: linear-gradient(135deg, rgba(6, 182, 212, 0.08) 0%, rgba(3, 5, 9, 0) 100%) !important;
-  border-left: 3px solid var(--color-cyan) !important;
-}
-
-.bento-wide {
-  grid-column: span 2;
-  grid-row: span 1;
-}
-
-.bento-tall {
-  grid-column: span 1;
-  grid-row: span 2;
-}
-
-/* Internal bento alignments */
-.bento-card .spec-label {
-  font-size: 1.1rem;
-  letter-spacing: 1px;
-}
-.bento-large .spec-val {
-  font-size: 5rem !important;
-}
-
-@media (max-width: 1024px) {
-  .bento-grid {
-    grid-template-columns: repeat(2, 1fr) !important;
-  }
-}
-
-@media (max-width: 768px) {
-  .bento-grid {
-    grid-template-columns: 1fr !important;
-  }
-  .bento-large, .bento-wide, .bento-tall {
-    grid-column: span 1;
-    grid-row: span 1;
-  }
-}
-`;
-
-if (!css.includes('BENTO GRID SYSTEM')) {
-  css += '\n' + bentoCSS;
-  fs.writeFileSync('c:/Users/SystemX/Documents/строй/frontend/src/index.css', css);
-  console.log('Added Bento CSS.');
-}
-
-// 2. Update App.jsx stats section
 let appJsx = fs.readFileSync('c:/Users/SystemX/Documents/строй/frontend/src/App.jsx', 'utf8');
 
-const startTag = '<section id="stats" className="container" style={{ display: \'grid\', gridTemplateColumns: \'repeat(auto-fit, minmax(240px, 1fr))\', gap: \'20px\', marginBottom: \'80px\', position: \'relative\', zIndex: 10 }}>';
-const endTag = '</section>\r\n            </div>\r\n            </div>\r\n\r\n            <div className="geological-layer aquifers-layer">';
-// Fallback if line endings differ
-const endTagUnix = '</section>\n            </div>\n            </div>\n\n            <div className="geological-layer aquifers-layer">';
+const searchStr = "<section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '30px', marginBottom: '60px', position: 'relative' }}>";
 
-let startIndex = appJsx.indexOf(startTag);
-if (startIndex === -1) {
-  console.log('Could not find stats section start.');
-} else {
-  let endIndex = appJsx.indexOf(endTag, startIndex);
-  if (endIndex === -1) endIndex = appJsx.indexOf(endTagUnix, startIndex);
+const startIndex = appJsx.indexOf(searchStr);
+if (startIndex !== -1) {
+  const endIndex = appJsx.indexOf('</section>', startIndex) + '</section>'.length;
   
-  if (endIndex === -1) {
-    console.log('Could not find stats section end.');
-  } else {
-    const endStrLength = appJsx.indexOf(endTag, startIndex) !== -1 ? endTag.length : endTagUnix.length;
-    
-    const bentoHtml = `
-              <section id="stats" className="container bento-grid" style={{ marginBottom: '100px', position: 'relative', zIndex: 10 }}>
+  const bentoHtml = `
+              <section className="container bento-grid" style={{ marginBottom: '100px', position: 'relative', zIndex: 10 }}>
                 {/* 2x2 Large Card */}
                 <div className="glow-card-premium bento-card bento-large float-slow">
                   <div style={{ position: 'absolute', right: '-40px', bottom: '-40px', opacity: 0.03 }}><Hammer size={300} /></div>
@@ -101,7 +16,7 @@ if (startIndex === -1) {
                     <Hammer size={32} color="var(--color-accent)" />
                   </div>
                   <EditableText id="stats_wells" defaultText={t.stats.wells} isVisualBuilder={isVisualBuilder} className="spec-label" style={{ marginBottom: '15px', color: 'var(--color-text-primary)' }} />
-                  <EditableText id="stats_wells_val" defaultText="1,420+" isVisualBuilder={isVisualBuilder} as="div" className="spec-val" style={{ fontSize: '5rem', fontWeight: 900, color: 'var(--color-accent)', fontFamily: 'var(--font-display)', lineHeight: 1, marginBottom: '20px', textShadow: '0 0 30px rgba(234, 179, 8, 0.5)' }} />
+                  <EditableText id="stats_wells_val" defaultText="1,420+" isVisualBuilder={isVisualBuilder} as="div" className="spec-val" style={{ fontSize: 'clamp(4rem, 8vw, 6rem)', fontWeight: 900, color: 'var(--color-accent)', fontFamily: 'var(--font-display)', lineHeight: 1, marginBottom: '20px', textShadow: '0 0 30px rgba(234, 179, 8, 0.5)' }} />
                   <EditableText id="stats_wells_desc" defaultText={t.stats.wellsDesc} isVisualBuilder={isVisualBuilder} as="p" style={{ fontSize: '1.1rem', color: 'var(--color-text-secondary)', margin: 0, lineHeight: 1.8, position: 'relative', zIndex: 2, maxWidth: '80%' }} />
                 </div>
 
@@ -141,14 +56,11 @@ if (startIndex === -1) {
                   </div>
                   <div style={{ position: 'absolute', right: '10%', top: '50%', transform: 'translateY(-50%)', opacity: 0.05 }}><Settings size={200} /></div>
                 </div>
-              </section>
-            </div>
-            </div>
+              </section>`;
 
-            <div className="geological-layer aquifers-layer">`;
-
-    appJsx = appJsx.substring(0, startIndex) + bentoHtml + appJsx.substring(endIndex + endStrLength);
-    fs.writeFileSync('c:/Users/SystemX/Documents/строй/frontend/src/App.jsx', appJsx);
-    console.log('App.jsx updated with Bento Box Grid layout.');
-  }
+  appJsx = appJsx.substring(0, startIndex) + bentoHtml + appJsx.substring(endIndex);
+  fs.writeFileSync('c:/Users/SystemX/Documents/строй/frontend/src/App.jsx', appJsx);
+  console.log('Successfully injected bento stats section.');
+} else {
+  console.log('Failed to find stats section bounds.');
 }

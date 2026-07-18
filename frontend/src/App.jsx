@@ -409,13 +409,12 @@ function App() {
 
   // Theme state
   const [theme, setTheme] = useState('dark');
-
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
   }, [theme]);
   
   const toggleTheme = () => {
-    setTheme(prev => prev === 'dark' ? 'light' : 'dark');
+    setTheme(prev => prev === 'dark' ? 'white' : 'dark');
   };
 
   // AI Assistant State
@@ -654,7 +653,7 @@ function App() {
           <header className="header">
             <div className="container nav-container">
               <a href="#" className="logo" onClick={() => setActivePage('home')} style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <img src="/images/logo-original.svg" alt="SpenGeo Logo" style={{ height: '45px', width: 'auto' }} />
+                <img src="/images/logo.png" alt="SpenGeo Logo" style={{ height: '45px', width: 'auto' }} />
                 <span>Спец<span>Инж</span>Гео</span>
               </a>
 
@@ -776,7 +775,7 @@ function App() {
         
         {/* ==================== PAGE: HOME ==================== */}
         {activePage === 'home' && (
-          <div className="page-wrapper">
+          <div className="page-wrapper page-enter">
             <div className="geological-layer crust-layer">
               <section 
                 className="hero-section full-width-bleed"
@@ -955,47 +954,54 @@ function App() {
                  <EditableText id="stats_subtitle" defaultText={t.stats.subtitle} isVisualBuilder={isVisualBuilder} className="hero-subtitle" style={{ color: 'var(--color-cyan)', textShadow: '0 0 15px rgba(6, 182, 212, 0.6)' }} />
                  <EditableText as="h2" id="stats_title" defaultText={t.stats.title} isVisualBuilder={isVisualBuilder} style={{ fontSize: '3.2rem', textShadow: '0 0 40px rgba(255,255,255,0.2)' }} />
               </div>
-              <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '30px', marginBottom: '60px', position: 'relative' }}>
-                <div className="bg-glow-orb" style={{ top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '800px', height: '300px', opacity: 0.1, background: 'radial-gradient(ellipse, var(--color-cyan) 0%, transparent 70%)' }}></div>
-                
-                <div className="glow-card-premium" style={{ padding: '35px 25px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', position: 'relative', overflow: 'hidden' }}>
-                  <div style={{ position: 'absolute', right: '-20px', top: '-20px', opacity: 0.03 }}><Hammer size={150} /></div>
-                  <div style={{ background: 'rgba(234, 179, 8, 0.1)', padding: '12px', borderRadius: '12px', marginBottom: '20px' }}>
-                    <Hammer size={24} color="var(--color-accent)" />
+              
+              <section className="container bento-grid" style={{ marginBottom: '100px', position: 'relative', zIndex: 10 }}>
+                {/* 2x2 Large Card */}
+                <div className="glow-card-premium bento-card bento-large float-slow">
+                  <div style={{ position: 'absolute', right: '-40px', bottom: '-40px', opacity: 0.03 }}><Hammer size={300} /></div>
+                  <div style={{ background: 'rgba(234, 179, 8, 0.1)', padding: '15px', borderRadius: '15px', marginBottom: '30px', display: 'inline-block', width: 'max-content' }}>
+                    <Hammer size={32} color="var(--color-accent)" />
                   </div>
-                  <EditableText id="stats_wells" defaultText={t.stats.wells} isVisualBuilder={isVisualBuilder} className="spec-label" style={{ marginBottom: '10px' }} />
-                  <EditableText id="stats_wells_val" defaultText="1,420+" isVisualBuilder={isVisualBuilder} as="div" style={{ fontSize: '3.2rem', fontWeight: 800, color: 'var(--color-accent)', fontFamily: 'var(--font-mono)', lineHeight: 1, marginBottom: '15px', textShadow: '0 0 20px rgba(234, 179, 8, 0.4)' }} />
-                  <EditableText id="stats_wells_desc" defaultText={t.stats.wellsDesc} isVisualBuilder={isVisualBuilder} as="p" style={{ fontSize: '0.95rem', color: 'var(--color-text-secondary)', margin: 0, lineHeight: 1.6, position: 'relative', zIndex: 2 }} />
+                  <EditableText id="stats_wells" defaultText={t.stats.wells} isVisualBuilder={isVisualBuilder} className="spec-label" style={{ marginBottom: '15px', color: 'var(--color-text-primary)' }} />
+                  <EditableText id="stats_wells_val" defaultText="1,420+" isVisualBuilder={isVisualBuilder} as="div" className="spec-val" style={{ fontSize: 'clamp(4rem, 8vw, 6rem)', fontWeight: 900, color: 'var(--color-accent)', fontFamily: 'var(--font-display)', lineHeight: 1, marginBottom: '20px', textShadow: '0 0 30px rgba(234, 179, 8, 0.5)' }} />
+                  <EditableText id="stats_wells_desc" defaultText={t.stats.wellsDesc} isVisualBuilder={isVisualBuilder} as="p" style={{ fontSize: '1.1rem', color: 'var(--color-text-secondary)', margin: 0, lineHeight: 1.8, position: 'relative', zIndex: 2, maxWidth: '80%' }} />
                 </div>
 
-                <div className="glow-card-premium" style={{ padding: '35px 25px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', position: 'relative', overflow: 'hidden' }}>
+                {/* 1x1 Card */}
+                <div className="glow-card-premium bento-card float-reverse">
                   <div style={{ position: 'absolute', right: '-20px', top: '-20px', opacity: 0.03 }}><MapPin size={150} /></div>
-                  <div style={{ background: 'rgba(6, 182, 212, 0.1)', padding: '12px', borderRadius: '12px', marginBottom: '20px' }}>
+                  <div style={{ background: 'rgba(6, 182, 212, 0.1)', padding: '12px', borderRadius: '12px', marginBottom: '20px', display: 'inline-block', width: 'max-content' }}>
                     <MapPin size={24} color="var(--color-cyan)" />
                   </div>
                   <EditableText id="stats_geo" defaultText={t.stats.geo} isVisualBuilder={isVisualBuilder} className="spec-label" style={{ marginBottom: '10px' }} />
-                  <EditableText id="stats_geo_val" defaultText={t.stats.geoValue} isVisualBuilder={isVisualBuilder} as="div" style={{ fontSize: '3.2rem', fontWeight: 800, color: 'var(--color-cyan)', fontFamily: 'var(--font-mono)', lineHeight: 1, marginBottom: '15px', textShadow: '0 0 20px rgba(6, 182, 212, 0.4)' }} />
+                  <EditableText id="stats_geo_val" defaultText={t.stats.geoValue} isVisualBuilder={isVisualBuilder} as="div" style={{ fontSize: '3rem', fontWeight: 800, color: 'var(--color-cyan)', fontFamily: 'var(--font-mono)', lineHeight: 1, marginBottom: '15px', textShadow: '0 0 20px rgba(6, 182, 212, 0.4)' }} />
                   <EditableText id="stats_geo_desc" defaultText={t.stats.geoDesc} isVisualBuilder={isVisualBuilder} as="p" style={{ fontSize: '0.95rem', color: 'var(--color-text-secondary)', margin: 0, lineHeight: 1.6, position: 'relative', zIndex: 2 }} />
                 </div>
 
-                <div className="glow-card-premium" style={{ padding: '35px 25px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', position: 'relative', overflow: 'hidden' }}>
+                {/* 1x1 Card */}
+                <div className="glow-card-premium bento-card float-slow">
                   <div style={{ position: 'absolute', right: '-20px', top: '-20px', opacity: 0.03 }}><Award size={150} /></div>
-                  <div style={{ background: 'rgba(234, 179, 8, 0.1)', padding: '12px', borderRadius: '12px', marginBottom: '20px' }}>
+                  <div style={{ background: 'rgba(234, 179, 8, 0.1)', padding: '12px', borderRadius: '12px', marginBottom: '20px', display: 'inline-block', width: 'max-content' }}>
                     <Award size={24} color="var(--color-accent)" />
                   </div>
                   <EditableText id="stats_standards" defaultText={t.stats.standards} isVisualBuilder={isVisualBuilder} className="spec-label" style={{ marginBottom: '10px' }} />
-                  <EditableText id="stats_standards_val" defaultText="100%" isVisualBuilder={isVisualBuilder} as="div" style={{ fontSize: '3.2rem', fontWeight: 800, color: 'var(--color-accent)', fontFamily: 'var(--font-mono)', lineHeight: 1, marginBottom: '15px', textShadow: '0 0 20px rgba(234, 179, 8, 0.4)' }} />
+                  <EditableText id="stats_standards_val" defaultText="100%" isVisualBuilder={isVisualBuilder} as="div" style={{ fontSize: '3rem', fontWeight: 800, color: 'var(--color-accent)', fontFamily: 'var(--font-mono)', lineHeight: 1, marginBottom: '15px', textShadow: '0 0 20px rgba(234, 179, 8, 0.4)' }} />
                   <EditableText id="stats_standards_desc" defaultText={t.stats.standardsDesc} isVisualBuilder={isVisualBuilder} as="p" style={{ fontSize: '0.95rem', color: 'var(--color-text-secondary)', margin: 0, lineHeight: 1.6, position: 'relative', zIndex: 2 }} />
                 </div>
 
-                <div className="glow-card-premium" style={{ padding: '35px 25px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', position: 'relative', overflow: 'hidden' }}>
-                  <div style={{ position: 'absolute', right: '-20px', top: '-20px', opacity: 0.03 }}><Settings size={150} /></div>
-                  <div style={{ background: 'rgba(6, 182, 212, 0.1)', padding: '12px', borderRadius: '12px', marginBottom: '20px' }}>
-                    <Settings size={24} color="var(--color-cyan)" />
+                {/* 2x1 Wide Card */}
+                <div className="glow-card-premium bento-card bento-wide float-fast" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ background: 'rgba(6, 182, 212, 0.1)', padding: '12px', borderRadius: '12px', marginBottom: '15px', display: 'inline-block', width: 'max-content' }}>
+                      <Settings size={24} color="var(--color-cyan)" />
+                    </div>
+                    <EditableText id="stats_fleet" defaultText={t.stats.fleet} isVisualBuilder={isVisualBuilder} className="spec-label" style={{ marginBottom: '10px' }} />
+                    <EditableText id="stats_fleet_desc" defaultText={t.stats.fleetDesc} isVisualBuilder={isVisualBuilder} as="p" style={{ fontSize: '1rem', color: 'var(--color-text-secondary)', margin: 0, lineHeight: 1.6, position: 'relative', zIndex: 2, maxWidth: '80%' }} />
                   </div>
-                  <EditableText id="stats_fleet" defaultText={t.stats.fleet} isVisualBuilder={isVisualBuilder} className="spec-label" style={{ marginBottom: '10px' }} />
-                  <EditableText id="stats_fleet_val" defaultText={t.stats.fleetValue} isVisualBuilder={isVisualBuilder} as="div" style={{ fontSize: '3.2rem', fontWeight: 800, color: 'var(--color-cyan)', fontFamily: 'var(--font-mono)', lineHeight: 1, marginBottom: '15px', textShadow: '0 0 20px rgba(6, 182, 212, 0.4)' }} />
-                  <EditableText id="stats_fleet_desc" defaultText={t.stats.fleetDesc} isVisualBuilder={isVisualBuilder} as="p" style={{ fontSize: '0.95rem', color: 'var(--color-text-secondary)', margin: 0, lineHeight: 1.6, position: 'relative', zIndex: 2 }} />
+                  <div style={{ flex: 1, textAlign: 'right' }}>
+                    <EditableText id="stats_fleet_val" defaultText={t.stats.fleetValue} isVisualBuilder={isVisualBuilder} as="div" style={{ fontSize: '4.5rem', fontWeight: 800, color: 'var(--color-cyan)', fontFamily: 'var(--font-mono)', lineHeight: 1, textShadow: '0 0 30px rgba(6, 182, 212, 0.5)' }} />
+                  </div>
+                  <div style={{ position: 'absolute', right: '10%', top: '50%', transform: 'translateY(-50%)', opacity: 0.05 }}><Settings size={200} /></div>
                 </div>
               </section>
             </div>
@@ -1106,7 +1112,7 @@ function App() {
                         <p className="bento-desc">{item.desc.substring(0, 80)}...</p>
                         
                         <div className="bento-logo">
-                           <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="2" style={{ width: '100%', height: '100%', color: 'var(--color-accent)' }}>
+                           <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="2" style={{ width: '100%', height: '100%', color: '#07090e' }}>
                              <circle cx="50" cy="50" r="45" strokeDasharray="5 5" />
                              <path d="M30 70 L70 30" strokeWidth="4" />
                              <path d="M50 30 L70 30 L70 50" strokeWidth="4" />
@@ -1135,9 +1141,9 @@ function App() {
               </div>
               <div style={{ display: 'flex', flexDirection: 'row', gap: '30px', alignItems: 'stretch' }} className="portfolio-split-view">
                 <div style={{ flex: '1 1 65%', height: '450px', borderRadius: 'var(--border-radius-md)', overflow: 'hidden', border: '1px solid rgba(6, 182, 212, 0.2)', boxShadow: '0 0 30px rgba(0,0,0,0.8)', position: 'relative' }}>
-                  <MapContainer center={[48.0196, 66.9237]} zoom={5} scrollWheelZoom={false} style={{ height: '100%', width: '100%', background: '#030509', zIndex: 1 }}>
+                  <MapContainer center={[48.0196, 66.9237]} zoom={5} scrollWheelZoom={false} style={{ height: '100%', width: '100%', background: theme === 'white' ? '#f1f5f9' : '#030509', zIndex: 1 }}>
                     <TileLayer 
-                      url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png" 
+                      url={theme === 'white' ? "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png" : "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"} 
                       attribution="&copy; OpenStreetMap &copy; CARTO" 
                     />
                     <MapFlyTo center={activeProjectCoords || [48.0196, 66.9237]} zoom={activeMapZoom} />
@@ -1216,8 +1222,8 @@ function App() {
             {/* 4.5. Approach Section (New) */}
             <section style={{ marginBottom: '80px', position: 'relative' }}>
               <div style={{ textAlign: 'center', marginBottom: '40px' }}>
-                <EditableText id="approach_label" defaultText="ИНДИВИДУАЛЬНЫЙ ПОДХОД" isVisualBuilder={isVisualBuilder} className="hero-subtitle" style={{ color: 'var(--color-accent)', textShadow: '0 0 15px rgba(234, 179, 8, 0.6)' }} />
-                <EditableText as="h2" id="approach_title" defaultText={t.sections.approachTitle} isVisualBuilder={isVisualBuilder} style={{ fontSize: '2.5rem', marginBottom: '20px', textShadow: '0 0 40px rgba(255,255,255,0.2)', maxWidth: '900px', margin: '0 auto 20px auto' }} />
+                <EditableText id="approach_label_v2" defaultText="ИНДИВИДУАЛЬНЫЙ ПОДХОД" isVisualBuilder={isVisualBuilder} className="hero-subtitle" style={{ color: 'var(--color-accent)', textShadow: '0 0 15px rgba(234, 179, 8, 0.6)' }} />
+                <EditableText as="h2" id="approach_title_v2" defaultText={t.sections.approachTitle} isVisualBuilder={isVisualBuilder} style={{ fontSize: '2.5rem', marginBottom: '20px', textShadow: '0 0 40px rgba(255,255,255,0.2)', maxWidth: '900px', margin: '0 auto 20px auto' }} />
                 <EditableText as="p" id="approach_desc" defaultText={t.sections.approachDesc} isVisualBuilder={isVisualBuilder} style={{ color: 'var(--color-text-secondary)', fontSize: '1.05rem', lineHeight: 1.6, maxWidth: '800px', margin: '0 auto' }} />
               </div>
 
@@ -1265,14 +1271,14 @@ function App() {
               </div>
 
               {/* Watermark Logo */}
-              <img src="/images/logo-original.svg" alt="Stamp Watermark" style={{ position: 'absolute', bottom: '-10%', right: '-5%', transform: 'rotate(-15deg)', width: '600px', opacity: 0.03, pointerEvents: 'none', filter: 'grayscale(100%) blur(2px)' }} />
+              <img src="/images/logo.png" alt="Stamp Watermark" style={{ position: 'absolute', bottom: '-10%', right: '-5%', transform: 'rotate(-15deg)', width: '600px', opacity: 0.03, pointerEvents: 'none', filter: 'grayscale(100%) blur(2px)' }} />
             </section>
 
             {/* 5. Director / About Section */}
             <section style={{ marginBottom: '80px', position: 'relative' }}>
               <div style={{ textAlign: 'center', marginBottom: '40px', position: 'relative', zIndex: 2 }}>
-                <EditableText id="founder_label" defaultText="РУКОВОДСТВО КОМПАНИИ" isVisualBuilder={isVisualBuilder} className="hero-subtitle" style={{ color: 'var(--color-cyan)', textShadow: '0 0 15px rgba(6, 182, 212, 0.6)' }} />
-                <EditableText as="h2" id="founder_title" defaultText="Слово Основателя" isVisualBuilder={isVisualBuilder} style={{ fontSize: '3.2rem', textShadow: '0 0 40px rgba(255,255,255,0.2)' }} />
+                <EditableText id="founder_label_v2" defaultText="РУКОВОДСТВО КОМПАНИИ" isVisualBuilder={isVisualBuilder} className="hero-subtitle" style={{ color: 'var(--color-cyan)', textShadow: '0 0 15px rgba(6, 182, 212, 0.6)' }} />
+                <EditableText as="h2" id="founder_title_v2" defaultText="Слово Основателя" isVisualBuilder={isVisualBuilder} style={{ fontSize: '3.2rem', textShadow: '0 0 40px rgba(255,255,255,0.2)' }} />
               </div>
               <div className="bg-glow-orb-2" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '600px', height: '600px', background: 'radial-gradient(circle, var(--color-cyan) 0%, transparent 70%)', opacity: 0.05 }}></div>
               <div className="glow-card-premium" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '0', alignItems: 'stretch', padding: '0', overflow: 'hidden', position: 'relative', zIndex: 2, background: 'linear-gradient(135deg, rgba(3, 5, 9, 0.95) 0%, rgba(10, 20, 35, 0.85) 100%)', border: '1px solid rgba(6, 182, 212, 0.2)', boxShadow: '0 0 50px rgba(0,0,0,0.8)' }}>
@@ -1285,12 +1291,12 @@ function App() {
                   <div style={{ position: 'absolute', top: '-10px', left: '20px', fontSize: '15rem', color: 'rgba(6, 182, 212, 0.05)', fontFamily: 'Georgia, serif', lineHeight: 1, pointerEvents: 'none', textShadow: '0 0 30px rgba(6, 182, 212, 0.2)' }}>“</div>
                   
                   <div style={{ position: 'relative', zIndex: 2 }}>
-                    <EditableText as="h3" id="f_name" defaultText="Шенвизов Рудольф" isVisualBuilder={isVisualBuilder} style={{ fontSize: '2.8rem', marginBottom: '5px', color: 'var(--color-text-primary)', letterSpacing: '-0.02em', textShadow: '0 0 20px rgba(255,255,255,0.1)' }} />
-                    <EditableText as="h3" id="f_patr" defaultText="Константинович" isVisualBuilder={isVisualBuilder} style={{ fontSize: '2.2rem', marginBottom: '25px', color: 'var(--color-text-secondary)', fontWeight: 400 }} />
+                    <EditableText as="h3" id="f_name" defaultText="Шенвизов Рудольф" isVisualBuilder={isVisualBuilder} style={{ fontSize: '2.8rem', marginBottom: '5px', color: '#ffffff', letterSpacing: '-0.02em', textShadow: '0 0 20px rgba(255,255,255,0.1)' }} />
+                    <EditableText as="h3" id="f_patr" defaultText="Константинович" isVisualBuilder={isVisualBuilder} style={{ fontSize: '2.2rem', marginBottom: '25px', color: 'rgba(255,255,255,0.85)', fontWeight: 400 }} />
                     
                     <EditableText as="div" id="f_role" defaultText="Основатель и Главный Геолог" isVisualBuilder={isVisualBuilder} style={{ display: 'inline-block', padding: '8px 16px', background: 'rgba(6, 182, 212, 0.1)', border: '1px solid rgba(6, 182, 212, 0.3)', borderRadius: '20px', color: 'var(--color-cyan)', fontSize: '0.85rem', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: '35px', fontWeight: 600, boxShadow: '0 0 15px rgba(6, 182, 212, 0.2)' }} />
                     
-                    <EditableText as="p" id="f_quote" defaultText="Мы строим нашу работу на безупречной точности и строгом соответствии регламентам СП РК и ГОСТ. С 2019 года наша команда опытных буровых инженеров, геодезистов и лаборантов успешно реализует сложнейшие проекты по всему Казахстану, обеспечивая прочный фундамент для каждого объекта." isVisualBuilder={isVisualBuilder} style={{ color: 'var(--color-text-secondary)', fontSize: '1.15rem', lineHeight: 1.8, marginBottom: '40px', fontStyle: 'italic', borderLeft: '3px solid var(--color-cyan)', paddingLeft: '25px', position: 'relative' }} />
+                    <EditableText as="p" id="f_quote" defaultText="Мы строим нашу работу на безупречной точности и строгом соответствии регламентам СП РК и ГОСТ. С 2019 года наша команда опытных буровых инженеров, геодезистов и лаборантов успешно реализует сложнейшие проекты по всему Казахстану, обеспечивая прочный фундамент для каждого объекта." isVisualBuilder={isVisualBuilder} style={{ color: 'rgba(255,255,255,0.8)', fontSize: '1.15rem', lineHeight: 1.8, marginBottom: '40px', fontStyle: 'italic', borderLeft: '3px solid var(--color-cyan)', paddingLeft: '25px', position: 'relative' }} />
                     
                     <div>
                       <button className="btn btn-primary" onClick={() => setActivePage('about')} style={{ padding: '16px 40px', fontSize: '1.1rem', background: 'linear-gradient(45deg, var(--color-cyan), #0284c7)', border: 'none', color: '#fff', boxShadow: '0 10px 25px rgba(6, 182, 212, 0.4)' }}>
@@ -1368,15 +1374,15 @@ function App() {
                   }}>
                     <div style={{ marginBottom: '20px' }}>
                       <label style={{ display: 'block', fontSize: '0.85rem', color: 'var(--color-text-secondary)', marginBottom: '8px', letterSpacing: '0.05em' }}>ВАШЕ ИМЯ</label>
-                      <input type="text" value={inquiryName} onChange={(e) => setInquiryName(e.target.value)} placeholder="Как к вам обращаться?" style={{ width: '100%', padding: '15px', background: 'var(--bg-dark)', border: '1px solid var(--border-color)', borderRadius: 'var(--border-radius-sm)', color: 'var(--color-text-primary)', fontSize: '1rem', outline: 'none', transition: 'border-color 0.3s' }} onFocus={(e) => e.target.style.borderColor = 'var(--color-cyan)'} onBlur={(e) => e.target.style.borderColor = 'var(--border-color)'} required />
+                      <input type="text" value={inquiryName} onChange={(e) => setInquiryName(e.target.value)} placeholder="Как к вам обращаться?" className="glass-input" style={{ width: '100%', padding: '15px', background: 'var(--bg-dark)', border: '1px solid var(--border-color)', borderRadius: 'var(--border-radius-sm)', color: 'var(--color-text-primary)', fontSize: '1rem', outline: 'none', transition: 'border-color 0.3s' }} onFocus={(e) => e.target.style.borderColor = 'var(--color-cyan)'} onBlur={(e) => e.target.style.borderColor = 'var(--border-color)'} required />
                     </div>
                     <div style={{ marginBottom: '20px' }}>
                       <label style={{ display: 'block', fontSize: '0.85rem', color: 'var(--color-text-secondary)', marginBottom: '8px', letterSpacing: '0.05em' }}>НОМЕР ТЕЛЕФОНА</label>
-                      <input type="tel" value={inquiryPhone} onChange={(e) => setInquiryPhone(e.target.value)} placeholder="+7 (___) ___-__-__" style={{ width: '100%', padding: '15px', background: 'var(--bg-dark)', border: '1px solid var(--border-color)', borderRadius: 'var(--border-radius-sm)', color: 'var(--color-text-primary)', fontSize: '1rem', outline: 'none', transition: 'border-color 0.3s' }} onFocus={(e) => e.target.style.borderColor = 'var(--color-cyan)'} onBlur={(e) => e.target.style.borderColor = 'var(--border-color)'} required />
+                      <input type="tel" value={inquiryPhone} onChange={(e) => setInquiryPhone(e.target.value)} placeholder="+7 (___) ___-__-__" className="glass-input" style={{ width: '100%', padding: '15px', background: 'var(--bg-dark)', border: '1px solid var(--border-color)', borderRadius: 'var(--border-radius-sm)', color: 'var(--color-text-primary)', fontSize: '1rem', outline: 'none', transition: 'border-color 0.3s' }} onFocus={(e) => e.target.style.borderColor = 'var(--color-cyan)'} onBlur={(e) => e.target.style.borderColor = 'var(--border-color)'} required />
                     </div>
                     <div style={{ marginBottom: '30px' }}>
                       <label style={{ display: 'block', fontSize: '0.85rem', color: 'var(--color-text-secondary)', marginBottom: '8px', letterSpacing: '0.05em' }}>ВИД ИЗЫСКАНИЙ</label>
-                      <select value={inquiryType} onChange={(e) => setInquiryType(e.target.value)} style={{ width: '100%', padding: '15px', background: 'var(--bg-dark)', border: '1px solid var(--border-color)', borderRadius: 'var(--border-radius-sm)', color: 'var(--color-text-primary)', fontSize: '1rem', outline: 'none', appearance: 'none', cursor: 'pointer' }}>
+                      <select value={inquiryType} onChange={(e) => setInquiryType(e.target.value)} className="glass-input" style={{ width: '100%', padding: '15px', background: 'var(--bg-dark)', border: '1px solid var(--border-color)', borderRadius: 'var(--border-radius-sm)', color: 'var(--color-text-primary)', fontSize: '1rem', outline: 'none', appearance: 'none', cursor: 'pointer' }}>
                         <option value="both" style={{ background: 'var(--bg-card)' }}>Комплексные изыскания</option>
                         <option value="geology" style={{ background: 'var(--bg-card)' }}>Инженерная геология</option>
                         <option value="geodesy" style={{ background: 'var(--bg-card)' }}>Геодезия и топосъемка</option>
@@ -1396,7 +1402,7 @@ function App() {
 
         {/* ==================== PAGE: ABOUT ==================== */}
         {activePage === 'about' && (
-          <div className="page-wrapper">
+          <div className="page-wrapper page-enter">
             <div style={{ marginBottom: '50px' }}>
               <h2>О компании ТОО «СпецИнжГео»</h2>
               <p style={{ color: 'var(--color-text-secondary)' }}>
@@ -1452,7 +1458,7 @@ function App() {
 
         {/* ==================== PAGE: SERVICES ==================== */}
         {activePage === 'services' && (
-          <div className="page-wrapper">
+          <div className="page-wrapper page-enter">
             <div style={{ marginBottom: '50px' }}>
               <h2>Инженерные Услуги</h2>
               <p style={{ color: 'var(--color-text-secondary)' }}>
@@ -1566,7 +1572,7 @@ function App() {
 
         {/* ==================== PAGE: PROJECTS ==================== */}
         {activePage === 'projects' && (
-          <div className="page-wrapper">
+          <div className="page-wrapper page-enter">
             <div style={{ marginBottom: '50px' }}>
               <h2>Завершенные Проекты ТОО «СпецИнжГео»</h2>
               <p style={{ color: 'var(--color-text-secondary)' }}>
@@ -1616,7 +1622,7 @@ function App() {
 
         {/* ==================== PAGE: BLOG ==================== */}
         {activePage === 'blog' && (
-          <div className="page-wrapper">
+          <div className="page-wrapper page-enter">
             <div style={{ marginBottom: '50px' }}>
               <h2>База знаний / Блог ТОО «СпецИнжГео»</h2>
               <p style={{ color: 'var(--color-text-secondary)' }}>
@@ -1658,7 +1664,7 @@ function App() {
 
         {/* ==================== PAGE: EQUIPMENT ==================== */}
         {activePage === 'equipment' && (
-          <div className="page-wrapper">
+          <div className="page-wrapper page-enter">
             <div style={{ marginBottom: '50px' }}>
               <h2>Спецтехника и измерительные приборы</h2>
               <p style={{ color: 'var(--color-text-secondary)' }}>
@@ -1799,7 +1805,7 @@ function App() {
 
         {/* ==================== PAGE: DOCUMENTS ==================== */}
         {activePage === 'documents' && (
-          <div className="page-wrapper">
+          <div className="page-wrapper page-enter">
             <div style={{ marginBottom: '50px' }}>
               <h2>Документы и Лицензии</h2>
               <p style={{ color: 'var(--color-text-secondary)' }}>
@@ -1830,7 +1836,7 @@ function App() {
 
         {/* ==================== PAGE: CALCULATOR ==================== */}
         {activePage === 'calculator' && (
-          <div className="page-wrapper">
+          <div className="page-wrapper page-enter">
             <div style={{ marginBottom: '50px' }}>
               <h2>Профессиональный Калькулятор Сметы</h2>
               <p style={{ color: 'var(--color-text-secondary)' }}>
@@ -2028,7 +2034,7 @@ function App() {
 
         {/* ==================== PAGE: CONTACTS ==================== */}
         {activePage === 'contacts' && (
-          <div className="page-wrapper">
+          <div className="page-wrapper page-enter">
             <div style={{ marginBottom: '50px' }}>
               <h2>Контакты ТОО «СпецИнжГео»</h2>
               <p style={{ color: 'var(--color-text-secondary)', fontSize: '1.1rem' }}>
@@ -2134,7 +2140,7 @@ function App() {
 
         {/* ==================== PAGE: ADMIN ==================== */}
         {activePage === 'admin' && (
-          <div className="page-wrapper">
+          <div className="page-wrapper page-enter">
             <div>
               <div className="admin-header">
                 <div>
@@ -2286,7 +2292,7 @@ function App() {
           <div className="footer-grid">
             <div>
               <h3 style={{ color: 'var(--color-text-primary)', marginBottom: '15px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <img src="/images/logo-original.svg" alt="SpenGeo Logo" style={{ height: '30px', width: 'auto' }} />
+                <img src="/images/logo.png" alt="SpenGeo Logo" style={{ height: '30px', width: 'auto' }} />
                 ТОО «СпецИнжГео»
               </h3>
               <p style={{ fontSize: '0.85rem', color: 'var(--color-text-secondary)', maxWidth: '400px' }}>

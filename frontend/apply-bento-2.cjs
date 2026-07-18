@@ -1,98 +1,11 @@
 const fs = require('fs');
-
-// 1. Update index.css
-let css = fs.readFileSync('c:/Users/SystemX/Documents/строй/frontend/src/index.css', 'utf8');
-const bentoCSS = `
-/* ==========================================================================
-   BENTO GRID SYSTEM
-   ========================================================================== */
-.bento-grid {
-  display: grid !important;
-  grid-template-columns: repeat(4, 1fr) !important;
-  grid-auto-rows: minmax(220px, auto);
-  gap: 20px !important;
-}
-
-.bento-card {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  position: relative;
-  overflow: hidden;
-  padding: 40px 30px !important;
-}
-
-.bento-large {
-  grid-column: span 2;
-  grid-row: span 2;
-  background: linear-gradient(135deg, rgba(6, 182, 212, 0.08) 0%, rgba(3, 5, 9, 0) 100%) !important;
-  border-left: 3px solid var(--color-cyan) !important;
-}
-
-.bento-wide {
-  grid-column: span 2;
-  grid-row: span 1;
-}
-
-.bento-tall {
-  grid-column: span 1;
-  grid-row: span 2;
-}
-
-/* Internal bento alignments */
-.bento-card .spec-label {
-  font-size: 1.1rem;
-  letter-spacing: 1px;
-}
-.bento-large .spec-val {
-  font-size: 5rem !important;
-}
-
-@media (max-width: 1024px) {
-  .bento-grid {
-    grid-template-columns: repeat(2, 1fr) !important;
-  }
-}
-
-@media (max-width: 768px) {
-  .bento-grid {
-    grid-template-columns: 1fr !important;
-  }
-  .bento-large, .bento-wide, .bento-tall {
-    grid-column: span 1;
-    grid-row: span 1;
-  }
-}
-`;
-
-if (!css.includes('BENTO GRID SYSTEM')) {
-  css += '\n' + bentoCSS;
-  fs.writeFileSync('c:/Users/SystemX/Documents/строй/frontend/src/index.css', css);
-  console.log('Added Bento CSS.');
-}
-
-// 2. Update App.jsx stats section
 let appJsx = fs.readFileSync('c:/Users/SystemX/Documents/строй/frontend/src/App.jsx', 'utf8');
 
-const startTag = '<section id="stats" className="container" style={{ display: \'grid\', gridTemplateColumns: \'repeat(auto-fit, minmax(240px, 1fr))\', gap: \'20px\', marginBottom: \'80px\', position: \'relative\', zIndex: 10 }}>';
-const endTag = '</section>\r\n            </div>\r\n            </div>\r\n\r\n            <div className="geological-layer aquifers-layer">';
-// Fallback if line endings differ
-const endTagUnix = '</section>\n            </div>\n            </div>\n\n            <div className="geological-layer aquifers-layer">';
+const startIndex = appJsx.indexOf('<section id="stats"');
+const endIndex = appJsx.indexOf('</section>', startIndex) + '</section>'.length;
 
-let startIndex = appJsx.indexOf(startTag);
-if (startIndex === -1) {
-  console.log('Could not find stats section start.');
-} else {
-  let endIndex = appJsx.indexOf(endTag, startIndex);
-  if (endIndex === -1) endIndex = appJsx.indexOf(endTagUnix, startIndex);
-  
-  if (endIndex === -1) {
-    console.log('Could not find stats section end.');
-  } else {
-    const endStrLength = appJsx.indexOf(endTag, startIndex) !== -1 ? endTag.length : endTagUnix.length;
-    
-    const bentoHtml = `
+if (startIndex !== -1 && endIndex > startIndex) {
+  const bentoHtml = `
               <section id="stats" className="container bento-grid" style={{ marginBottom: '100px', position: 'relative', zIndex: 10 }}>
                 {/* 2x2 Large Card */}
                 <div className="glow-card-premium bento-card bento-large float-slow">
@@ -142,13 +55,10 @@ if (startIndex === -1) {
                   <div style={{ position: 'absolute', right: '10%', top: '50%', transform: 'translateY(-50%)', opacity: 0.05 }}><Settings size={200} /></div>
                 </div>
               </section>
-            </div>
-            </div>
-
-            <div className="geological-layer aquifers-layer">`;
-
-    appJsx = appJsx.substring(0, startIndex) + bentoHtml + appJsx.substring(endIndex + endStrLength);
-    fs.writeFileSync('c:/Users/SystemX/Documents/строй/frontend/src/App.jsx', appJsx);
-    console.log('App.jsx updated with Bento Box Grid layout.');
-  }
+`;
+  appJsx = appJsx.substring(0, startIndex) + bentoHtml + appJsx.substring(endIndex);
+  fs.writeFileSync('c:/Users/SystemX/Documents/строй/frontend/src/App.jsx', appJsx);
+  console.log('Successfully injected bento stats section.');
+} else {
+  console.log('Failed to find stats section bounds.');
 }
