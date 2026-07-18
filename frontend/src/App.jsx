@@ -1043,25 +1043,26 @@ function App() {
             
             
             
-            {/* 2.7 Interactive Premium Accordion Features Section */}
-            <section style={{ marginBottom: '50px' }}>
+            
+            {/* 2.7 Skewed Glass Accordion Section */}
+            <section className="accordion-wrapper">
               <div className="accordion-container">
                 
                 {/* Block 1: Heavy Equipment */}
                 <div className="accordion-item">
-                  <div className="accordion-bg" style={{ backgroundImage: "url('/images/rig.png')" }}></div>
-                  <div className="accordion-overlay"></div>
-                  
-                  <div className="accordion-title-vertical">Буровая техника</div>
-                  
-                  <div className="accordion-content">
+                  <div className="accordion-inner">
+                    <div className="accordion-bg" style={{ backgroundImage: "url('/images/rig.png')" }}></div>
+                    <div className="accordion-overlay"></div>
+                    
+                    <div className="accordion-title-vertical"><span>Буровая техника</span></div>
+                    
                     <div className="accordion-details">
-                      <EditableText id="b1_label" defaultText="МАТЕРИАЛЬНАЯ БАЗА" isVisualBuilder={isVisualBuilder} className="spec-label" style={{ color: 'var(--color-cyan)', fontSize: '0.9rem', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '10px', display: 'block' }} />
+                      <EditableText id="b1_label" defaultText="МАТЕРИАЛЬНАЯ БАЗА" isVisualBuilder={isVisualBuilder} className="spec-label" style={{ color: 'var(--color-cyan)', fontSize: '0.85rem', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '8px', display: 'block' }} />
                       <EditableText as="h3" id="b1_title" defaultText="Мощный парк техники" isVisualBuilder={isVisualBuilder} />
-                      <EditableText as="p" id="b1_desc" defaultText="Мы не зависим от арендодателей. В нашем распоряжении находятся тяжелые установки класса Bauer BG20/BG28 для устройства свай в сложнейших скальных породах, а также маневренные ПБУ-2 на базе вездеходных шасси УРАЛ и КАМАЗ." isVisualBuilder={isVisualBuilder} />
+                      <EditableText as="p" id="b1_desc" defaultText="Мы не зависим от арендодателей. В нашем распоряжении находятся тяжелые установки класса Bauer BG20/BG28 для устройства свай в сложнейших скальных породах, а также маневренные ПБУ-2 на базе вездеходных шасси УРАЛ." isVisualBuilder={isVisualBuilder} />
                       <ul>
-                        <li><CheckCircle size={20} color="var(--color-cyan)" style={{ marginRight: '12px' }}/> <EditableText id="b1_li1" defaultText="Бурение до 80 метров в глубину" isVisualBuilder={isVisualBuilder} /></li>
-                        <li><CheckCircle size={20} color="var(--color-cyan)" style={{ marginRight: '12px' }}/> <EditableText id="b1_li2" defaultText="Выезд на объект за 24 часа по РК" isVisualBuilder={isVisualBuilder} /></li>
+                        <li><CheckCircle size={18} color="var(--color-cyan)" style={{ marginRight: '10px' }}/> <EditableText id="b1_li1" defaultText="Бурение до 80 метров в глубину" isVisualBuilder={isVisualBuilder} /></li>
+                        <li><CheckCircle size={18} color="var(--color-cyan)" style={{ marginRight: '10px' }}/> <EditableText id="b1_li2" defaultText="Выезд на объект за 24 часа по РК" isVisualBuilder={isVisualBuilder} /></li>
                       </ul>
                     </div>
                   </div>
@@ -1069,19 +1070,19 @@ function App() {
 
                 {/* Block 2: Laboratory */}
                 <div className="accordion-item">
-                  <div className="accordion-bg" style={{ backgroundImage: "url('/images/lab.png')" }}></div>
-                  <div className="accordion-overlay"></div>
-                  
-                  <div className="accordion-title-vertical">Лаборатория грунтов</div>
-                  
-                  <div className="accordion-content">
+                  <div className="accordion-inner">
+                    <div className="accordion-bg" style={{ backgroundImage: "url('/images/lab.png')" }}></div>
+                    <div className="accordion-overlay"></div>
+                    
+                    <div className="accordion-title-vertical"><span>Лаборатория грунтов</span></div>
+                    
                     <div className="accordion-details">
-                      <EditableText id="b2_label" defaultText="ТОЧНОСТЬ ДАННЫХ" isVisualBuilder={isVisualBuilder} className="spec-label" style={{ color: 'var(--color-accent)', fontSize: '0.9rem', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '10px', display: 'block' }} />
+                      <EditableText id="b2_label" defaultText="ТОЧНОСТЬ ДАННЫХ" isVisualBuilder={isVisualBuilder} className="spec-label" style={{ color: 'var(--color-accent)', fontSize: '0.85rem', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '8px', display: 'block' }} />
                       <EditableText as="h3" id="b2_title" defaultText="Грунтовая лаборатория" isVisualBuilder={isVisualBuilder} />
                       <EditableText as="p" id="b2_desc" defaultText="Ни одна полевая работа не имеет смысла без качественных лабораторных тестов. Наш комплекс оснащен современными компрессионными и сдвиговыми приборами с автоматической фиксацией деформаций." isVisualBuilder={isVisualBuilder} />
                       <ul>
-                        <li><CheckCircle size={20} color="var(--color-accent)" style={{ marginRight: '12px' }}/> <EditableText id="b2_li1" defaultText="Аттестат СТ РК ИСО/МЭК 17025" isVisualBuilder={isVisualBuilder} /></li>
-                        <li><CheckCircle size={20} color="var(--color-accent)" style={{ marginRight: '12px' }}/> <EditableText id="b2_li2" defaultText="Химический анализ воды и грунтов" isVisualBuilder={isVisualBuilder} /></li>
+                        <li><CheckCircle size={18} color="var(--color-accent)" style={{ marginRight: '10px' }}/> <EditableText id="b2_li1" defaultText="Аттестат СТ РК ИСО/МЭК 17025" isVisualBuilder={isVisualBuilder} /></li>
+                        <li><CheckCircle size={18} color="var(--color-accent)" style={{ marginRight: '10px' }}/> <EditableText id="b2_li2" defaultText="Химический анализ воды и грунтов" isVisualBuilder={isVisualBuilder} /></li>
                       </ul>
                     </div>
                   </div>
@@ -1089,19 +1090,19 @@ function App() {
 
                 {/* Block 3: Geodesy */}
                 <div className="accordion-item">
-                  <div className="accordion-bg" style={{ backgroundImage: "url('/images/geodesy.png')" }}></div>
-                  <div className="accordion-overlay"></div>
-                  
-                  <div className="accordion-title-vertical">Инженерная геодезия</div>
-                  
-                  <div className="accordion-content">
+                  <div className="accordion-inner">
+                    <div className="accordion-bg" style={{ backgroundImage: "url('/images/geodesy.png')" }}></div>
+                    <div className="accordion-overlay"></div>
+                    
+                    <div className="accordion-title-vertical"><span>Инженерная геодезия</span></div>
+                    
                     <div className="accordion-details">
-                      <EditableText id="b3_label" defaultText="ИНЖЕНЕРНАЯ ГЕОДЕЗИЯ" isVisualBuilder={isVisualBuilder} className="spec-label" style={{ color: 'var(--color-cyan)', fontSize: '0.9rem', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '10px', display: 'block' }} />
+                      <EditableText id="b3_label" defaultText="ИНЖЕНЕРНАЯ ГЕОДЕЗИЯ" isVisualBuilder={isVisualBuilder} className="spec-label" style={{ color: 'var(--color-cyan)', fontSize: '0.85rem', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '8px', display: 'block' }} />
                       <EditableText as="h3" id="b3_title" defaultText="Точность съемки" isVisualBuilder={isVisualBuilder} />
                       <EditableText as="p" id="b3_desc" defaultText="Используем роботизированные тахеометры и высокоточные GNSS-приемники для создания опорных сетей, мониторинга осадков фундаментов и топографической съемки M1:500 для самых сложных проектов." isVisualBuilder={isVisualBuilder} />
                       <ul>
-                        <li><CheckCircle size={20} color="var(--color-cyan)" style={{ marginRight: '12px' }}/> <EditableText id="b3_li1" defaultText="3D-моделирование рельефа" isVisualBuilder={isVisualBuilder} /></li>
-                        <li><CheckCircle size={20} color="var(--color-cyan)" style={{ marginRight: '12px' }}/> <EditableText id="b3_li2" defaultText="Вынос осей зданий в натуру" isVisualBuilder={isVisualBuilder} /></li>
+                        <li><CheckCircle size={18} color="var(--color-cyan)" style={{ marginRight: '10px' }}/> <EditableText id="b3_li1" defaultText="3D-моделирование рельефа" isVisualBuilder={isVisualBuilder} /></li>
+                        <li><CheckCircle size={18} color="var(--color-cyan)" style={{ marginRight: '10px' }}/> <EditableText id="b3_li2" defaultText="Вынос осей зданий в натуру" isVisualBuilder={isVisualBuilder} /></li>
                       </ul>
                     </div>
                   </div>
