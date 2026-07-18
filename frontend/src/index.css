@@ -296,7 +296,7 @@ h1, h2, h3, h4 {
       rgba(3, 5, 9, 0.9) 80%, 
       #030509 100%
     ),
-    url('/images/geodesy_surface_bg.png') !important;
+    url('/images/geodesy_surface_bg.png');
   background-attachment: scroll, fixed;
   background-size: 100% 100%, cover;
   background-position: center, center;
@@ -314,7 +314,7 @@ h1, h2, h3, h4 {
       rgba(3, 5, 9, 0.8) calc(100% - 150px), 
       #030509 100%
     ),
-    url('/images/geology_bg_2.png') !important;
+    url('/images/geology_bg_2.png');
   background-attachment: scroll, fixed;
   background-size: 100% 100%, cover;
   background-position: center, center;
@@ -332,7 +332,7 @@ h1, h2, h3, h4 {
       rgba(3, 5, 9, 0.9) calc(100% - 250px), 
       #030509 100%
     ),
-    url('/images/geology_bg_3.png') !important;
+    url('/images/geology_bg_3.png');
   background-attachment: scroll, fixed;
   background-size: 100% 100%, cover;
   background-position: center, center;
@@ -3373,6 +3373,7 @@ html { scroll-behavior: smooth; }
 
 /* Light Theme Fixes for Parallax Backgrounds */
 [data-theme="white"] .crust-layer {
+  background-color: #f8fafc !important;
   background-image: 
     linear-gradient(to bottom, 
       rgba(248, 250, 252, 0.98) 0%, 
@@ -3380,10 +3381,11 @@ html { scroll-behavior: smooth; }
       rgba(248, 250, 252, 0.95) 80%, 
       #f8fafc 100%
     ),
-    url('/images/geodesy_surface_bg.png') !important;
+    url('/images/geodesy_surface_bg.png');
 }
 
 [data-theme="white"] .aquifers-layer {
+  background-color: #f8fafc !important;
   background-image: 
     linear-gradient(to bottom, 
       #f8fafc 0%, 
@@ -3391,10 +3393,11 @@ html { scroll-behavior: smooth; }
       rgba(248, 250, 252, 0.95) calc(100% - 150px), 
       #f8fafc 100%
     ),
-    url('/images/geology_bg_2.png') !important;
+    url('/images/geology_bg_2.png');
 }
 
 [data-theme="white"] .mantle-layer {
+  background-color: #f8fafc !important;
   background-image: 
     linear-gradient(to bottom, 
       #f8fafc 0%, 
@@ -3402,9 +3405,8 @@ html { scroll-behavior: smooth; }
       rgba(248, 250, 252, 0.95) calc(100% - 250px), 
       #f8fafc 100%
     ),
-    url('/images/geology_bg_3.png') !important;
+    url('/images/geology_bg_3.png');
 }
-
 
 [data-theme="white"] .geological-layer {
   background-color: #f8fafc !important;
