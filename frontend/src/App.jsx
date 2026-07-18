@@ -1410,52 +1410,47 @@ function App() {
                 <EditableText as="p" id="approach_desc" defaultText={t.sections.approachDesc} isVisualBuilder={isVisualBuilder} style={{ color: 'var(--color-text-secondary)', fontSize: '1.05rem', lineHeight: 1.6, maxWidth: '800px', margin: '0 auto' }} />
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '30px', position: 'relative', zIndex: 2 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '30px', position: 'relative', zIndex: 2, alignItems: 'stretch' }}>
                 {/* Card 1 */}
-                <div className="glow-card-premium" style={{ padding: '40px 30px' }}>
-                  <div className="license-icon-glow" style={{ marginBottom: '25px', display: 'inline-flex', padding: '15px', background: 'rgba(6, 182, 212, 0.1)', borderRadius: '50%' }}>
+                <div className="approach-card-premium">
+                  <div className="approach-watermark">01</div>
+                  <div className="license-icon-glow" style={{ marginBottom: '30px', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '80px', height: '80px', background: 'rgba(6, 182, 212, 0.1)', borderRadius: '50%', border: '1px solid rgba(6, 182, 212, 0.3)', boxShadow: '0 0 20px rgba(6, 182, 212, 0.2)' }}>
                     <Search size={36} color="var(--color-cyan)" />
                   </div>
-                  <EditableText as="h3" id="app_c1_t" defaultText={t.sections.approach1Title} isVisualBuilder={isVisualBuilder} style={{ fontSize: '1.4rem', marginBottom: '15px', color: 'var(--color-text-primary)' }} />
-                  <EditableText as="p" id="app_c1_d" defaultText={t.sections.approach1Text} isVisualBuilder={isVisualBuilder} style={{ color: 'var(--color-text-secondary)', fontSize: '0.95rem', lineHeight: 1.7 }} />
+                  <EditableText as="h3" id="app_c1_t" defaultText={t.sections.approach1Title} isVisualBuilder={isVisualBuilder} style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '20px', color: 'var(--color-text-primary)', lineHeight: 1.4 }} />
+                  <EditableText as="p" id="app_c1_d" defaultText={t.sections.approach1Text} isVisualBuilder={isVisualBuilder} style={{ color: 'var(--color-text-secondary)', fontSize: '1rem', lineHeight: 1.6, flex: 1 }} />
                 </div>
 
                 {/* Card 2 */}
-                <div className="glow-card-premium" style={{ padding: '40px 30px', borderLeft: '3px solid var(--color-accent)', background: 'linear-gradient(135deg, rgba(234, 179, 8, 0.05) 0%, rgba(3, 5, 9, 0) 100%)' }}>
-                  <div className="license-icon-glow" style={{ marginBottom: '25px', display: 'inline-flex', padding: '15px', background: 'rgba(234, 179, 8, 0.1)', borderRadius: '50%' }}>
+                <div className="approach-card-premium approach-card-center">
+                  <div className="approach-watermark">02</div>
+                  <div className="license-icon-glow" style={{ marginBottom: '30px', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '80px', height: '80px', background: 'rgba(234, 179, 8, 0.1)', borderRadius: '50%', border: '1px solid rgba(234, 179, 8, 0.3)', boxShadow: '0 0 20px rgba(234, 179, 8, 0.2)' }}>
                     <Briefcase size={36} color="var(--color-accent)" />
                   </div>
-                  <EditableText as="h3" id="app_c2_t" defaultText={t.sections.approach2Title} isVisualBuilder={isVisualBuilder} style={{ fontSize: '1.4rem', marginBottom: '15px', color: 'var(--color-text-primary)' }} />
-                  <ul style={{ color: 'var(--color-text-secondary)', fontSize: '0.95rem', lineHeight: 1.7, paddingLeft: '20px', margin: 0 }}>
-                    <EditableText as="li" id="app_c2_l1" dangerously={true} defaultText={t.sections.approach2L1} isVisualBuilder={isVisualBuilder} />
-                    <EditableText as="li" id="app_c2_l2" dangerously={true} defaultText={t.sections.approach2L2} isVisualBuilder={isVisualBuilder} />
-                    <EditableText as="li" id="app_c2_l3" dangerously={true} defaultText={t.sections.approach2L3} isVisualBuilder={isVisualBuilder} />
+                  <EditableText as="h3" id="app_c2_t" defaultText={t.sections.approach2Title} isVisualBuilder={isVisualBuilder} style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '20px', color: 'var(--color-text-primary)', lineHeight: 1.4 }} />
+                  <ul style={{ color: 'var(--color-text-secondary)', fontSize: '1rem', lineHeight: 1.6, paddingLeft: '20px', margin: 0, flex: 1 }}>
+                    <EditableText as="li" id="app_c2_l1" dangerously={true} defaultText={t.sections.approach2L1} isVisualBuilder={isVisualBuilder} style={{ marginBottom: '12px' }} />
+                    <EditableText as="li" id="app_c2_l2" dangerously={true} defaultText={t.sections.approach2L2} isVisualBuilder={isVisualBuilder} style={{ marginBottom: '12px' }} />
+                    <EditableText as="li" id="app_c2_l3" dangerously={true} defaultText={t.sections.approach2L3} isVisualBuilder={isVisualBuilder} style={{ marginBottom: '12px' }} />
                     <EditableText as="li" id="app_c2_l4" dangerously={true} defaultText={t.sections.approach2L4} isVisualBuilder={isVisualBuilder} />
                   </ul>
                 </div>
 
                 {/* Card 3 */}
-                <div className="glow-card-premium" style={{ padding: '40px 30px' }}>
-                  <div className="license-icon-glow" style={{ marginBottom: '25px', display: 'inline-flex', padding: '15px', background: 'rgba(6, 182, 212, 0.1)', borderRadius: '50%' }}>
+                <div className="approach-card-premium">
+                  <div className="approach-watermark">03</div>
+                  <div className="license-icon-glow" style={{ marginBottom: '30px', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '80px', height: '80px', background: 'rgba(6, 182, 212, 0.1)', borderRadius: '50%', border: '1px solid rgba(6, 182, 212, 0.3)', boxShadow: '0 0 20px rgba(6, 182, 212, 0.2)' }}>
                     <ShieldCheck size={36} color="var(--color-cyan)" />
                   </div>
-                  <EditableText as="h3" id="app_c3_t" defaultText={t.sections.approach3Title} isVisualBuilder={isVisualBuilder} style={{ fontSize: '1.4rem', marginBottom: '15px', color: 'var(--color-text-primary)' }} />
-                  <EditableText as="p" id="app_c3_d" defaultText={t.sections.approach3Text} isVisualBuilder={isVisualBuilder} style={{ color: 'var(--color-text-secondary)', fontSize: '0.95rem', lineHeight: 1.7, marginBottom: '20px' }} />
-                  <ul style={{ color: 'var(--color-text-secondary)', fontSize: '0.95rem', lineHeight: 1.7, paddingLeft: '20px', margin: 0 }}>
-                    <EditableText as="li" id="app_c3_l1" dangerously={true} defaultText={t.sections.approach3L1} isVisualBuilder={isVisualBuilder} />
-                    <EditableText as="li" id="app_c3_l2" dangerously={true} defaultText={t.sections.approach3L2} isVisualBuilder={isVisualBuilder} />
+                  <EditableText as="h3" id="app_c3_t" defaultText={t.sections.approach3Title} isVisualBuilder={isVisualBuilder} style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '20px', color: 'var(--color-text-primary)', lineHeight: 1.4 }} />
+                  <EditableText as="p" id="app_c3_d" defaultText={t.sections.approach3Text} isVisualBuilder={isVisualBuilder} style={{ color: 'var(--color-text-secondary)', fontSize: '1rem', lineHeight: 1.6, marginBottom: '20px' }} />
+                  <ul style={{ color: 'var(--color-text-secondary)', fontSize: '1rem', lineHeight: 1.6, paddingLeft: '20px', margin: 0, flex: 1 }}>
+                    <EditableText as="li" id="app_c3_l1" dangerously={true} defaultText={t.sections.approach3L1} isVisualBuilder={isVisualBuilder} style={{ marginBottom: '12px' }} />
+                    <EditableText as="li" id="app_c3_l2" dangerously={true} defaultText={t.sections.approach3L2} isVisualBuilder={isVisualBuilder} style={{ marginBottom: '12px' }} />
                     <EditableText as="li" id="app_c3_l3" dangerously={true} defaultText={t.sections.approach3L3} isVisualBuilder={isVisualBuilder} />
                   </ul>
-    </div>
-
-    <div className="service-bento-arrow">
-      <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="2" style={{ width: '100%', height: '100%' }}>
-        <circle cx="50" cy="50" r="45" strokeDasharray="5 5" />
-        <path d="M30 70 L70 30" strokeWidth="4" />
-        <path d="M50 30 L70 30 L70 50" strokeWidth="4" />
-      </svg>
-    </div>
-  </div>
+                </div>
+              </div>
 
               <div style={{ textAlign: 'center', marginTop: '50px', position: 'relative', zIndex: 2 }}>
                 <button className="btn btn-primary" style={{ padding: '15px 45px', fontSize: '1.1rem', boxShadow: '0 0 30px rgba(6, 182, 212, 0.4)' }} onClick={() => setActivePage('calculator')}>{t.sections.approachBtn}</button>
