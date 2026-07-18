@@ -3621,139 +3621,188 @@ html { scroll-behavior: smooth; }
 
 
 
+
+
 /* ==========================================================================
-   CINEMATIC SLANTED GLASS FEATURE BLOCKS
+   INTERACTIVE PREMIUM ACCORDION (ADVANTAGES)
    ========================================================================== */
-.feature-block-cinematic {
-  position: relative;
+.accordion-container {
+  display: flex;
   width: 100%;
-  min-height: 500px;
+  height: 650px;
+  gap: 15px;
+  margin-bottom: 80px;
+}
+.accordion-item {
+  position: relative;
+  flex: 1;
   border-radius: 24px;
   overflow: hidden;
-  margin-bottom: 60px;
-  box-shadow: 0 30px 60px rgba(0,0,0,0.4);
-  display: flex;
-  align-items: center; /* Changed from stretch to center so it floats! */
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  background: #030509;
+  transition: flex 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.3s ease;
+  cursor: pointer;
+  background: var(--bg-dark);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
 }
-.feature-block-cinematic:hover {
-  box-shadow: 0 40px 80px rgba(0,0,0,0.6);
+.accordion-item:hover {
+  flex: 3;
+  box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+  border: 1px solid rgba(255,255,255,0.1);
 }
-
-/* Background Image that fills the whole block */
-.feature-block-bg {
+.accordion-bg {
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;
-  z-index: 0;
+  background-size: cover;
+  background-position: center;
+  transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.6s ease;
+  filter: grayscale(80%) brightness(0.5);
 }
-.feature-block-bg img {
-  width: 100%; height: 100%;
-  object-fit: cover;
-  transition: transform 1.5s cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-.feature-block-cinematic:hover .feature-block-bg img {
+.accordion-item:hover .accordion-bg {
   transform: scale(1.05);
+  filter: grayscale(0%) brightness(0.9);
+}
+.accordion-overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(to top, rgba(3,5,9,0.9) 0%, rgba(3,5,9,0.3) 40%, rgba(3,5,9,0) 100%);
+  transition: background 0.6s ease, opacity 0.6s ease;
+}
+.accordion-item:hover .accordion-overlay {
+  background: linear-gradient(to right, rgba(3,5,9,0.95) 0%, rgba(3,5,9,0.6) 50%, rgba(3,5,9,0) 100%);
 }
 
-/* The Frosted Glass Panel */
-.feature-content-glass {
-  position: relative;
-  z-index: 1;
-  width: 60%;
-  margin-left: 40px; /* Offset from left edge */
-  border-radius: 20px; /* Rounded corners for floating effect */
+.accordion-content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 50px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  padding: 50px 80px 50px 50px;
-  background: rgba(3, 5, 9, 0.75);
-  backdrop-filter: blur(15px);
-  -webkit-backdrop-filter: blur(15px);
-  clip-path: polygon(0 0, 100% 0, 85% 100%, 0% 100%);
-  transition: background 0.4s ease, transform 0.4s ease;
-}
-.feature-block-cinematic.reverse .feature-content-glass {
-  margin-left: auto;
-  margin-right: 40px; /* Offset from right edge */
-  padding: 50px 50px 50px 80px;
-  clip-path: polygon(0 0, 100% 0, 100% 100%, 15% 100%);
-  background: rgba(3, 5, 9, 0.8);
-}
-.feature-block-cinematic:hover .feature-content-glass {
-  background: rgba(3, 5, 9, 0.6);
-  transform: scale(1.02); /* Slight pop effect */
+  justify-content: flex-end;
+  z-index: 2;
 }
 
-/* Glowing border accent on the slant */
-.glass-glow-accent {
+.accordion-title-vertical {
   position: absolute;
-  top: 50px; bottom: 50px; /* Match height of inset glass */
-  width: 4px;
-  border-radius: 4px;
-  background: linear-gradient(to bottom, transparent, var(--color-cyan), transparent);
-  right: calc(40% + 15px); /* approximate position */
-  transform: skewX(-11deg);
-  z-index: 2;
-  opacity: 0.5;
-  transition: opacity 0.3s;
-}
-.feature-block-cinematic.reverse .glass-glow-accent {
-  left: calc(40% + 15px);
-  right: auto;
-  background: linear-gradient(to bottom, transparent, var(--color-accent), transparent);
-  transform: skewX(11deg);
-}
-.feature-block-cinematic:hover .glass-glow-accent {
+  bottom: 50px;
+  left: 50%;
+  transform: translateX(-50%) rotate(180deg);
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: rgba(255,255,255,0.8);
+  white-space: nowrap;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  transition: opacity 0.3s ease, transform 0.3s ease;
   opacity: 1;
-  box-shadow: 0 0 20px var(--color-cyan);
+  letter-spacing: 2px;
+  text-transform: uppercase;
 }
-.feature-block-cinematic.reverse:hover .glass-glow-accent {
-  box-shadow: 0 0 20px var(--color-accent);
+.accordion-item:hover .accordion-title-vertical {
+  opacity: 0;
+  transform: translateX(-50%) rotate(180deg) translateY(20px);
+  pointer-events: none;
+}
+
+.accordion-details {
+  opacity: 0;
+  transform: translateX(-30px);
+  transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition-delay: 0s;
+  pointer-events: none;
+  max-width: 550px;
+}
+.accordion-item:hover .accordion-details {
+  opacity: 1;
+  transform: translateX(0);
+  transition-delay: 0.2s;
+  pointer-events: auto;
+}
+
+.accordion-details h3 {
+  font-size: 2.8rem;
+  font-weight: 800;
+  color: white;
+  margin-bottom: 15px;
+  line-height: 1.1;
+  text-shadow: 0 5px 15px rgba(0,0,0,0.5);
+}
+.accordion-details p {
+  color: #cbd5e1;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 25px;
+  text-shadow: 0 2px 5px rgba(0,0,0,0.5);
+}
+.accordion-details ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.accordion-details li {
+  display: flex;
+  align-items: center;
+  color: #f1f5f9;
+  font-size: 1.1rem;
+  font-weight: 500;
+  text-shadow: 0 2px 5px rgba(0,0,0,0.5);
 }
 
 /* Light Theme Overrides */
-[data-theme="white"] .feature-block-cinematic {
-  border: 1px solid rgba(0,0,0,0.05);
-  box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+[data-theme="white"] .accordion-item {
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
   background: #f8fafc;
 }
-[data-theme="white"] .feature-block-cinematic:hover {
-  box-shadow: 0 30px 60px rgba(0,0,0,0.15);
+[data-theme="white"] .accordion-item:hover {
+  box-shadow: 0 30px 60px rgba(0,0,0,0.2);
+  border: 1px solid rgba(0,0,0,0.05);
 }
-[data-theme="white"] .feature-content-glass {
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+[data-theme="white"] .accordion-overlay {
+  background: linear-gradient(to top, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0) 100%);
 }
-[data-theme="white"] .feature-block-cinematic.reverse .feature-content-glass {
-  background: rgba(255, 255, 255, 0.85);
+[data-theme="white"] .accordion-item:hover .accordion-overlay {
+  background: linear-gradient(to right, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.8) 50%, rgba(255,255,255,0) 100%);
 }
-[data-theme="white"] .feature-block-cinematic:hover .feature-content-glass {
-  background: rgba(255, 255, 255, 0.7);
+[data-theme="white"] .accordion-title-vertical {
+  color: rgba(15, 23, 42, 0.8);
+}
+[data-theme="white"] .accordion-details h3 {
+  color: #0f172a;
+  text-shadow: none;
+}
+[data-theme="white"] .accordion-details p {
+  color: #334155;
+  text-shadow: none;
+}
+[data-theme="white"] .accordion-details li {
+  color: #1e293b;
+  text-shadow: none;
 }
 
-@media (max-width: 900px) {
-  .feature-content-glass, .feature-block-cinematic.reverse .feature-content-glass {
-    width: 90%;
-    margin: -60px auto 30px auto !important;
-    padding: 30px !important;
-    clip-path: none !important;
-    border-radius: 16px;
-    background: rgba(3, 5, 9, 0.85);
-  }
-  [data-theme="white"] .feature-content-glass {
-    background: rgba(255, 255, 255, 0.95);
-  }
-  .glass-glow-accent {
-    display: none;
-  }
-  .feature-block-cinematic {
-    min-height: auto;
+@media (max-width: 1024px) {
+  .accordion-container {
     flex-direction: column;
+    height: 1000px;
   }
-  .feature-block-bg {
-    position: relative;
-    height: 300px;
+  .accordion-title-vertical {
+    writing-mode: horizontal-tb;
+    transform: translateX(-50%);
+    bottom: 30px;
+  }
+  .accordion-item:hover .accordion-title-vertical {
+    transform: translateX(-50%) translateY(20px);
+  }
+  .accordion-item:hover .accordion-overlay {
+    background: linear-gradient(to top, rgba(3,5,9,0.95) 0%, rgba(3,5,9,0.7) 70%, rgba(3,5,9,0) 100%);
+  }
+  [data-theme="white"] .accordion-item:hover .accordion-overlay {
+    background: linear-gradient(to top, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.8) 70%, rgba(255,255,255,0) 100%);
+  }
+  .accordion-details {
+    max-width: 100%;
   }
 }
