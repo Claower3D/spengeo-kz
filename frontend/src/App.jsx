@@ -1141,9 +1141,9 @@ function App() {
               </div>
               <div style={{ display: 'flex', flexDirection: 'row', gap: '30px', alignItems: 'stretch' }} className="portfolio-split-view">
                 <div style={{ flex: '1 1 65%', height: '450px', borderRadius: 'var(--border-radius-md)', overflow: 'hidden', border: '1px solid rgba(6, 182, 212, 0.2)', boxShadow: '0 0 30px rgba(0,0,0,0.8)', position: 'relative' }}>
-                  <MapContainer center={[48.0196, 66.9237]} zoom={5} scrollWheelZoom={false} style={{ height: '100%', width: '100%', background: theme === 'white' ? '#f1f5f9' : '#030509', zIndex: 1 }}>
+                  <MapContainer center={[48.0196, 66.9237]} zoom={5} scrollWheelZoom={false} style={{ height: '100%', width: '100%', background: theme !== 'dark' ? '#f1f5f9' : '#030509', zIndex: 1 }}>
                     <TileLayer 
-                      url={theme === 'white' ? "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png" : "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"} 
+                      url={theme !== 'dark' ? "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png" : "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"} 
                       attribution="&copy; OpenStreetMap &copy; CARTO" 
                     />
                     <MapFlyTo center={activeProjectCoords || [48.0196, 66.9237]} zoom={activeMapZoom} />

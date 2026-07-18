@@ -3365,3 +3365,38 @@ html { scroll-behavior: smooth; }
 .whatsapp-btn:hover {
   transform: scale(1.1) rotate(-5deg) !important;
 }
+
+
+/* Light Theme Fixes for Parallax Backgrounds */
+[data-theme="white"] .crust-layer {
+  background-image: 
+    linear-gradient(to bottom, 
+      rgba(248, 250, 252, 0.98) 0%, 
+      rgba(248, 250, 252, 0.95) 300px, 
+      rgba(248, 250, 252, 0.95) 80%, 
+      #f8fafc 100%
+    ),
+    url('/images/geodesy_surface_bg.png');
+}
+
+[data-theme="white"] .aquifers-layer {
+  background-image: 
+    linear-gradient(to bottom, 
+      #f8fafc 0%, 
+      rgba(248, 250, 252, 0.95) 150px, 
+      rgba(248, 250, 252, 0.95) calc(100% - 150px), 
+      #f8fafc 100%
+    ),
+    url('/images/geology_bg_2.png');
+}
+
+[data-theme="white"] .mantle-layer {
+  background-image: 
+    linear-gradient(to bottom, 
+      #f8fafc 0%, 
+      rgba(248, 250, 252, 0.95) 150px, 
+      rgba(248, 250, 252, 0.95) calc(100% - 250px), 
+      #f8fafc 100%
+    ),
+    url('/images/geology_bg_3.png');
+}
