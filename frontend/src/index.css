@@ -107,6 +107,7 @@
 
 /* Specific Light Theme Adjustments */
 :is([data-theme="white"], [data-theme="light-gray"]) .blueprint-bg {
+  background-color: var(--bg-main);
   background-image: 
     linear-gradient(rgba(0, 0, 0, 0.04) 1px, transparent 1px),
     linear-gradient(90deg, rgba(0, 0, 0, 0.04) 1px, transparent 1px),
@@ -2938,36 +2939,39 @@ input[type="range"]::-webkit-slider-thumb:hover {
 
 /* LIGHT THEME OVERRIDES FOR GEOLOGICAL LAYERS */
 :is([data-theme="white"], [data-theme="light-gray"]) .crust-layer {
+  background-color: #f8fafc !important;
   background-image: 
     linear-gradient(to bottom, 
-      var(--bg-dark-secondary) 0%, 
-      rgba(248, 250, 252, 0.92) 300px, 
-      rgba(248, 250, 252, 0.92) 80%, 
-      var(--bg-dark) 100%
+      #f8fafc 0%, 
+      rgba(248, 250, 252, 0.95) 300px, 
+      rgba(248, 250, 252, 0.95) 80%, 
+      #f8fafc 100%
     ),
-    url('/images/geodesy_surface_bg.png') !important;
+    url('/images/geodesy_surface_bg.png');
 }
 
 :is([data-theme="white"], [data-theme="light-gray"]) .aquifers-layer {
+  background-color: #f8fafc !important;
   background-image: 
     linear-gradient(to bottom, 
-      var(--bg-dark) 0%, 
+      #f8fafc 0%, 
       rgba(248, 250, 252, 0.95) 150px, 
       rgba(248, 250, 252, 0.95) calc(100% - 150px), 
-      var(--bg-dark) 100%
+      #f8fafc 100%
     ),
-    url('/images/geology_bg_2.png') !important;
+    url('/images/geology_bg_2.png');
 }
 
 :is([data-theme="white"], [data-theme="light-gray"]) .mantle-layer {
+  background-color: #f8fafc !important;
   background-image: 
     linear-gradient(to bottom, 
-      var(--bg-dark) 0%, 
-      rgba(248, 250, 252, 0.96) 150px, 
-      rgba(248, 250, 252, 0.96) calc(100% - 250px), 
-      var(--bg-dark) 100%
+      #f8fafc 0%, 
+      rgba(248, 250, 252, 0.95) 150px, 
+      rgba(248, 250, 252, 0.95) calc(100% - 250px), 
+      #f8fafc 100%
     ),
-    url('/images/geology_bg_3.png') !important;
+    url('/images/geology_bg_3.png');
 }
 
 :is([data-theme="white"], [data-theme="light-gray"]) .page-wrapper {
