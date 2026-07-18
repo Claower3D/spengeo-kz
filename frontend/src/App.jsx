@@ -1056,8 +1056,16 @@ function App() {
                     <li><CheckCircle size={16} color="var(--color-cyan)" style={{ display: 'inline', marginRight: '8px', verticalAlign: 'middle' }}/> <EditableText id="b1_li1" defaultText="Бурение до 80 метров в глубину" isVisualBuilder={isVisualBuilder} /></li>
                     <li><CheckCircle size={16} color="var(--color-cyan)" style={{ display: 'inline', marginRight: '8px', verticalAlign: 'middle' }}/> <EditableText id="b1_li2" defaultText="Выезд на объект за 24 часа по РК" isVisualBuilder={isVisualBuilder} /></li>
                   </ul>
-                </div>
-              </div>
+    </div>
+
+    <div className="service-bento-arrow">
+      <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="2" style={{ width: '100%', height: '100%' }}>
+        <circle cx="50" cy="50" r="45" strokeDasharray="5 5" />
+        <path d="M30 70 L70 30" strokeWidth="4" />
+        <path d="M50 30 L70 30 L70 50" strokeWidth="4" />
+      </svg>
+    </div>
+  </div>
 
               {/* Block 2: Laboratory (Text Left, Image Right) */}
               <div className="glow-card-premium" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '0', alignItems: 'center', padding: '0', overflow: 'hidden' }} className="feature-reverse">
@@ -1088,8 +1096,16 @@ function App() {
                     <li><CheckCircle size={16} color="var(--color-cyan)" style={{ display: 'inline', marginRight: '8px', verticalAlign: 'middle' }}/> <EditableText id="b3_li1" defaultText="3D-моделирование рельефа" isVisualBuilder={isVisualBuilder} /></li>
                     <li><CheckCircle size={16} color="var(--color-cyan)" style={{ display: 'inline', marginRight: '8px', verticalAlign: 'middle' }}/> <EditableText id="b3_li2" defaultText="Вынос осей зданий в натуру" isVisualBuilder={isVisualBuilder} /></li>
                   </ul>
-                </div>
-              </div>
+    </div>
+
+    <div className="service-bento-arrow">
+      <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="2" style={{ width: '100%', height: '100%' }}>
+        <circle cx="50" cy="50" r="45" strokeDasharray="5 5" />
+        <path d="M30 70 L70 30" strokeWidth="4" />
+        <path d="M50 30 L70 30 L70 50" strokeWidth="4" />
+      </svg>
+    </div>
+  </div>
 
             </section>
 
@@ -1103,7 +1119,7 @@ function App() {
 <div className="service-bento-grid">
   {/* 1. Geology - Wide */}
   <div className="service-bento-card wide" onClick={() => {setActiveServiceTab('geology'); setActivePage('services');}}>
-    <div className="service-bento-bg" style={{ backgroundImage: "url('/images/services/geology.jpg')" }}></div>
+    <div className="service-bento-bg" style={{ backgroundImage: "url('/images/services/geology.jpg')" }}></div><div className="service-bento-overlay"></div>
     <div className="service-bento-content">
       <h3 className="service-bento-title">Инженерно-геологические изыскания</h3>
       <ul className="service-bento-list">
@@ -1113,11 +1129,19 @@ function App() {
         <li>Изучение опасных процессов</li>
       </ul>
     </div>
+
+    <div className="service-bento-arrow">
+      <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="2" style={{ width: '100%', height: '100%' }}>
+        <circle cx="50" cy="50" r="45" strokeDasharray="5 5" />
+        <path d="M30 70 L70 30" strokeWidth="4" />
+        <path d="M50 30 L70 30 L70 50" strokeWidth="4" />
+      </svg>
+    </div>
   </div>
 
   {/* 2. Geodesy - Normal */}
   <div className="service-bento-card" onClick={() => {setActiveServiceTab('geodesy'); setActivePage('services');}}>
-    <div className="service-bento-bg" style={{ backgroundImage: "url('/images/services/geodesy.jpg')" }}></div>
+    <div className="service-bento-bg" style={{ backgroundImage: "url('/images/services/geodesy.jpg')" }}></div><div className="service-bento-overlay"></div>
     <div className="service-bento-content">
       <h3 className="service-bento-title">Геодезия и топосъемка</h3>
       <ul className="service-bento-list">
@@ -1126,11 +1150,19 @@ function App() {
         <li>Вынос осей в натуру</li>
       </ul>
     </div>
+
+    <div className="service-bento-arrow">
+      <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="2" style={{ width: '100%', height: '100%' }}>
+        <circle cx="50" cy="50" r="45" strokeDasharray="5 5" />
+        <path d="M30 70 L70 30" strokeWidth="4" />
+        <path d="M50 30 L70 30 L70 50" strokeWidth="4" />
+      </svg>
+    </div>
   </div>
 
   {/* 3. CPT - Normal */}
   <div className="service-bento-card" onClick={() => {setActiveServiceTab('cpt'); setActivePage('services');}}>
-    <div className="service-bento-bg" style={{ backgroundImage: "url('/images/services/cpt.jpg')" }}></div>
+    <div className="service-bento-bg" style={{ backgroundImage: "url('/images/services/cpt.jpg')" }}></div><div className="service-bento-overlay"></div>
     <div className="service-bento-content">
       <h3 className="service-bento-title">CPT Зондирование</h3>
       <ul className="service-bento-list">
@@ -1139,11 +1171,19 @@ function App() {
         <li>Расчленение разреза</li>
       </ul>
     </div>
+
+    <div className="service-bento-arrow">
+      <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="2" style={{ width: '100%', height: '100%' }}>
+        <circle cx="50" cy="50" r="45" strokeDasharray="5 5" />
+        <path d="M30 70 L70 30" strokeWidth="4" />
+        <path d="M50 30 L70 30 L70 50" strokeWidth="4" />
+      </svg>
+    </div>
   </div>
 
   {/* 4. Piles - Normal */}
   <div className="service-bento-card" onClick={() => {setActiveServiceTab('piles'); setActivePage('services');}}>
-    <div className="service-bento-bg" style={{ backgroundImage: "url('/images/services/piles.jpg')" }}></div>
+    <div className="service-bento-bg" style={{ backgroundImage: "url('/images/services/piles.jpg')" }}></div><div className="service-bento-overlay"></div>
     <div className="service-bento-content">
       <h3 className="service-bento-title">Испытания свай</h3>
       <ul className="service-bento-list">
@@ -1152,11 +1192,19 @@ function App() {
         <li>Динамические испытания</li>
       </ul>
     </div>
+
+    <div className="service-bento-arrow">
+      <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="2" style={{ width: '100%', height: '100%' }}>
+        <circle cx="50" cy="50" r="45" strokeDasharray="5 5" />
+        <path d="M30 70 L70 30" strokeWidth="4" />
+        <path d="M50 30 L70 30 L70 50" strokeWidth="4" />
+      </svg>
+    </div>
   </div>
 
   {/* 5. Plates - Normal */}
   <div className="service-bento-card" onClick={() => {setActiveServiceTab('plates'); setActivePage('services');}}>
-    <div className="service-bento-bg" style={{ backgroundImage: "url('/images/services/plates.jpg')" }}></div>
+    <div className="service-bento-bg" style={{ backgroundImage: "url('/images/services/plates.jpg')" }}></div><div className="service-bento-overlay"></div>
     <div className="service-bento-content">
       <h3 className="service-bento-title">Штамповые испытания</h3>
       <ul className="service-bento-list">
@@ -1165,11 +1213,19 @@ function App() {
         <li>Модуль деформации</li>
       </ul>
     </div>
+
+    <div className="service-bento-arrow">
+      <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="2" style={{ width: '100%', height: '100%' }}>
+        <circle cx="50" cy="50" r="45" strokeDasharray="5 5" />
+        <path d="M30 70 L70 30" strokeWidth="4" />
+        <path d="M50 30 L70 30 L70 50" strokeWidth="4" />
+      </svg>
+    </div>
   </div>
 
   {/* 6. Laboratory - Full Width */}
   <div className="service-bento-card full" onClick={() => {setActiveServiceTab('laboratory'); setActivePage('services');}}>
-    <div className="service-bento-bg" style={{ backgroundImage: "url('/images/services/laboratory.jpg')" }}></div>
+    <div className="service-bento-bg" style={{ backgroundImage: "url('/images/services/laboratory.jpg')" }}></div><div className="service-bento-overlay"></div>
     <div className="service-bento-content">
       <h3 className="service-bento-title">Лаборатория грунтов</h3>
       <ul className="service-bento-list">
@@ -1178,6 +1234,14 @@ function App() {
         <li>Коррозионная агрессивность</li>
         <li>Компрессионное сжатие</li>
       </ul>
+    </div>
+
+    <div className="service-bento-arrow">
+      <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="2" style={{ width: '100%', height: '100%' }}>
+        <circle cx="50" cy="50" r="45" strokeDasharray="5 5" />
+        <path d="M30 70 L70 30" strokeWidth="4" />
+        <path d="M50 30 L70 30 L70 50" strokeWidth="4" />
+      </svg>
     </div>
   </div>
 </div>
@@ -1316,8 +1380,16 @@ function App() {
                     <EditableText as="li" id="app_c3_l2" dangerously={true} defaultText={t.sections.approach3L2} isVisualBuilder={isVisualBuilder} />
                     <EditableText as="li" id="app_c3_l3" dangerously={true} defaultText={t.sections.approach3L3} isVisualBuilder={isVisualBuilder} />
                   </ul>
-                </div>
-              </div>
+    </div>
+
+    <div className="service-bento-arrow">
+      <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="2" style={{ width: '100%', height: '100%' }}>
+        <circle cx="50" cy="50" r="45" strokeDasharray="5 5" />
+        <path d="M30 70 L70 30" strokeWidth="4" />
+        <path d="M50 30 L70 30 L70 50" strokeWidth="4" />
+      </svg>
+    </div>
+  </div>
 
               <div style={{ textAlign: 'center', marginTop: '50px', position: 'relative', zIndex: 2 }}>
                 <button className="btn btn-primary" style={{ padding: '15px 45px', fontSize: '1.1rem', boxShadow: '0 0 30px rgba(6, 182, 212, 0.4)' }} onClick={() => setActivePage('calculator')}>{t.sections.approachBtn}</button>
@@ -2372,8 +2444,16 @@ function App() {
                 <li>✉️ info@spengeo.kz</li>
                 <li>⚙️ API: Go REST Service Port 8083</li>
               </ul>
-            </div>
-          </div>
+    </div>
+
+    <div className="service-bento-arrow">
+      <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="2" style={{ width: '100%', height: '100%' }}>
+        <circle cx="50" cy="50" r="45" strokeDasharray="5 5" />
+        <path d="M30 70 L70 30" strokeWidth="4" />
+        <path d="M50 30 L70 30 L70 50" strokeWidth="4" />
+      </svg>
+    </div>
+  </div>
 
           <div className="footer-bottom">
             <div>
