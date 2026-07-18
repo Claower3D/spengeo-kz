@@ -1365,7 +1365,7 @@ function App() {
                           padding: '15px 25px',
                           cursor: 'pointer',
                           transition: 'all 0.3s ease',
-                          opacity: isActive ? 1 : 0.6,
+                          opacity: 1,
                           background: isActive ? (theme === 'dark' ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)') : 'transparent',
                           borderLeft: isActive ? '3px solid var(--color-cyan)' : '3px solid transparent',
                           borderRadius: '16px'
