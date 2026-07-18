@@ -7,7 +7,7 @@ import {
   Printer, HardDrive, AlertTriangle, Layers, Clock, Settings,
   BookOpen, FileSpreadsheet, Search, MessageCircle, Bot, ArrowUp, Sun, Moon, Briefcase, Edit3
 } from 'lucide-react';
-import { MapContainer, TileLayer, Marker, Popup, Tooltip, useMap } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, Tooltip, useMap, GeoJSON } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { translations } from './translations';
@@ -397,6 +397,13 @@ function App() {
 
   // Map Sync states
   const [activeProjectCoords, setActiveProjectCoords] = useState(null);
+  const [kzGeoJson, setKzGeoJson] = useState(null);
+  useEffect(() => {
+    fetch('https://raw.githubusercontent.com/johan/world.geo.json/master/countries/KAZ.geo.json')
+      .then(res => res.json())
+      .then(data => setKzGeoJson(data))
+      .catch(err => console.error("Failed to load KZ GeoJSON", err));
+  }, []);
   const [activeMapZoom, setActiveMapZoom] = useState(5);
   
   // Interactive navigation submenu controllers
@@ -1264,20 +1271,36 @@ function App() {
             </div>
             <div className="geological-layer mantle-layer">
               <div className="geological-layer-content">
-                {/* 4. Projects Section (Summarized) */}
-                <section style={{ marginBottom: '50px', backgroundColor: 'var(--bg-dark-secondary)', padding: '40px', borderRadius: 'var(--border-radius-lg)', border: '1px solid var(--border-color)', boxShadow: '0 10px 40px rgba(0,0,0,0.15)' }}>
-              <div style={{ textAlign: 'center', marginBottom: '30px' }}>
-                <EditableText id="portfolio_label_v3" defaultText="ПОРТФОЛИО" isVisualBuilder={isVisualBuilder} className="hero-subtitle" style={{ color: 'var(--color-cyan)' }} />
-                <EditableText as="h2" id="portfolio_title_v3" defaultText="Выполненные Объекты" isVisualBuilder={isVisualBuilder} />
+                
+                {/* 4. Projects Section (Map Dashboard) */}
+                <section className="map-dashboard-container">
+              <div style={{ textAlign: 'center', marginBottom: '40px' }}>
+                <EditableText id="portfolio_label_v3" defaultText="ПОРТФОЛИО" isVisualBuilder={isVisualBuilder} className="spec-label" style={{ color: 'var(--color-cyan)', fontSize: '1rem', letterSpacing: '3px', textTransform: 'uppercase', marginBottom: '15px', display: 'block' }} />
+                <EditableText as="h2" id="portfolio_title_v3" defaultText="Выполненные Объекты" isVisualBuilder={isVisualBuilder} style={{ fontSize: '3rem', fontWeight: 800, lineHeight: 1.2, margin: 0 }} />
               </div>
-              <div style={{ display: 'flex', flexDirection: 'row', gap: '30px', alignItems: 'stretch' }} className="portfolio-split-view">
-                <div style={{ flex: '1 1 65%', height: '450px', borderRadius: 'var(--border-radius-md)', overflow: 'hidden', border: '1px solid rgba(6, 182, 212, 0.2)', boxShadow: '0 0 30px rgba(0,0,0,0.8)', position: 'relative' }}>
-                  <MapContainer center={[48.0196, 66.9237]} zoom={5} scrollWheelZoom={false} style={{ height: '100%', width: '100%', background: theme !== 'dark' ? '#f1f5f9' : '#030509', zIndex: 1 }}>
+              <div style={{ display: 'flex', flexDirection: 'row', gap: '40px', alignItems: 'stretch' }} className="portfolio-split-view">
+                
+                {/* Map Area */}
+                <div style={{ flex: '1 1 60%' }} className="map-wrapper-premium">
+                  <MapContainer center={[48.0196, 66.9237]} zoom={5} scrollWheelZoom={false} style={{ height: '100%', width: '100%', background: theme !== 'dark' ? '#f8fafc' : '#030509', zIndex: 1 }}>
                     <TileLayer key={theme} 
                       url={theme !== 'dark' ? "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png" : "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"} 
                       attribution="&copy; OpenStreetMap &copy; CARTO" 
                     />
                     <MapFlyTo center={activeProjectCoords || [48.0196, 66.9237]} zoom={activeMapZoom} />
+                    {kzGeoJson && (
+                      <GeoJSON 
+                        data={kzGeoJson} 
+                        style={{ 
+                          color: 'var(--color-cyan)', 
+                          weight: 3, 
+                          fillColor: 'var(--color-cyan)', 
+                          fillOpacity: theme === 'dark' ? 0.05 : 0.08,
+                          dashArray: '6, 8'
+                        }} 
+                      />
+                    )}
+
                     {DETAILED_PROJECTS.map(proj => (
                       <Marker 
                         key={proj.id} 
@@ -1307,46 +1330,48 @@ function App() {
                   {activeProjectCoords && (
                     <button 
                       onClick={() => { setActiveProjectCoords(null); setActiveMapZoom(5); }}
-                      style={{ position: 'absolute', bottom: '20px', left: '20px', zIndex: 1000, padding: '8px 16px', background: 'rgba(3, 5, 9, 0.9)', border: '1px solid var(--color-cyan)', color: 'var(--color-cyan)', borderRadius: 'var(--border-radius-sm)', cursor: 'pointer', backdropFilter: 'blur(5px)', fontSize: '0.8rem', fontWeight: 600 }}
+                      className="map-reset-btn"
                     >
-                      ⟲ Показать весь Казахстан
+                      <MapPin size={18} /> Вернуться к обзору РК
                     </button>
                   )}
                 </div>
 
-                <div style={{ flex: '1 1 35%', display: 'flex', flexDirection: 'column', gap: '15px', height: '450px', overflowY: 'auto', paddingRight: '10px' }} className="custom-scrollbar">
+                {/* Projects List Area */}
+                <div style={{ flex: '1 1 40%', display: 'flex', flexDirection: 'column', gap: '16px', height: '500px', overflowY: 'auto', paddingRight: '15px' }} className="projects-list-scroll">
                   {DETAILED_PROJECTS.map(proj => {
                     const isActive = activeProjectCoords === proj.coords;
                     return (
                       <div 
                         key={proj.id} 
-                        style={{ 
-                          padding: '20px', 
-                          background: isActive ? 'rgba(6, 182, 212, 0.08)' : 'rgba(255,255,255,0.02)', 
-                          border: isActive ? '1px solid var(--color-cyan)' : '1px solid rgba(255,255,255,0.05)',
-                          borderRadius: 'var(--border-radius-md)',
-                          cursor: 'pointer',
-                          transition: 'all 0.3s ease',
-                          boxShadow: isActive ? '0 0 15px rgba(6, 182, 212, 0.2)' : 'none'
-                        }}
+                        className={`project-card-premium ${isActive ? 'active' : ''}`}
                         onClick={() => {
                           setActiveProjectCoords(proj.coords);
                           setActiveMapZoom(13);
                         }}
-                        onMouseEnter={(e) => { e.currentTarget.style.borderColor = isActive ? 'var(--color-cyan)' : 'var(--color-accent)'; }}
-                        onMouseLeave={(e) => { e.currentTarget.style.borderColor = isActive ? 'var(--color-cyan)' : 'rgba(255,255,255,0.05)'; }}
                       >
-                        <span className="spec-label" style={{ color: isActive ? 'var(--color-cyan)' : 'var(--color-accent)' }}>{proj.client}</span>
-                        <h3 style={{ fontSize: '1.05rem', marginBlock: '8px', color: 'var(--color-text-primary)' }}>{proj.name}</h3>
-                        <p style={{ fontSize: '0.8rem', color: 'var(--color-text-secondary)', marginBottom: '5px' }}>📍 {proj.loc}</p>
-                        <p style={{ fontSize: '0.8rem', color: 'var(--color-text-secondary)' }}>⚙️ {proj.type}</p>
+                        <div style={{ fontSize: '0.85rem', color: 'var(--color-accent)', fontWeight: 700, letterSpacing: '1px', textTransform: 'uppercase' }}>
+                          {proj.client}
+                        </div>
+                        <div style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--color-text-primary)' }}>
+                          {proj.name}
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.9rem', color: 'var(--color-text-secondary)', marginTop: '4px' }}>
+                          <MapPin size={14} color="var(--color-cyan)" /> {proj.loc}
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.9rem', color: 'var(--color-text-secondary)' }}>
+                          <Settings size={14} color="var(--color-cyan)" /> {proj.type}
+                        </div>
                       </div>
                     );
                   })}
                 </div>
               </div>
+              
               <div style={{ textAlign: 'center', marginTop: '40px' }}>
-                <button className="btn btn-primary" onClick={() => setActivePage('projects')}>Смотреть все 50+ проектов</button>
+                <a href="#portfolio" onClick={(e) => { e.preventDefault(); setActivePage('portfolio'); }} className="cta-button-primary glow-effect" style={{ padding: '15px 40px', fontSize: '1.1rem', borderRadius: '30px' }}>
+                  <EditableText id="portfolio_btn_v3" defaultText="Смотреть все 50+ проектов" isVisualBuilder={isVisualBuilder} />
+                </a>
               </div>
             </section>
 
