@@ -1041,15 +1041,16 @@ function App() {
             </section>
 
             
-            {/* 2.7 Premium Overlapping Features Section */}
+            
+            {/* 2.7 Cinematic Slanted Glass Features Section */}
             <section style={{ marginBottom: '50px' }}>
               
               {/* Block 1: Heavy Equipment */}
-              <div className="feature-block-premium">
-                <div className="feature-image-wrapper">
-                  <div className="feature-image-overlay"></div>
+              <div className="feature-block-cinematic">
+                <div className="feature-block-bg">
                   <img src="/images/rig.png" alt="Буровая техника" onError={(e) => { e.target.src='/images/hero.png' }} />
                 </div>
+                <div className="glass-glow-accent"></div>
                 <div className="feature-content-glass">
                   <EditableText id="b1_label" defaultText="МАТЕРИАЛЬНАЯ БАЗА" isVisualBuilder={isVisualBuilder} className="spec-label" style={{ color: 'var(--color-cyan)', fontSize: '0.9rem', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '10px', display: 'block' }} />
                   <EditableText as="h3" id="b1_title" defaultText="Мощный парк буровой техники" isVisualBuilder={isVisualBuilder} style={{ fontSize: '2.5rem', marginBottom: '20px', lineHeight: 1.2, fontWeight: '800' }} />
@@ -1062,11 +1063,11 @@ function App() {
               </div>
 
               {/* Block 2: Laboratory (Reversed) */}
-              <div className="feature-block-premium reverse">
-                <div className="feature-image-wrapper">
-                  <div className="feature-image-overlay"></div>
+              <div className="feature-block-cinematic reverse">
+                <div className="feature-block-bg">
                   <img src="/images/lab.png" alt="Грунтовая лаборатория" onError={(e) => { e.target.src='/images/hero.png' }} />
                 </div>
+                <div className="glass-glow-accent"></div>
                 <div className="feature-content-glass">
                   <EditableText id="b2_label" defaultText="ТОЧНОСТЬ ДАННЫХ" isVisualBuilder={isVisualBuilder} className="spec-label" style={{ color: 'var(--color-accent)', fontSize: '0.9rem', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '10px', display: 'block' }} />
                   <EditableText as="h3" id="b2_title" defaultText="Собственная грунтовая лаборатория" isVisualBuilder={isVisualBuilder} style={{ fontSize: '2.5rem', marginBottom: '20px', lineHeight: 1.2, fontWeight: '800' }} />
@@ -1079,11 +1080,11 @@ function App() {
               </div>
 
               {/* Block 3: Geodesy */}
-              <div className="feature-block-premium">
-                <div className="feature-image-wrapper">
-                  <div className="feature-image-overlay"></div>
+              <div className="feature-block-cinematic">
+                <div className="feature-block-bg">
                   <img src="/images/geodesy.png" alt="Геодезия и топосъемка" onError={(e) => { e.target.src='/images/hero.png' }} />
                 </div>
+                <div className="glass-glow-accent"></div>
                 <div className="feature-content-glass">
                   <EditableText id="b3_label" defaultText="ИНЖЕНЕРНАЯ ГЕОДЕЗИЯ" isVisualBuilder={isVisualBuilder} className="spec-label" style={{ color: 'var(--color-cyan)', fontSize: '0.9rem', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '10px', display: 'block' }} />
                   <EditableText as="h3" id="b3_title" defaultText="Миллиметровая точность съемки" isVisualBuilder={isVisualBuilder} style={{ fontSize: '2.5rem', marginBottom: '20px', lineHeight: 1.2, fontWeight: '800' }} />
