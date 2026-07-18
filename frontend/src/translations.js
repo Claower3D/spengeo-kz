@@ -7,7 +7,8 @@ export const translations = {
       equipment: 'Оборудование',
       calculator: 'Калькулятор',
       contacts: 'Контакты',
-      login: 'Вход'
+      login: 'Вход',
+      knowledge: 'База знаний'
     },
     hero: {
       subtitle: 'ТОО «СпецИнжГео» // Лицензия №19004562',
@@ -101,7 +102,8 @@ export const translations = {
       equipment: 'Equipment',
       calculator: 'Calculator',
       contacts: 'Contacts',
-      login: 'Login'
+      login: 'Login',
+      knowledge: 'Knowledge Base'
     },
     hero: {
       subtitle: 'SpenGeo LLP // License No. 19004562',
@@ -195,7 +197,8 @@ export const translations = {
       equipment: 'Жабдықтар',
       calculator: 'Калькулятор',
       contacts: 'Байланыс',
-      login: 'Кіру'
+      login: 'Кіру',
+      knowledge: 'Білім базасы'
     },
     hero: {
       subtitle: '«СпецИнжГео» ЖШС // Лицензия №19004562',

@@ -252,7 +252,7 @@ function EditableText({ id, defaultText, isVisualBuilder, dangerously = false, a
         outline: isVisualBuilder ? '2px dashed var(--color-accent)' : 'none',
         outlineOffset: '2px',
         cursor: isVisualBuilder ? 'text' : 'inherit',
-        display: isVisualBuilder ? 'inline-block' : 'inherit',
+        display: isVisualBuilder ? 'inline-block' : (style && style.display ? style.display : undefined),
         minWidth: isVisualBuilder ? '20px' : 'auto',
         minHeight: isVisualBuilder ? '1em' : 'auto',
         transition: 'outline 0.3s ease',
@@ -273,10 +273,81 @@ function EditableText({ id, defaultText, isVisualBuilder, dangerously = false, a
 
 const HERO_ICONS = [Layers, Compass, Cpu, ShieldCheck];
 
+const MENU_STRUCTURE = {
+  ru: [
+    { title: 'Главная', page: 'home', action: { type: 'page', val: 'home' } },
+    { 
+      title: 'О компании', page: 'about', 
+      items: [
+        { name: 'История', action: { type: 'page', val: 'about' } },
+        { name: 'Команда', action: { type: 'page', val: 'about' } },
+        { name: 'Наши преимущества', action: { type: 'scroll', page: 'home', target: 'advantages' } },
+        { name: 'Лицензии', action: { type: 'page', val: 'documents' } },
+        { name: 'Сертификаты', action: { type: 'page', val: 'documents' } }
+      ]
+    },
+    {
+      title: 'Услуги', page: 'services',
+      columns: 2,
+      items: [
+        { name: 'Инженерно-геологические изыскания', action: { type: 'service', val: 'geology' } },
+        { name: 'Инженерно-геодезические изыскания', action: { type: 'service', val: 'geodesy' } },
+        { name: 'Экологические изыскания', action: { type: 'service', val: 'geology' } },
+        { name: 'Гидрометеорологические изыскания', action: { type: 'service', val: 'geodesy' } },
+        { name: 'Бурение инженерно-геологических скважин', action: { type: 'service', val: 'geology' } },
+        { name: 'Гидрогеологические исследования', action: { type: 'service', val: 'hydrogeology' } },
+        { name: 'Статическое зондирование (CPT)', action: { type: 'service', val: 'cpt' } },
+        { name: 'Статические испытания свай', action: { type: 'service', val: 'piles' } },
+        { name: 'Динамические испытания свай', action: { type: 'service', val: 'piles' } },
+        { name: 'Штамповые испытания', action: { type: 'service', val: 'plates' } },
+        { name: 'Лабораторные исследования', action: { type: 'service', val: 'laboratory' } },
+        { name: 'Водопонижение', action: { type: 'service', val: 'hydrogeology' } },
+        { name: 'Проектирование водопонижения', action: { type: 'service', val: 'hydrogeology' } }
+      ]
+    },
+    {
+      title: 'Проекты', page: 'projects',
+      items: [
+        { name: 'Поиск', action: { type: 'page', val: 'projects' } },
+        { name: 'По регионам', action: { type: 'page', val: 'projects' } },
+        { name: 'По услугам', action: { type: 'page', val: 'projects' } },
+        { name: 'По заказчикам', action: { type: 'page', val: 'projects' } },
+        { name: 'Страница проекта', action: { type: 'page', val: 'projects' } }
+      ]
+    },
+    {
+      title: 'Оборудование', page: 'equipment',
+      items: [
+        { name: 'Буровые установки', action: { type: 'equip', cat: 'rigs', idx: 0 } },
+        { name: 'CPT', action: { type: 'equip', cat: 'lab', idx: 0 } },
+        { name: 'Геодезическое оборудование', action: { type: 'equip', cat: 'lab', idx: 2 } },
+        { name: 'Испытательное оборудование', action: { type: 'equip', cat: 'lab', idx: 1 } },
+        { name: 'Лаборатория', action: { type: 'equip', cat: 'lab', idx: 2 } },
+        { name: 'Насосное оборудование', action: { type: 'equip', cat: 'lab', idx: 2 } },
+        { name: 'Автотранспорт', action: { type: 'equip', cat: 'rigs', idx: 1 } }
+      ]
+    },
+    {
+      title: 'База знаний', page: 'blog',
+      items: [
+        { name: 'Статьи', action: { type: 'page', val: 'blog' } },
+        { name: 'Методы испытаний', action: { type: 'page', val: 'blog' } },
+        { name: 'Типы грунтов', action: { type: 'page', val: 'blog' } },
+        { name: 'Нормативные документы', action: { type: 'page', val: 'blog' } },
+        { name: 'FAQ', action: { type: 'page', val: 'blog' } },
+        { name: 'Новости', action: { type: 'page', val: 'blog' } },
+        { name: 'Фото', action: { type: 'page', val: 'blog' } },
+        { name: 'Видео', action: { type: 'page', val: 'blog' } }
+      ]
+    },
+    { title: 'Контакты', page: 'contacts', action: { type: 'page', val: 'contacts' } }
+  ]
+};
+
 function App() {
   const [activePage, setActivePage] = useState(() => {
     const path = window.location.pathname.replace(/^\//, '');
-    return ['home', 'about', 'services', 'projects', 'admin'].includes(path) ? path : 'home';
+    return ['home', 'about', 'services', 'projects', 'equipment', 'blog', 'documents', 'calculator', 'contacts', 'admin'].includes(path) ? path : 'home';
   });
   
   useEffect(() => {
@@ -589,36 +660,57 @@ function App() {
 
               <nav className="desktop-nav">
                 <ul className="nav-links">
-                  <li>
-                    <button type="button" className={`nav-btn ${activePage === 'about' ? 'active' : ''}`} onClick={() => { setActivePage('about'); logEvent('Opened company details.'); }}>
-                      {t.nav.about}
-                    </button>
-                  </li>
-                  <li>
-                    <button type="button" className={`nav-btn ${activePage === 'services' ? 'active' : ''}`} onClick={() => { setActivePage('services'); logEvent('Opened services terminal.'); }}>
-                      {t.nav.services}
-                    </button>
-                  </li>
-                  <li>
-                    <button type="button" className={`nav-btn ${activePage === 'projects' ? 'active' : ''}`} onClick={() => { setActivePage('projects'); logEvent('Opened project archives.'); }}>
-                      {t.nav.projects}
-                    </button>
-                  </li>
-                  <li>
-                    <button type="button" className={`nav-btn ${activePage === 'equipment' ? 'active' : ''}`} onClick={() => { setActivePage('equipment'); logEvent('Opened equipment viewer.'); }}>
-                      {t.nav.equipment}
-                    </button>
-                  </li>
-                  <li>
-                    <button type="button" className={`nav-btn ${activePage === 'calculator' ? 'active' : ''}`} onClick={() => { setActivePage('calculator'); logEvent('Opened estimator engine.'); }}>
-                      {t.nav.calculator}
-                    </button>
-                  </li>
-                  <li>
-                    <button type="button" className={`nav-btn ${activePage === 'contacts' ? 'active' : ''}`} onClick={() => { setActivePage('contacts'); logEvent('Opened contacts.'); }}>
-                      {t.nav.contacts}
-                    </button>
-                  </li>
+                  {(MENU_STRUCTURE[language] || MENU_STRUCTURE.ru).map((menu, i) => (
+                    <li key={i} className={menu.items ? "nav-item-with-dropdown" : ""}>
+                      <button 
+                        type="button" 
+                        className={`nav-btn ${activePage === menu.page || (menu.page === 'about' && activePage === 'documents') ? 'active' : ''}`} 
+                        onClick={() => {
+                          if (menu.action) {
+                            if (menu.action.type === 'page') setActivePage(menu.action.val);
+                          }
+                        }}
+                      >
+                        {menu.title}
+                      </button>
+                      
+                      {menu.items && (
+                        <div className={`dropdown-menu ${menu.columns ? 'dropdown-menu-wide' : ''}`}>
+                          {menu.items.map((item, j) => (
+                            <button 
+                              key={j} 
+                              type="button" 
+                              className="dropdown-item" 
+                              onClick={() => {
+                                if (item.action.type === 'page') {
+                                  setActivePage(item.action.val);
+                                } else if (item.action.type === 'scroll') {
+                                  setActivePage(item.action.page);
+                                  setTimeout(() => {
+                                    const el = document.getElementById(item.action.target);
+                                    if (el) el.scrollIntoView({ behavior: 'smooth' });
+                                  }, 100);
+                                } else if (item.action.type === 'service') {
+                                  setActiveServiceTab(item.action.val);
+                                  setActivePage('services');
+                                } else if (item.action.type === 'equip') {
+                                  setEquipCategory(item.action.cat);
+                                  if (item.action.cat === 'rigs') {
+                                    if (typeof setSelectedRig === 'function') setSelectedRig(item.action.idx);
+                                  } else {
+                                    if (typeof setSelectedLab === 'function') setSelectedLab(item.action.idx);
+                                  }
+                                  setActivePage('equipment');
+                                }
+                              }}
+                            >
+                              {item.name}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </li>
+                  ))}
                 </ul>
               </nav>
 
@@ -1001,26 +1093,35 @@ function App() {
                 <EditableText id="services_label" defaultText={t.sections.servicesLabel} isVisualBuilder={isVisualBuilder} className="hero-subtitle" />
                 <EditableText as="h2" id="services_title" defaultText={t.sections.servicesTitle} isVisualBuilder={isVisualBuilder} />
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '30px' }}>
+              <div className="bento-grid">
                 {Object.entries(SERVICES_DATA).slice(0, 6).map(([key, item]) => {
-                  const Icon = item.icon;
                   return (
-                    <div key={key} className="service-card-photo" onClick={() => {setActiveServiceTab(key); setActivePage('services');}}>
-                      <div className="service-card-bg">
-                         <img src={`/images/services/${key}.jpg`} alt={item.title} onError={(e) => { e.target.src='/images/hero.png' }} />
+                    <div key={key} className="bento-item" onClick={() => {setActiveServiceTab(key); setActivePage('services');}}>
+                      <div className="bento-item-bg">
+                         <img src={`/images/services/${key}.jpg`} alt={item.title} style={{width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'right'}} onError={(e) => { e.target.src='/images/hero.png' }} />
                       </div>
-                      <div className="service-card-overlay"></div>
-                      <div className="service-card-content">
-                        <Icon size={28} color="var(--color-accent)" style={{ marginBottom: '10px' }} />
-                        <h3 style={{ fontSize: '1.25rem', marginBottom: '8px', color: '#fff', textShadow: '0 2px 5px rgba(0,0,0,0.8)' }}>{item.title}</h3>
-                        <p style={{ fontSize: '0.85rem', color: 'var(--color-text-secondary)', marginBottom: '15px', textShadow: '0 1px 3px rgba(0,0,0,0.8)' }}>{item.desc.substring(0, 110)}...</p>
-                        <span className="service-card-btn">Подробнее <ArrowUpRight size={14} style={{marginLeft: '4px'}}/></span>
+                      <div className="bento-item-overlay"></div>
+                      <div className="bento-item-content">
+                        <h3 className="bento-title">{item.title}</h3>
+                        <p className="bento-desc">{item.desc.substring(0, 80)}...</p>
+                        
+                        <div className="bento-logo">
+                           <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="2" style={{ width: '100%', height: '100%', color: 'var(--color-accent)' }}>
+                             <circle cx="50" cy="50" r="45" strokeDasharray="5 5" />
+                             <path d="M30 70 L70 30" strokeWidth="4" />
+                             <path d="M50 30 L70 30 L70 50" strokeWidth="4" />
+                           </svg>
+                        </div>
                       </div>
                     </div>
                   )
                 })}
               </div>
+            
             </section>
+
+            
+
             </div>
             </div>
 
@@ -1136,7 +1237,7 @@ function App() {
                     <Briefcase size={36} color="var(--color-accent)" />
                   </div>
                   <EditableText as="h3" id="app_c2_t" defaultText={t.sections.approach2Title} isVisualBuilder={isVisualBuilder} style={{ fontSize: '1.4rem', marginBottom: '15px', color: 'var(--color-text-primary)' }} />
-                  <ul style={{ color: 'var(--color-text-secondary)', fontSize: '0.95rem', lineHeight: 1.7, paddingLeft: '20px', display: 'flex', flexDirection: 'column', gap: '12px', margin: 0 }}>
+                  <ul style={{ color: 'var(--color-text-secondary)', fontSize: '0.95rem', lineHeight: 1.7, paddingLeft: '20px', margin: 0 }}>
                     <EditableText as="li" id="app_c2_l1" dangerously={true} defaultText={t.sections.approach2L1} isVisualBuilder={isVisualBuilder} />
                     <EditableText as="li" id="app_c2_l2" dangerously={true} defaultText={t.sections.approach2L2} isVisualBuilder={isVisualBuilder} />
                     <EditableText as="li" id="app_c2_l3" dangerously={true} defaultText={t.sections.approach2L3} isVisualBuilder={isVisualBuilder} />
@@ -1151,7 +1252,7 @@ function App() {
                   </div>
                   <EditableText as="h3" id="app_c3_t" defaultText={t.sections.approach3Title} isVisualBuilder={isVisualBuilder} style={{ fontSize: '1.4rem', marginBottom: '15px', color: 'var(--color-text-primary)' }} />
                   <EditableText as="p" id="app_c3_d" defaultText={t.sections.approach3Text} isVisualBuilder={isVisualBuilder} style={{ color: 'var(--color-text-secondary)', fontSize: '0.95rem', lineHeight: 1.7, marginBottom: '20px' }} />
-                  <ul style={{ color: 'var(--color-text-secondary)', fontSize: '0.95rem', lineHeight: 1.7, paddingLeft: '20px', display: 'flex', flexDirection: 'column', gap: '12px', margin: 0 }}>
+                  <ul style={{ color: 'var(--color-text-secondary)', fontSize: '0.95rem', lineHeight: 1.7, paddingLeft: '20px', margin: 0 }}>
                     <EditableText as="li" id="app_c3_l1" dangerously={true} defaultText={t.sections.approach3L1} isVisualBuilder={isVisualBuilder} />
                     <EditableText as="li" id="app_c3_l2" dangerously={true} defaultText={t.sections.approach3L2} isVisualBuilder={isVisualBuilder} />
                     <EditableText as="li" id="app_c3_l3" dangerously={true} defaultText={t.sections.approach3L3} isVisualBuilder={isVisualBuilder} />
