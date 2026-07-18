@@ -1096,8 +1096,8 @@ function App() {
             {/* 3. Services Section (Photo Cards) */}
             <section style={{ marginBottom: '50px' }}>
               <div style={{ textAlign: 'center', marginBottom: '30px' }}>
-                <EditableText id="services_label" defaultText={t.sections.servicesLabel} isVisualBuilder={isVisualBuilder} className="hero-subtitle" />
-                <EditableText as="h2" id="services_title" defaultText={t.sections.servicesTitle} isVisualBuilder={isVisualBuilder} />
+                <EditableText id="services_label_v3" defaultText={t.sections.servicesLabel} isVisualBuilder={isVisualBuilder} className="hero-subtitle" />
+                <EditableText as="h2" id="services_title_v3" defaultText={t.sections.servicesTitle} isVisualBuilder={isVisualBuilder} />
               </div>
               <div className="bento-grid">
                 {Object.entries(SERVICES_DATA).slice(0, 6).map(([key, item]) => {
@@ -1136,8 +1136,8 @@ function App() {
                 {/* 4. Projects Section (Summarized) */}
                 <section style={{ marginBottom: '50px', backgroundColor: 'var(--bg-dark-secondary)', padding: '40px', borderRadius: 'var(--border-radius-lg)', border: '1px solid var(--border-color)', boxShadow: '0 10px 40px rgba(0,0,0,0.15)' }}>
               <div style={{ textAlign: 'center', marginBottom: '30px' }}>
-                <EditableText id="portfolio_label" defaultText="ПОРТФОЛИО" isVisualBuilder={isVisualBuilder} className="hero-subtitle" style={{ color: 'var(--color-cyan)' }} />
-                <EditableText as="h2" id="portfolio_title" defaultText="Выполненные Объекты" isVisualBuilder={isVisualBuilder} />
+                <EditableText id="portfolio_label_v3" defaultText="ПОРТФОЛИО" isVisualBuilder={isVisualBuilder} className="hero-subtitle" style={{ color: 'var(--color-cyan)' }} />
+                <EditableText as="h2" id="portfolio_title_v3" defaultText="Выполненные Объекты" isVisualBuilder={isVisualBuilder} />
               </div>
               <div style={{ display: 'flex', flexDirection: 'row', gap: '30px', alignItems: 'stretch' }} className="portfolio-split-view">
                 <div style={{ flex: '1 1 65%', height: '450px', borderRadius: 'var(--border-radius-md)', overflow: 'hidden', border: '1px solid rgba(6, 182, 212, 0.2)', boxShadow: '0 0 30px rgba(0,0,0,0.8)', position: 'relative' }}>
@@ -1222,8 +1222,8 @@ function App() {
             {/* 4.5. Approach Section (New) */}
             <section style={{ marginBottom: '80px', position: 'relative' }}>
               <div style={{ textAlign: 'center', marginBottom: '40px' }}>
-                <EditableText id="approach_label_v2" defaultText="ИНДИВИДУАЛЬНЫЙ ПОДХОД" isVisualBuilder={isVisualBuilder} className="hero-subtitle" style={{ color: 'var(--color-accent)', textShadow: '0 0 15px rgba(234, 179, 8, 0.6)' }} />
-                <EditableText as="h2" id="approach_title_v2" defaultText={t.sections.approachTitle} isVisualBuilder={isVisualBuilder} style={{ fontSize: '2.5rem', marginBottom: '20px', textShadow: '0 0 40px rgba(255,255,255,0.2)', maxWidth: '900px', margin: '0 auto 20px auto' }} />
+                <EditableText id="approach_label_v3" defaultText="ИНДИВИДУАЛЬНЫЙ ПОДХОД" isVisualBuilder={isVisualBuilder} className="hero-subtitle" style={{ color: 'var(--color-accent)', textShadow: '0 0 15px rgba(234, 179, 8, 0.6)' }} />
+                <EditableText as="h2" id="approach_title_v3" defaultText={t.sections.approachTitle} isVisualBuilder={isVisualBuilder} style={{ fontSize: '2.5rem', marginBottom: '20px', textShadow: '0 0 40px rgba(255,255,255,0.2)', maxWidth: '900px', margin: '0 auto 20px auto' }} />
                 <EditableText as="p" id="approach_desc" defaultText={t.sections.approachDesc} isVisualBuilder={isVisualBuilder} style={{ color: 'var(--color-text-secondary)', fontSize: '1.05rem', lineHeight: 1.6, maxWidth: '800px', margin: '0 auto' }} />
               </div>
 
@@ -1277,8 +1277,8 @@ function App() {
             {/* 5. Director / About Section */}
             <section style={{ marginBottom: '80px', position: 'relative' }}>
               <div style={{ textAlign: 'center', marginBottom: '40px', position: 'relative', zIndex: 2 }}>
-                <EditableText id="founder_label_v2" defaultText="РУКОВОДСТВО КОМПАНИИ" isVisualBuilder={isVisualBuilder} className="hero-subtitle" style={{ color: 'var(--color-cyan)', textShadow: '0 0 15px rgba(6, 182, 212, 0.6)' }} />
-                <EditableText as="h2" id="founder_title_v2" defaultText="Слово Основателя" isVisualBuilder={isVisualBuilder} style={{ fontSize: '3.2rem', textShadow: '0 0 40px rgba(255,255,255,0.2)' }} />
+                <EditableText id="founder_label_v3" defaultText="РУКОВОДСТВО КОМПАНИИ" isVisualBuilder={isVisualBuilder} className="hero-subtitle" style={{ color: 'var(--color-cyan)', textShadow: '0 0 15px rgba(6, 182, 212, 0.6)' }} />
+                <EditableText as="h2" id="founder_title_v3" defaultText="Слово Основателя" isVisualBuilder={isVisualBuilder} style={{ fontSize: '3.2rem', textShadow: '0 0 40px rgba(255,255,255,0.2)' }} />
               </div>
               <div className="bg-glow-orb-2" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '600px', height: '600px', background: 'radial-gradient(circle, var(--color-cyan) 0%, transparent 70%)', opacity: 0.05 }}></div>
               <div className="glow-card-premium" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '0', alignItems: 'stretch', padding: '0', overflow: 'hidden', position: 'relative', zIndex: 2, background: 'linear-gradient(135deg, rgba(3, 5, 9, 0.95) 0%, rgba(10, 20, 35, 0.85) 100%)', border: '1px solid rgba(6, 182, 212, 0.2)', boxShadow: '0 0 50px rgba(0,0,0,0.8)' }}>
