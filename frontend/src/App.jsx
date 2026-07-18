@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { 
   Hammer, Compass, Award, Phone, ShieldCheck, Mail, 
   MapPin, Send, Cpu, CheckCircle, ChevronRight, Lock, 
@@ -345,6 +345,7 @@ const MENU_STRUCTURE = {
 };
 
 function App() {
+  const markerRefs = useRef({});
   const [activePage, setActivePage] = useState(() => {
     const path = window.location.pathname.replace(/^\//, '');
     return ['home', 'about', 'services', 'projects', 'equipment', 'blog', 'documents', 'calculator', 'contacts', 'admin'].includes(path) ? path : 'home';
@@ -1314,7 +1315,10 @@ function App() {
 
                     {DETAILED_PROJECTS.map(proj => (
                       <Marker 
-                        key={proj.id} 
+                        key={proj.id}
+                        ref={(ref) => {
+                          if (ref) markerRefs.current[proj.id] = ref;
+                        }} 
                         position={proj.coords} 
                         icon={customGlowIcon}
                         eventHandlers={{
@@ -1360,9 +1364,14 @@ function App() {
                         onClick={() => {
                           setActiveProjectCoords(proj.coords);
                           setActiveMapZoom(13);
+                          setTimeout(() => {
+                            const marker = markerRefs.current[proj.id];
+                            if (marker) marker.openPopup();
+                          }, 1500); // Wait for flyTo animation to finish
                         }}
                       >
-                        <div style={{ fontSize: '0.85rem', color: 'var(--color-accent)', fontWeight: 700, letterSpacing: '1px', textTransform: 'uppercase' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '0.85rem', color: 'var(--color-accent)', fontWeight: 700, letterSpacing: '1px', textTransform: 'uppercase' }}>
+                          <div style={{ width: '10px', height: '10px', borderRadius: '50%', backgroundColor: 'var(--color-cyan)', boxShadow: '0 0 10px var(--color-cyan), 0 0 20px var(--color-cyan)' }} className="pulse-marker-mini"></div>
                           {proj.client}
                         </div>
                         <div style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--color-text-primary)' }}>
