@@ -1040,72 +1040,60 @@ function App() {
               </div>
             </section>
 
-            {/* 2.7 Alternating Features Section */}
-            <section style={{ marginBottom: '50px', display: 'flex', flexDirection: 'column', gap: '40px' }}>
+            
+            {/* 2.7 Premium Overlapping Features Section */}
+            <section style={{ marginBottom: '50px' }}>
               
-              {/* Block 1: Heavy Equipment (Image Left, Text Right) */}
-              <div className="glow-card-premium" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '0', alignItems: 'center', padding: '0', overflow: 'hidden' }}>
-                <div style={{ height: '350px' }}>
-                  <img src="/images/rig.png" alt="Буровая техника Bauer" style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={(e) => { e.target.src='/images/hero.png' }} />
+              {/* Block 1: Heavy Equipment */}
+              <div className="feature-block-premium">
+                <div className="feature-image-wrapper">
+                  <div className="feature-image-overlay"></div>
+                  <img src="/images/rig.png" alt="Буровая техника" onError={(e) => { e.target.src='/images/hero.png' }} />
                 </div>
-                <div style={{ padding: '40px' }}>
-                  <EditableText id="b1_label" defaultText="МАТЕРИАЛЬНАЯ БАЗА" isVisualBuilder={isVisualBuilder} className="spec-label" style={{ color: 'var(--color-cyan)', fontSize: '0.9rem' }} />
-                  <EditableText as="h3" id="b1_title" defaultText="Мощный парк буровой техники" isVisualBuilder={isVisualBuilder} style={{ fontSize: '2rem', marginBottom: '20px', lineHeight: 1.2 }} />
-                  <EditableText as="p" id="b1_desc" defaultText="Мы не зависим от арендодателей. В нашем распоряжении находятся тяжелые установки класса Bauer BG20/BG28 для устройства свай в сложнейших скальных породах, а также маневренные ПБУ-2 на базе вездеходных шасси УРАЛ и КАМАЗ." isVisualBuilder={isVisualBuilder} style={{ color: 'var(--color-text-secondary)', fontSize: '1.05rem', lineHeight: 1.6, marginBottom: '20px' }} />
-                  <ul style={{ listStyle: 'none', padding: 0, color: 'var(--color-text-secondary)', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                    <li><CheckCircle size={16} color="var(--color-cyan)" style={{ display: 'inline', marginRight: '8px', verticalAlign: 'middle' }}/> <EditableText id="b1_li1" defaultText="Бурение до 80 метров в глубину" isVisualBuilder={isVisualBuilder} /></li>
-                    <li><CheckCircle size={16} color="var(--color-cyan)" style={{ display: 'inline', marginRight: '8px', verticalAlign: 'middle' }}/> <EditableText id="b1_li2" defaultText="Выезд на объект за 24 часа по РК" isVisualBuilder={isVisualBuilder} /></li>
+                <div className="feature-content-glass">
+                  <EditableText id="b1_label" defaultText="МАТЕРИАЛЬНАЯ БАЗА" isVisualBuilder={isVisualBuilder} className="spec-label" style={{ color: 'var(--color-cyan)', fontSize: '0.9rem', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '10px', display: 'block' }} />
+                  <EditableText as="h3" id="b1_title" defaultText="Мощный парк буровой техники" isVisualBuilder={isVisualBuilder} style={{ fontSize: '2.5rem', marginBottom: '20px', lineHeight: 1.2, fontWeight: '800' }} />
+                  <EditableText as="p" id="b1_desc" defaultText="Мы не зависим от арендодателей. В нашем распоряжении находятся тяжелые установки класса Bauer BG20/BG28 для устройства свай в сложнейших скальных породах, а также маневренные ПБУ-2 на базе вездеходных шасси УРАЛ и КАМАЗ." isVisualBuilder={isVisualBuilder} style={{ color: 'var(--color-text-secondary)', fontSize: '1.1rem', lineHeight: 1.6, marginBottom: '30px' }} />
+                  <ul style={{ listStyle: 'none', padding: 0, color: 'var(--color-text-secondary)', display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                    <li style={{ display: 'flex', alignItems: 'center' }}><CheckCircle size={20} color="var(--color-cyan)" style={{ marginRight: '12px' }}/> <EditableText id="b1_li1" defaultText="Бурение до 80 метров в глубину" isVisualBuilder={isVisualBuilder} /></li>
+                    <li style={{ display: 'flex', alignItems: 'center' }}><CheckCircle size={20} color="var(--color-cyan)" style={{ marginRight: '12px' }}/> <EditableText id="b1_li2" defaultText="Выезд на объект за 24 часа по РК" isVisualBuilder={isVisualBuilder} /></li>
                   </ul>
-    </div>
-
-    <div className="service-bento-arrow">
-      <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="2" style={{ width: '100%', height: '100%' }}>
-        <circle cx="50" cy="50" r="45" strokeDasharray="5 5" />
-        <path d="M30 70 L70 30" strokeWidth="4" />
-        <path d="M50 30 L70 30 L70 50" strokeWidth="4" />
-      </svg>
-    </div>
-  </div>
-
-              {/* Block 2: Laboratory (Text Left, Image Right) */}
-              <div className="glow-card-premium" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '0', alignItems: 'center', padding: '0', overflow: 'hidden' }} className="feature-reverse">
-                <div style={{ padding: '40px' }} className="feature-text">
-                  <EditableText id="b2_label" defaultText="ТОЧНОСТЬ ДАННЫХ" isVisualBuilder={isVisualBuilder} className="spec-label" style={{ color: 'var(--color-accent)', fontSize: '0.9rem' }} />
-                  <EditableText as="h3" id="b2_title" defaultText="Собственная грунтовая лаборатория" isVisualBuilder={isVisualBuilder} style={{ fontSize: '2rem', marginBottom: '20px', lineHeight: 1.2 }} />
-                  <EditableText as="p" id="b2_desc" defaultText="Ни одна полевая работа не имеет смысла без качественных лабораторных тестов. Наш комплекс оснащен современными компрессионными и сдвиговыми приборами с автоматической фиксацией деформаций." isVisualBuilder={isVisualBuilder} style={{ color: 'var(--color-text-secondary)', fontSize: '1.05rem', lineHeight: 1.6, marginBottom: '20px' }} />
-                  <ul style={{ listStyle: 'none', padding: 0, color: 'var(--color-text-secondary)', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                    <li><CheckCircle size={16} color="var(--color-accent)" style={{ display: 'inline', marginRight: '8px', verticalAlign: 'middle' }}/> <EditableText id="b2_li1" defaultText="Аттестат СТ РК ИСО/МЭК 17025" isVisualBuilder={isVisualBuilder} /></li>
-                    <li><CheckCircle size={16} color="var(--color-accent)" style={{ display: 'inline', marginRight: '8px', verticalAlign: 'middle' }}/> <EditableText id="b2_li2" defaultText="Химический анализ воды и грунтов" isVisualBuilder={isVisualBuilder} /></li>
-                  </ul>
-                </div>
-                <div style={{ height: '350px' }}>
-                  <img src="/images/lab.png" alt="Грунтовая лаборатория" style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={(e) => { e.target.src='/images/hero.png' }} />
                 </div>
               </div>
 
-              {/* Block 3: Geodesy (Image Left, Text Right) */}
-              <div className="glow-card-premium" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '0', alignItems: 'center', padding: '0', overflow: 'hidden' }}>
-                <div style={{ height: '350px' }}>
-                  <img src="/images/geodesy.png" alt="Геодезия и топосъемка" style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={(e) => { e.target.src='/images/hero.png' }} />
+              {/* Block 2: Laboratory (Reversed) */}
+              <div className="feature-block-premium reverse">
+                <div className="feature-image-wrapper">
+                  <div className="feature-image-overlay"></div>
+                  <img src="/images/lab.png" alt="Грунтовая лаборатория" onError={(e) => { e.target.src='/images/hero.png' }} />
                 </div>
-                <div style={{ padding: '40px' }}>
-                  <EditableText id="b3_label" defaultText="ИНЖЕНЕРНАЯ ГЕОДЕЗИЯ" isVisualBuilder={isVisualBuilder} className="spec-label" style={{ color: 'var(--color-cyan)', fontSize: '0.9rem' }} />
-                  <EditableText as="h3" id="b3_title" defaultText="Миллиметровая точность съемки" isVisualBuilder={isVisualBuilder} style={{ fontSize: '2rem', marginBottom: '20px', lineHeight: 1.2 }} />
-                  <EditableText as="p" id="b3_desc" defaultText="Используем роботизированные тахеометры и высокоточные GNSS-приемники для создания опорных сетей, мониторинга осадков фундаментов и топографической съемки М1:500 для самых сложных проектов." isVisualBuilder={isVisualBuilder} style={{ color: 'var(--color-text-secondary)', fontSize: '1.05rem', lineHeight: 1.6, marginBottom: '20px' }} />
-                  <ul style={{ listStyle: 'none', padding: 0, color: 'var(--color-text-secondary)', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                    <li><CheckCircle size={16} color="var(--color-cyan)" style={{ display: 'inline', marginRight: '8px', verticalAlign: 'middle' }}/> <EditableText id="b3_li1" defaultText="3D-моделирование рельефа" isVisualBuilder={isVisualBuilder} /></li>
-                    <li><CheckCircle size={16} color="var(--color-cyan)" style={{ display: 'inline', marginRight: '8px', verticalAlign: 'middle' }}/> <EditableText id="b3_li2" defaultText="Вынос осей зданий в натуру" isVisualBuilder={isVisualBuilder} /></li>
+                <div className="feature-content-glass">
+                  <EditableText id="b2_label" defaultText="ТОЧНОСТЬ ДАННЫХ" isVisualBuilder={isVisualBuilder} className="spec-label" style={{ color: 'var(--color-accent)', fontSize: '0.9rem', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '10px', display: 'block' }} />
+                  <EditableText as="h3" id="b2_title" defaultText="Собственная грунтовая лаборатория" isVisualBuilder={isVisualBuilder} style={{ fontSize: '2.5rem', marginBottom: '20px', lineHeight: 1.2, fontWeight: '800' }} />
+                  <EditableText as="p" id="b2_desc" defaultText="Ни одна полевая работа не имеет смысла без качественных лабораторных тестов. Наш комплекс оснащен современными компрессионными и сдвиговыми приборами с автоматической фиксацией деформаций." isVisualBuilder={isVisualBuilder} style={{ color: 'var(--color-text-secondary)', fontSize: '1.1rem', lineHeight: 1.6, marginBottom: '30px' }} />
+                  <ul style={{ listStyle: 'none', padding: 0, color: 'var(--color-text-secondary)', display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                    <li style={{ display: 'flex', alignItems: 'center' }}><CheckCircle size={20} color="var(--color-accent)" style={{ marginRight: '12px' }}/> <EditableText id="b2_li1" defaultText="Аттестат СТ РК ИСО/МЭК 17025" isVisualBuilder={isVisualBuilder} /></li>
+                    <li style={{ display: 'flex', alignItems: 'center' }}><CheckCircle size={20} color="var(--color-accent)" style={{ marginRight: '12px' }}/> <EditableText id="b2_li2" defaultText="Химический анализ воды и грунтов" isVisualBuilder={isVisualBuilder} /></li>
                   </ul>
-    </div>
+                </div>
+              </div>
 
-    <div className="service-bento-arrow">
-      <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="2" style={{ width: '100%', height: '100%' }}>
-        <circle cx="50" cy="50" r="45" strokeDasharray="5 5" />
-        <path d="M30 70 L70 30" strokeWidth="4" />
-        <path d="M50 30 L70 30 L70 50" strokeWidth="4" />
-      </svg>
-    </div>
-  </div>
+              {/* Block 3: Geodesy */}
+              <div className="feature-block-premium">
+                <div className="feature-image-wrapper">
+                  <div className="feature-image-overlay"></div>
+                  <img src="/images/geodesy.png" alt="Геодезия и топосъемка" onError={(e) => { e.target.src='/images/hero.png' }} />
+                </div>
+                <div className="feature-content-glass">
+                  <EditableText id="b3_label" defaultText="ИНЖЕНЕРНАЯ ГЕОДЕЗИЯ" isVisualBuilder={isVisualBuilder} className="spec-label" style={{ color: 'var(--color-cyan)', fontSize: '0.9rem', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '10px', display: 'block' }} />
+                  <EditableText as="h3" id="b3_title" defaultText="Миллиметровая точность съемки" isVisualBuilder={isVisualBuilder} style={{ fontSize: '2.5rem', marginBottom: '20px', lineHeight: 1.2, fontWeight: '800' }} />
+                  <EditableText as="p" id="b3_desc" defaultText="Используем роботизированные тахеометры и высокоточные GNSS-приемники для создания опорных сетей, мониторинга осадков фундаментов и топографической съемки M1:500 для самых сложных проектов." isVisualBuilder={isVisualBuilder} style={{ color: 'var(--color-text-secondary)', fontSize: '1.1rem', lineHeight: 1.6, marginBottom: '30px' }} />
+                  <ul style={{ listStyle: 'none', padding: 0, color: 'var(--color-text-secondary)', display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                    <li style={{ display: 'flex', alignItems: 'center' }}><CheckCircle size={20} color="var(--color-cyan)" style={{ marginRight: '12px' }}/> <EditableText id="b3_li1" defaultText="3D-моделирование рельефа" isVisualBuilder={isVisualBuilder} /></li>
+                    <li style={{ display: 'flex', alignItems: 'center' }}><CheckCircle size={20} color="var(--color-cyan)" style={{ marginRight: '12px' }}/> <EditableText id="b3_li2" defaultText="Вынос осей зданий в натуру" isVisualBuilder={isVisualBuilder} /></li>
+                  </ul>
+                </div>
+              </div>
 
             </section>
 
