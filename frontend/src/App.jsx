@@ -5,7 +5,7 @@ import {
   Eye, Trash2, Calendar, FileText, Check, Database, 
   RefreshCw, BarChart2, UserCheck, Menu, X, ArrowUpRight,
   Printer, HardDrive, AlertTriangle, Layers, Clock, Settings,
-  BookOpen, FileSpreadsheet, Search, MessageCircle, Bot, ArrowUp, Sun, Moon, Briefcase, Edit3
+  BookOpen, FileSpreadsheet, Search, MessageCircle, Bot, ArrowUp, Sun, Moon, Briefcase, Edit3, Folder
 } from 'lucide-react';
 import { MapContainer, TileLayer, Marker, Popup, Tooltip, useMap, GeoJSON, ZoomControl } from 'react-leaflet';
 import L from 'leaflet';
@@ -279,8 +279,8 @@ const MENU_STRUCTURE = {
     { 
       title: 'О компании', page: 'about', 
       items: [
-        { name: 'История', action: { type: 'page', val: 'about' } },
-        { name: 'Команда', action: { type: 'page', val: 'about' } },
+        { name: 'История', action: { type: 'page', val: 'about', subpage: 'history' } },
+        { name: 'Команда', action: { type: 'page', val: 'about', subpage: 'team' } },
         { name: 'Наши преимущества', action: { type: 'scroll', page: 'home', target: 'advantages' } },
         { name: 'Лицензии', action: { type: 'page', val: 'documents' } },
         { name: 'Сертификаты', action: { type: 'page', val: 'documents' } }
@@ -308,11 +308,11 @@ const MENU_STRUCTURE = {
     {
       title: 'Проекты', page: 'projects',
       items: [
-        { name: 'Поиск', action: { type: 'page', val: 'projects' } },
-        { name: 'По регионам', action: { type: 'page', val: 'projects' } },
-        { name: 'По услугам', action: { type: 'page', val: 'projects' } },
-        { name: 'По заказчикам', action: { type: 'page', val: 'projects' } },
-        { name: 'Страница проекта', action: { type: 'page', val: 'projects' } }
+        { name: 'Поиск', action: { type: 'page', val: 'projects', subpage: 'search' } },
+        { name: 'По регионам', action: { type: 'page', val: 'projects', subpage: 'regions' } },
+        { name: 'По услугам', action: { type: 'page', val: 'projects', subpage: 'services' } },
+        { name: 'По заказчикам', action: { type: 'page', val: 'projects', subpage: 'clients' } },
+        { name: 'Страница проекта', action: { type: 'page', val: 'projects', subpage: 'detail' } }
       ]
     },
     {
@@ -330,14 +330,14 @@ const MENU_STRUCTURE = {
     {
       title: 'База знаний', page: 'blog',
       items: [
-        { name: 'Статьи', action: { type: 'page', val: 'blog' } },
-        { name: 'Методы испытаний', action: { type: 'page', val: 'blog' } },
-        { name: 'Типы грунтов', action: { type: 'page', val: 'blog' } },
-        { name: 'Нормативные документы', action: { type: 'page', val: 'blog' } },
-        { name: 'FAQ', action: { type: 'page', val: 'blog' } },
-        { name: 'Новости', action: { type: 'page', val: 'blog' } },
-        { name: 'Фото', action: { type: 'page', val: 'blog' } },
-        { name: 'Видео', action: { type: 'page', val: 'blog' } }
+        { name: 'Статьи', action: { type: 'page', val: 'blog', subpage: 'articles' } },
+        { name: 'Методы испытаний', action: { type: 'page', val: 'blog', subpage: 'methods' } },
+        { name: 'Типы грунтов', action: { type: 'page', val: 'blog', subpage: 'soils' } },
+        { name: 'Нормативные документы', action: { type: 'page', val: 'blog', subpage: 'norms' } },
+        { name: 'FAQ', action: { type: 'page', val: 'blog', subpage: 'faq' } },
+        { name: 'Новости', action: { type: 'page', val: 'blog', subpage: 'news' } },
+        { name: 'Фото', action: { type: 'page', val: 'blog', subpage: 'photos' } },
+        { name: 'Видео', action: { type: 'page', val: 'blog', subpage: 'videos' } }
       ]
     },
     { title: 'Контакты', page: 'contacts', action: { type: 'page', val: 'contacts' } }
@@ -346,6 +346,7 @@ const MENU_STRUCTURE = {
 
 function App() {
   const markerRefs = useRef({});
+  const [activeSubPage, setActiveSubPage] = useState(null);
   const [activePage, setActivePage] = useState(() => {
     const path = window.location.pathname.replace(/^\//, '');
     return ['home', 'about', 'services', 'projects', 'equipment', 'blog', 'documents', 'calculator', 'contacts', 'admin'].includes(path) ? path : 'home';
@@ -496,6 +497,7 @@ function App() {
   const [adminPass, setAdminPass] = useState('');
   const [inquiries, setInquiries] = useState([]);
   const [adminError, setAdminError] = useState('');
+  const [activeAdminSection, setActiveAdminSection] = useState('dashboard');
 
   // Calculations
   const selectedSoilConfig = SOILS[activeSoil];
@@ -639,6 +641,8 @@ function App() {
 
   return (
     <>
+      <div style={isVisualBuilder ? { paddingTop: '60px', paddingLeft: '300px', paddingRight: '300px', height: '100vh', overflow: 'hidden', background: '#0a0a0a', transition: 'all 0.3s ease' } : {}}>
+        <div style={isVisualBuilder ? { height: '100%', width: '100%', overflowY: 'auto', position: 'relative', boxShadow: '0 0 50px rgba(0,0,0,0.8)', borderLeft: '1px solid #333', borderRight: '1px solid #333', backgroundColor: 'var(--bg-main)' } : {}}>
       <div className="blueprint-bg"></div>
       <div className="bg-glow-orb bg-glow-orb-1"></div>
       <div className="bg-glow-orb bg-glow-orb-2"></div>
@@ -675,7 +679,10 @@ function App() {
                         className={`nav-btn ${activePage === menu.page || (menu.page === 'about' && activePage === 'documents') ? 'active' : ''}`} 
                         onClick={() => {
                           if (menu.action) {
-                            if (menu.action.type === 'page') setActivePage(menu.action.val);
+                            if (menu.action.type === 'page') {
+                              setActivePage(menu.action.val);
+                              setActiveSubPage(menu.action.subpage || null);
+                            }
                           }
                         }}
                       >
@@ -692,6 +699,7 @@ function App() {
                               onClick={() => {
                                 if (item.action.type === 'page') {
                                   setActivePage(item.action.val);
+                                  setActiveSubPage(item.action.subpage || null);
                                 } else if (item.action.type === 'scroll') {
                                   setActivePage(item.action.page);
                                   setTimeout(() => {
@@ -1591,37 +1599,52 @@ function App() {
         {activePage === 'about' && (
           <div className="page-wrapper page-enter">
             <div style={{ marginBottom: '50px' }}>
-              <h2>О компании ТОО «СпецИнжГео»</h2>
+              <h2>
+                {activeSubPage === 'history' ? 'История компании' : 
+                 activeSubPage === 'team' ? 'Наша команда' : 
+                 'О компании ТОО «СпецИнжГео»'}
+              </h2>
               <p style={{ color: 'var(--color-text-secondary)' }}>
-                Комплексные инженерные изыскания для промышленного и гражданского строительства с 2019 года.
+                {activeSubPage === 'history' ? 'Путь развития нашей компании с 2019 года до сегодняшнего дня.' : 
+                 activeSubPage === 'team' ? 'Познакомьтесь с нашими ведущими инженерами и специалистами.' : 
+                 'Комплексные инженерные изыскания для промышленного и гражданского строительства с 2019 года.'}
               </p>
             </div>
 
-            <div className="glow-card-premium" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '0', alignItems: 'stretch', padding: '0', overflow: 'hidden', position: 'relative', zIndex: 2, background: 'var(--bg-card)', border: '1px solid var(--border-color)', boxShadow: '0 0 50px rgba(0,0,0,0.1)', marginBottom: '60px' }}>
-                <div style={{ position: 'relative', minHeight: '500px', overflow: 'hidden' }}>
-                  <img src="/images/director.png" alt="Шенвизов Рудольф Константинович" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', filter: 'contrast(1.1)', maskImage: 'linear-gradient(to right, black 60%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to right, black 60%, transparent 100%)' }} />
-                  <div style={{ position: 'absolute', bottom: '-50px', left: '-50px', width: '200px', height: '200px', background: 'var(--color-cyan)', filter: 'blur(100px)', opacity: 0.15, zIndex: 0 }}></div>
-                </div>
-                
-                <div style={{ padding: '60px', display: 'flex', flexDirection: 'column', justifyContent: 'center', position: 'relative' }}>
-                  <div style={{ position: 'absolute', top: '-10px', left: '20px', fontSize: '15rem', color: 'var(--color-cyan)', opacity: 0.05, fontFamily: 'Georgia, serif', lineHeight: 1, pointerEvents: 'none' }}>“</div>
+            {(!activeSubPage || activeSubPage === 'history') && (
+              <div className="glow-card-premium" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '0', alignItems: 'stretch', padding: '0', overflow: 'hidden', position: 'relative', zIndex: 2, background: 'var(--bg-card)', border: '1px solid var(--border-color)', boxShadow: '0 0 50px rgba(0,0,0,0.1)', marginBottom: '60px' }}>
+                  <div style={{ position: 'relative', minHeight: '500px', overflow: 'hidden' }}>
+                    <img src="/images/director.png" alt="Шенвизов Рудольф Константинович" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', filter: 'contrast(1.1)', maskImage: 'linear-gradient(to right, black 60%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to right, black 60%, transparent 100%)' }} />
+                    <div style={{ position: 'absolute', bottom: '-50px', left: '-50px', width: '200px', height: '200px', background: 'var(--color-cyan)', filter: 'blur(100px)', opacity: 0.15, zIndex: 0 }}></div>
+                  </div>
                   
-                  <div style={{ position: 'relative', zIndex: 2 }}>
-                    <h3 style={{ fontSize: '2.8rem', marginBottom: '5px', color: 'var(--color-text-primary)', letterSpacing: '-0.02em' }}>Шенвизов Рудольф</h3>
-                    <h3 style={{ fontSize: '2.2rem', marginBottom: '25px', color: 'var(--color-text-secondary)', fontWeight: 400 }}>Константинович</h3>
+                  <div style={{ padding: '60px', display: 'flex', flexDirection: 'column', justifyContent: 'center', position: 'relative' }}>
+                    <div style={{ position: 'absolute', top: '-10px', left: '20px', fontSize: '15rem', color: 'var(--color-cyan)', opacity: 0.05, fontFamily: 'Georgia, serif', lineHeight: 1, pointerEvents: 'none' }}>“</div>
                     
-                    <div style={{ display: 'inline-block', padding: '8px 16px', background: 'rgba(6, 182, 212, 0.1)', border: '1px solid rgba(6, 182, 212, 0.3)', borderRadius: '20px', color: 'var(--color-cyan)', fontSize: '0.85rem', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: '35px', fontWeight: 600 }}>
-                      Основатель и Главный Геолог
+                    <div style={{ position: 'relative', zIndex: 2 }}>
+                      <h3 style={{ fontSize: '2.8rem', marginBottom: '5px', color: 'var(--color-text-primary)', letterSpacing: '-0.02em' }}>Шенвизов Рудольф</h3>
+                      <h3 style={{ fontSize: '2.2rem', marginBottom: '25px', color: 'var(--color-text-secondary)', fontWeight: 400 }}>Константинович</h3>
+                      
+                      <div style={{ display: 'inline-block', padding: '8px 16px', background: 'rgba(6, 182, 212, 0.1)', border: '1px solid rgba(6, 182, 212, 0.3)', borderRadius: '20px', color: 'var(--color-cyan)', fontSize: '0.85rem', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: '35px', fontWeight: 600 }}>
+                        Основатель и Главный Геолог
+                      </div>
+                      
+                      <p style={{ color: 'var(--color-text-secondary)', fontSize: '1.1rem', lineHeight: 1.8, position: 'relative', zIndex: 2, fontStyle: 'italic', borderLeft: '3px solid var(--color-cyan)', paddingLeft: '25px' }}>
+                        Рудольф Константинович основал компанию в 2019 году в городе Алматы. Получив геологическое образование в Сибирском государственном университете (г. Томск, РФ), он собрал команду опытных буровых инженеров, геодезистов и лаборантов.
+                        <br /><br />
+                        Основным принципом работы компании является жесткое следование строительным регламентам СП РК и ГОСТ. Благодаря этому отчеты ТОО «СпецИнжГео» успешно и быстро проходят государственную вневедомственную экспертизу.
+                      </p>
                     </div>
-                    
-                    <p style={{ color: 'var(--color-text-secondary)', fontSize: '1.1rem', lineHeight: 1.8, position: 'relative', zIndex: 2, fontStyle: 'italic', borderLeft: '3px solid var(--color-cyan)', paddingLeft: '25px' }}>
-                      Рудольф Константинович основал компанию в 2019 году в городе Алматы. Получив геологическое образование в Сибирском государственном университете (г. Томск, РФ), он собрал команду опытных буровых инженеров, геодезистов и лаборантов.
-                      <br /><br />
-                      Основным принципом работы компании является жесткое следование строительным регламентам СП РК и ГОСТ. Благодаря этому отчеты ТОО «СпецИнжГео» успешно и быстро проходят государственную вневедомственную экспертизу.
-                    </p>
                   </div>
                 </div>
+            )}
+
+            {activeSubPage === 'team' && (
+              <div style={{ padding: '60px', textAlign: 'center', border: '1px dashed var(--color-cyan)', borderRadius: '12px', marginBottom: '60px', background: 'rgba(6, 182, 212, 0.02)' }}>
+                <h3 style={{ fontSize: '1.5rem', marginBottom: '15px', color: 'var(--color-cyan)' }}>Раздел "Команда" в разработке</h3>
+                <p style={{ color: 'var(--color-text-secondary)', fontSize: '1.1rem' }}>Здесь будут представлены профили наших ведущих инженеров, геологов и геодезистов.</p>
               </div>
+            )}
 
             <section style={{ marginBottom: '40px' }}>
               <h3 style={{ marginBottom: '20px' }}>Наши ценности и принципы</h3>
@@ -1761,49 +1784,65 @@ function App() {
         {activePage === 'projects' && (
           <div className="page-wrapper page-enter">
             <div style={{ marginBottom: '50px' }}>
-              <h2>Завершенные Проекты ТОО «СпецИнжГео»</h2>
+              <h2>
+                {activeSubPage === 'regions' ? 'Проекты по регионам' :
+                 activeSubPage === 'services' ? 'Проекты по видам услуг' :
+                 activeSubPage === 'clients' ? 'Проекты по заказчикам' :
+                 activeSubPage === 'detail' ? 'Страница проекта' :
+                 'Завершенные Проекты ТОО «СпецИнжГео»'}
+              </h2>
               <p style={{ color: 'var(--color-text-secondary)' }}>
                 Архив инженерно-геологических отчетов и геодезической привязки (более 50 крупных объектов).
               </p>
             </div>
 
-            {/* Search filter bar */}
-            <div style={{ display: 'flex', gap: '15px', marginBottom: '45px' }}>
-              <div style={{ position: 'relative', flex: 1 }}>
-                <Search size={16} style={{ position: 'absolute', left: '15px', top: '15px', color: 'var(--color-text-muted)' }} />
-                <input 
-                  type="text" 
-                  className="form-input" 
-                  style={{ paddingLeft: '45px' }}
-                  placeholder="Поиск по названию, заказчику (BI Group, Air Astana, Mega Garden)..."
-                  value={projectSearch}
-                  onChange={(e) => setProjectSearch(e.target.value)}
-                />
+            {activeSubPage === 'detail' ? (
+              <div style={{ padding: '60px', textAlign: 'center', border: '1px dashed var(--color-cyan)', borderRadius: '12px', marginBottom: '60px', background: 'rgba(6, 182, 212, 0.02)' }}>
+                <h3 style={{ fontSize: '1.5rem', marginBottom: '15px', color: 'var(--color-cyan)' }}>Детальная страница проекта в разработке</h3>
+                <p style={{ color: 'var(--color-text-secondary)', fontSize: '1.1rem' }}>Выберите проект из списка чтобы просмотреть его карточку.</p>
+                <button className="btn btn-secondary" onClick={() => setActiveSubPage('search')} style={{ marginTop: '20px' }}>Вернуться к поиску</button>
               </div>
-            </div>
-
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '25px', marginBottom: '60px' }}>
-              {filteredProjects.map(proj => (
-                <HudCard key={proj.id} style={{ padding: '25px' }}>
-                  <span className="spec-label" style={{ color: 'var(--color-accent)' }}>{proj.client}</span>
-                  <h3 style={{ fontSize: '1.2rem', marginBlock: '8px 12px', color: 'var(--color-text-primary)' }}>{proj.name}</h3>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', fontSize: '0.85rem', color: 'var(--color-text-secondary)' }}>
-                    <span>📍 Локация: {proj.loc}</span>
-                    <span>⚙️ Вид работ: {proj.type}</span>
-                    <span>📊 Спецификация: {proj.specs}</span>
-                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.75rem', marginTop: '10px', color: 'var(--color-text-muted)' }}>ГОД СДАЧИ: {proj.year} // STATUS: ARCHIVED_OK</span>
+            ) : (
+              <>
+                {/* Search filter bar */}
+                <div style={{ display: 'flex', gap: '15px', marginBottom: '45px' }}>
+                  <div style={{ position: 'relative', flex: 1 }}>
+                    <Search size={16} style={{ position: 'absolute', left: '15px', top: '15px', color: 'var(--color-text-muted)' }} />
+                    <input 
+                      type="text" 
+                      className="form-input" 
+                      style={{ paddingLeft: '45px' }}
+                      placeholder="Поиск по названию, заказчику (BI Group, Air Astana, Mega Garden)..."
+                      value={projectSearch}
+                      onChange={(e) => setProjectSearch(e.target.value)}
+                    />
                   </div>
-                </HudCard>
-              ))}
-            </div>
+                </div>
 
-            <div style={{ padding: '30px', textAlign: 'center', border: '1px dashed rgba(255,255,255,0.06)', borderRadius: '12px', backgroundColor: 'rgba(255,255,255,0.01)' }}>
-              <Database size={32} color="var(--color-accent-secondary)" style={{ marginBottom: '10px', marginInline: 'auto' }} />
-              <h4 style={{ marginBottom: '6px' }}>В архиве содержится еще около 50 завершенных объектов</h4>
-              <p style={{ fontSize: '0.85rem', color: 'var(--color-text-secondary)', maxWidth: '600px', marginInline: 'auto' }}>
-                Все изыскания внесены в единую государственную базу градостроительного кадастра РК. Для получения архивных геологических разрезов смежных участков обратитесь в отдел продаж.
-              </p>
-            </div>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '25px', marginBottom: '60px' }}>
+                  {filteredProjects.map(proj => (
+                    <HudCard key={proj.id} style={{ padding: '25px' }}>
+                      <span className="spec-label" style={{ color: 'var(--color-accent)' }}>{proj.client}</span>
+                      <h3 style={{ fontSize: '1.2rem', marginBlock: '8px 12px', color: 'var(--color-text-primary)' }}>{proj.name}</h3>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', fontSize: '0.85rem', color: 'var(--color-text-secondary)' }}>
+                        <span>📍 Локация: {proj.loc}</span>
+                        <span>⚙️ Вид работ: {proj.type}</span>
+                        <span>📊 Спецификация: {proj.specs}</span>
+                        <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.75rem', marginTop: '10px', color: 'var(--color-text-muted)' }}>ГОД СДАЧИ: {proj.year} // STATUS: ARCHIVED_OK</span>
+                      </div>
+                    </HudCard>
+                  ))}
+                </div>
+
+                <div style={{ padding: '30px', textAlign: 'center', border: '1px dashed rgba(255,255,255,0.06)', borderRadius: '12px', backgroundColor: 'rgba(255,255,255,0.01)' }}>
+                  <Database size={32} color="var(--color-accent-secondary)" style={{ marginBottom: '10px', marginInline: 'auto' }} />
+                  <h4 style={{ marginBottom: '6px' }}>В архиве содержится еще около 50 завершенных объектов</h4>
+                  <p style={{ fontSize: '0.85rem', color: 'var(--color-text-secondary)', maxWidth: '600px', marginInline: 'auto' }}>
+                    Все изыскания внесены в единую государственную базу градостроительного кадастра РК. Для получения архивных геологических разрезов смежных участков обратитесь в отдел продаж.
+                  </p>
+                </div>
+              </>
+            )}
           </div>
         )}
 
@@ -1811,41 +1850,60 @@ function App() {
         {activePage === 'blog' && (
           <div className="page-wrapper page-enter">
             <div style={{ marginBottom: '50px' }}>
-              <h2>База знаний / Блог ТОО «СпецИнжГео»</h2>
+              <h2>
+                {activeSubPage === 'methods' ? 'Методы испытаний' :
+                 activeSubPage === 'soils' ? 'Типы грунтов' :
+                 activeSubPage === 'norms' ? 'Нормативные документы' :
+                 activeSubPage === 'faq' ? 'Часто задаваемые вопросы' :
+                 activeSubPage === 'news' ? 'Новости' :
+                 activeSubPage === 'photos' ? 'Фотогалерея' :
+                 activeSubPage === 'videos' ? 'Видеоматериалы' :
+                 'База знаний / Статьи'}
+              </h2>
               <p style={{ color: 'var(--color-text-secondary)' }}>
-                Профессиональные статьи о геологии, статическом зондировании CPT и нормах СП РК.
+                Профессиональные материалы о геологии, статическом зондировании CPT и нормах СП РК.
               </p>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '30px', marginBottom: '60px' }}>
-              {BLOG_POSTS.map(post => (
-                <HudCard key={post.id} style={{ padding: '30px' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.72rem', fontFamily: 'var(--font-mono)', color: 'var(--color-accent)', marginBottom: '12px' }}>
-                    <span>{post.category}</span>
-                    <span>{post.date}</span>
-                  </div>
-                  <h3 style={{ fontSize: '1.25rem', marginBottom: '12px', color: 'var(--color-text-primary)' }}>{post.title}</h3>
-                  <p style={{ fontSize: '0.9rem', color: 'var(--color-text-secondary)', marginBottom: '20px' }}>
-                    {post.excerpt}
+            {(!activeSubPage || activeSubPage === 'articles') ? (
+              <>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '30px', marginBottom: '60px' }}>
+                  {BLOG_POSTS.map(post => (
+                    <HudCard key={post.id} style={{ padding: '30px' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.72rem', fontFamily: 'var(--font-mono)', color: 'var(--color-accent)', marginBottom: '12px' }}>
+                        <span>{post.category}</span>
+                        <span>{post.date}</span>
+                      </div>
+                      <h3 style={{ fontSize: '1.25rem', marginBottom: '12px', color: 'var(--color-text-primary)' }}>{post.title}</h3>
+                      <p style={{ fontSize: '0.9rem', color: 'var(--color-text-secondary)', marginBottom: '20px' }}>
+                        {post.excerpt}
+                      </p>
+                      
+                      <div style={{ borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '15px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <span style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)' }}>⏱️ Чтение: {post.readTime}</span>
+                        <button className="btn btn-secondary" onClick={() => logEvent(`Opened article: ${post.title}`)} style={{ padding: '5px 12px', fontSize: '0.75rem' }}>
+                          Читать полностью
+                        </button>
+                      </div>
+                    </HudCard>
+                  ))}
+                </div>
+
+                <div style={{ padding: '30px', textAlign: 'center', border: '1px dashed rgba(255,255,255,0.06)', borderRadius: '12px', backgroundColor: 'rgba(255,255,255,0.01)' }}>
+                  <BookOpen size={32} color="var(--color-accent)" style={{ marginBottom: '10px', marginInline: 'auto' }} />
+                  <h4 style={{ marginBottom: '6px' }}>В блоке статей содержится около 100 профильных публикаций</h4>
+                  <p style={{ fontSize: '0.85rem', color: 'var(--color-text-secondary)', maxWidth: '600px', marginInline: 'auto' }}>
+                    Мы пишем простым языком о сложных грунтовых условиях Республики Казахстан. Раздел регулярно дополняется нашими ведущими инженерами-камеральщиками.
                   </p>
-                  
-                  <div style={{ borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '15px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)' }}>⏱️ Чтение: {post.readTime}</span>
-                    <button className="btn btn-secondary" onClick={() => logEvent(`Opened article: ${post.title}`)} style={{ padding: '5px 12px', fontSize: '0.75rem' }}>
-                      Читать полностью
-                    </button>
-                  </div>
-                </HudCard>
-              ))}
-            </div>
-
-            <div style={{ padding: '30px', textAlign: 'center', border: '1px dashed rgba(255,255,255,0.06)', borderRadius: '12px', backgroundColor: 'rgba(255,255,255,0.01)' }}>
-              <BookOpen size={32} color="var(--color-accent)" style={{ marginBottom: '10px', marginInline: 'auto' }} />
-              <h4 style={{ marginBottom: '6px' }}>В блоке статей содержится около 100 профильных публикаций</h4>
-              <p style={{ fontSize: '0.85rem', color: 'var(--color-text-secondary)', maxWidth: '600px', marginInline: 'auto' }}>
-                Мы пишем простым языком о сложных грунтовых условиях Республики Казахстан. Раздел регулярно дополняется нашими ведущими инженерами-камеральщиками.
-              </p>
-            </div>
+                </div>
+              </>
+            ) : (
+              <div style={{ padding: '60px', textAlign: 'center', border: '1px dashed var(--color-cyan)', borderRadius: '12px', marginBottom: '60px', background: 'rgba(6, 182, 212, 0.02)' }}>
+                <h3 style={{ fontSize: '1.5rem', marginBottom: '15px', color: 'var(--color-cyan)' }}>Раздел "{activeSubPage}" в стадии наполнения</h3>
+                <p style={{ color: 'var(--color-text-secondary)', fontSize: '1.1rem' }}>Наши редакторы готовят экспертный контент для этого раздела. Пожалуйста, загляните позже.</p>
+                <button className="btn btn-secondary" onClick={() => setActiveSubPage('articles')} style={{ marginTop: '20px' }}>Смотреть основные статьи</button>
+              </div>
+            )}
           </div>
         )}
 
@@ -2327,146 +2385,165 @@ function App() {
 
         {/* ==================== PAGE: ADMIN ==================== */}
         {activePage === 'admin' && (
-          <div className="page-wrapper page-enter" style={{ background: '#0a0a0a', margin: '-50px', padding: '50px', minHeight: '100vh', borderRadius: '12px' }}>
-            <div style={{ maxWidth: '1200px', margin: '0 auto', color: '#fff', fontFamily: 'sans-serif' }}>
-              <div style={{ marginBottom: '40px' }}>
-                <h1 style={{ fontSize: '2rem', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '-0.02em', marginBottom: '8px', color: '#fff' }}>
-                  Выберите раздел для управления
-                </h1>
-                <p style={{ fontSize: '0.9rem', color: '#888' }}>
-                  Нажмите на плитку чтобы открыть нужный раздел администрирования.
-                </p>
+          <div className="page-wrapper page-enter" style={{ background: theme === 'white' ? '#f8fafc' : '#0a0a0a', margin: '-50px', padding: '50px', minHeight: '100vh', borderRadius: '12px' }}>
+            <div style={{ maxWidth: '1200px', margin: '0 auto', color: theme === 'white' ? '#0f172a' : '#fff', fontFamily: 'sans-serif' }}>
+              <div style={{ marginBottom: '40px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div>
+                  <h1 style={{ fontSize: '2rem', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '-0.02em', marginBottom: '8px', color: theme === 'white' ? '#0f172a' : '#fff' }}>
+                    {activeAdminSection === 'dashboard' ? 'Выберите раздел для управления' : 
+                     activeAdminSection === 'leads' ? 'Управление заявками' :
+                     activeAdminSection === 'services' ? 'Управление услугами' :
+                     activeAdminSection === 'content' ? 'Управление контентом' :
+                     activeAdminSection === 'pages' ? 'Структура страниц' :
+                     activeAdminSection === 'settings' ? 'Глобальные настройки' :
+                     activeAdminSection === 'bot' ? 'Настройки ассистента' : 'Панель управления'}
+                  </h1>
+                  <p style={{ fontSize: '0.9rem', color: theme === 'white' ? '#64748b' : '#888' }}>
+                    {activeAdminSection === 'dashboard' ? 'Нажмите на плитку чтобы открыть нужный раздел администрирования.' : 'Вносите изменения и сохраняйте настройки.'}
+                  </p>
+                </div>
+                {activeAdminSection !== 'dashboard' && (
+                  <button onClick={() => setActiveAdminSection('dashboard')} style={{ background: theme === 'white' ? '#f1f5f9' : '#222', color: theme === 'white' ? '#0f172a' : '#fff', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #333', padding: '10px 20px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}>
+                    ← Назад в панель
+                  </button>
+                )}
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px' }}>
+              {activeAdminSection === 'dashboard' && (
+                <>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px' }}>
                 {/* 1. Leads */}
-                <div style={{ position: 'relative', overflow: 'hidden', borderRadius: '12px', background: '#111', border: '1px solid rgba(16, 185, 129, 0.3)', padding: '24px', display: 'flex', flexDirection: 'column', cursor: 'pointer', transition: 'transform 0.2s' }}>
+                <div onClick={() => setActiveAdminSection('leads')} style={{ position: 'relative', overflow: 'hidden', borderRadius: '12px', background: theme === 'white' ? '#fff' : '#111', border: theme === 'white' ? '1px solid rgba(16, 185, 129, 0.4)' : '1px solid rgba(16, 185, 129, 0.3)', padding: '24px', display: 'flex', flexDirection: 'column', cursor: 'pointer', transition: 'transform 0.2s', boxShadow: theme === 'white' ? '0 4px 20px rgba(0,0,0,0.05)' : 'none' }}>
                   <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '100px', background: 'linear-gradient(to bottom, rgba(16, 185, 129, 0.15), transparent)', pointerEvents: 'none' }}></div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '40px', position: 'relative', zIndex: 1 }}>
-                    <div style={{ background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.05)', padding: '8px', borderRadius: '8px', color: '#10b981' }}>
+                    <div style={{ background: theme === 'white' ? 'rgba(16, 185, 129, 0.1)' : 'rgba(0,0,0,0.4)', border: theme === 'white' ? '1px solid rgba(16, 185, 129, 0.2)' : '1px solid rgba(255,255,255,0.05)', padding: '8px', borderRadius: '8px', color: '#10b981' }}>
                       <Database size={24} />
                     </div>
                     <div style={{ textAlign: 'right' }}>
                       <div style={{ fontSize: '1.5rem', fontWeight: 'bold', lineHeight: 1 }}>{inquiries.length}</div>
-                      <div style={{ fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: '#888', marginTop: '4px' }}>заявок</div>
+                      <div style={{ fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: theme === 'white' ? '#64748b' : '#888', marginTop: '4px' }}>заявок</div>
                     </div>
                   </div>
                   <div style={{ marginTop: 'auto', position: 'relative', zIndex: 1 }}>
-                    <div style={{ fontSize: '0.65rem', fontFamily: 'monospace', textTransform: 'uppercase', letterSpacing: '0.2em', color: '#888', marginBottom: '8px' }}>Обработка лидов</div>
+                    <div style={{ fontSize: '0.65rem', fontFamily: 'monospace', textTransform: 'uppercase', letterSpacing: '0.2em', color: theme === 'white' ? '#64748b' : '#888', marginBottom: '8px' }}>Обработка лидов</div>
                     <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '12px' }}>Входящие заявки</h2>
-                    <p style={{ fontSize: '0.85rem', color: '#aaa', marginBottom: '24px', lineHeight: 1.5 }}>Управляйте входящими лидами с сайта. Звоните клиентам и меняйте статусы.</p>
+                    <p style={{ fontSize: '0.85rem', color: theme === 'white' ? '#475569' : '#aaa', marginBottom: '24px', lineHeight: 1.5 }}>Управляйте входящими лидами с сайта. Звоните клиентам и меняйте статусы.</p>
                     <div style={{ fontSize: '0.85rem', fontWeight: 500, color: '#10b981' }}>Управление →</div>
                   </div>
                 </div>
 
                 {/* 2. Services */}
-                <div style={{ position: 'relative', overflow: 'hidden', borderRadius: '12px', background: '#111', border: '1px solid rgba(59, 130, 246, 0.3)', padding: '24px', display: 'flex', flexDirection: 'column', cursor: 'pointer', transition: 'transform 0.2s' }}>
+                <div onClick={() => setActiveAdminSection('services')} style={{ position: 'relative', overflow: 'hidden', borderRadius: '12px', background: theme === 'white' ? '#fff' : '#111', border: theme === 'white' ? '1px solid rgba(59, 130, 246, 0.4)' : '1px solid rgba(59, 130, 246, 0.3)', padding: '24px', display: 'flex', flexDirection: 'column', cursor: 'pointer', transition: 'transform 0.2s', boxShadow: theme === 'white' ? '0 4px 20px rgba(0,0,0,0.05)' : 'none' }}>
                   <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '100px', background: 'linear-gradient(to bottom, rgba(59, 130, 246, 0.15), transparent)', pointerEvents: 'none' }}></div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '40px', position: 'relative', zIndex: 1 }}>
-                    <div style={{ background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.05)', padding: '8px', borderRadius: '8px', color: '#3b82f6' }}>
+                    <div style={{ background: theme === 'white' ? 'rgba(59, 130, 246, 0.1)' : 'rgba(0,0,0,0.4)', border: theme === 'white' ? '1px solid rgba(59, 130, 246, 0.2)' : '1px solid rgba(255,255,255,0.05)', padding: '8px', borderRadius: '8px', color: '#3b82f6' }}>
                       <Briefcase size={24} />
                     </div>
                     <div style={{ textAlign: 'right' }}>
-                      <div style={{ fontSize: '1.5rem', fontWeight: 'bold', lineHeight: 1 }}>7</div>
-                      <div style={{ fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: '#888', marginTop: '4px' }}>услуг</div>
+                      <div style={{ fontSize: '1.5rem', fontWeight: 'bold', lineHeight: 1 }}>{Object.keys(SERVICES_DATA).length}</div>
+                      <div style={{ fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: theme === 'white' ? '#64748b' : '#888', marginTop: '4px' }}>услуг</div>
                     </div>
                   </div>
                   <div style={{ marginTop: 'auto', position: 'relative', zIndex: 1 }}>
-                    <div style={{ fontSize: '0.65rem', fontFamily: 'monospace', textTransform: 'uppercase', letterSpacing: '0.2em', color: '#888', marginBottom: '8px' }}>Список услуг</div>
+                    <div style={{ fontSize: '0.65rem', fontFamily: 'monospace', textTransform: 'uppercase', letterSpacing: '0.2em', color: theme === 'white' ? '#64748b' : '#888', marginBottom: '8px' }}>Список услуг</div>
                     <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '12px' }}>Услуги</h2>
-                    <p style={{ fontSize: '0.85rem', color: '#aaa', marginBottom: '24px', lineHeight: 1.5 }}>Управляйте описанием услуг, изображениями, видео и переводами.</p>
+                    <p style={{ fontSize: '0.85rem', color: theme === 'white' ? '#475569' : '#aaa', marginBottom: '24px', lineHeight: 1.5 }}>Управляйте описанием услуг, изображениями, видео и переводами.</p>
                     <div style={{ fontSize: '0.85rem', fontWeight: 500, color: '#3b82f6' }}>Управление →</div>
                   </div>
                 </div>
 
                 {/* 3. Visual Builder */}
-                <div onClick={() => { setIsVisualBuilder(true); setActivePage('home'); }} style={{ position: 'relative', overflow: 'hidden', borderRadius: '12px', background: '#111', border: '1px solid rgba(168, 85, 247, 0.3)', padding: '24px', display: 'flex', flexDirection: 'column', cursor: 'pointer', transition: 'transform 0.2s' }}>
+                <div onClick={() => { setIsVisualBuilder(true); setActivePage('home'); }} style={{ position: 'relative', overflow: 'hidden', borderRadius: '12px', background: theme === 'white' ? '#fff' : '#111', border: theme === 'white' ? '1px solid rgba(168, 85, 247, 0.4)' : '1px solid rgba(168, 85, 247, 0.3)', padding: '24px', display: 'flex', flexDirection: 'column', cursor: 'pointer', transition: 'transform 0.2s', boxShadow: theme === 'white' ? '0 4px 20px rgba(0,0,0,0.05)' : 'none' }}>
                   <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '100px', background: 'linear-gradient(to bottom, rgba(168, 85, 247, 0.15), transparent)', pointerEvents: 'none' }}></div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '40px', position: 'relative', zIndex: 1 }}>
-                    <div style={{ background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.05)', padding: '8px', borderRadius: '8px', color: '#a855f7' }}>
+                    <div style={{ background: theme === 'white' ? 'rgba(168, 85, 247, 0.1)' : 'rgba(0,0,0,0.4)', border: theme === 'white' ? '1px solid rgba(168, 85, 247, 0.2)' : '1px solid rgba(255,255,255,0.05)', padding: '8px', borderRadius: '8px', color: '#a855f7' }}>
                       <Edit3 size={24} />
                     </div>
                     <div style={{ textAlign: 'right' }}>
-                      <div style={{ fontSize: '1.5rem', fontWeight: 'bold', lineHeight: 1 }}>5</div>
-                      <div style={{ fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: '#888', marginTop: '4px' }}>страниц</div>
+                      <div style={{ fontSize: '1.5rem', fontWeight: 'bold', lineHeight: 1 }}>
+                        {MENU_STRUCTURE[language].reduce((acc, curr) => acc + 1 + (curr.items ? curr.items.length : 0), 0)}
+                      </div>
+                      <div style={{ fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: theme === 'white' ? '#64748b' : '#888', marginTop: '4px' }}>страниц</div>
                     </div>
                   </div>
                   <div style={{ marginTop: 'auto', position: 'relative', zIndex: 1 }}>
-                    <div style={{ fontSize: '0.65rem', fontFamily: 'monospace', textTransform: 'uppercase', letterSpacing: '0.2em', color: '#888', marginBottom: '8px' }}>Конструктор страниц</div>
+                    <div style={{ fontSize: '0.65rem', fontFamily: 'monospace', textTransform: 'uppercase', letterSpacing: '0.2em', color: theme === 'white' ? '#64748b' : '#888', marginBottom: '8px' }}>Конструктор страниц</div>
                     <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '12px' }}>Visual Builder</h2>
-                    <p style={{ fontSize: '0.85rem', color: '#aaa', marginBottom: '24px', lineHeight: 1.5 }}>Редактируйте тексты, заголовки и блоки прямо на страницах сайта.</p>
+                    <p style={{ fontSize: '0.85rem', color: theme === 'white' ? '#475569' : '#aaa', marginBottom: '24px', lineHeight: 1.5 }}>Редактируйте тексты, заголовки и блоки прямо на страницах сайта.</p>
                     <div style={{ fontSize: '0.85rem', fontWeight: 500, color: '#a855f7' }}>Открыть Builder →</div>
                   </div>
                 </div>
 
                 {/* 4. Content */}
-                <div style={{ position: 'relative', overflow: 'hidden', borderRadius: '12px', background: '#111', border: '1px solid rgba(234, 179, 8, 0.3)', padding: '24px', display: 'flex', flexDirection: 'column', cursor: 'pointer', transition: 'transform 0.2s' }}>
+                <div onClick={() => setActiveAdminSection('content')} style={{ position: 'relative', overflow: 'hidden', borderRadius: '12px', background: theme === 'white' ? '#fff' : '#111', border: theme === 'white' ? '1px solid rgba(234, 179, 8, 0.4)' : '1px solid rgba(234, 179, 8, 0.3)', padding: '24px', display: 'flex', flexDirection: 'column', cursor: 'pointer', transition: 'transform 0.2s', boxShadow: theme === 'white' ? '0 4px 20px rgba(0,0,0,0.05)' : 'none' }}>
                   <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '100px', background: 'linear-gradient(to bottom, rgba(234, 179, 8, 0.15), transparent)', pointerEvents: 'none' }}></div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '40px', position: 'relative', zIndex: 1 }}>
-                    <div style={{ background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.05)', padding: '8px', borderRadius: '8px', color: '#eab308' }}>
+                    <div style={{ background: theme === 'white' ? 'rgba(234, 179, 8, 0.1)' : 'rgba(0,0,0,0.4)', border: theme === 'white' ? '1px solid rgba(234, 179, 8, 0.2)' : '1px solid rgba(255,255,255,0.05)', padding: '8px', borderRadius: '8px', color: '#eab308' }}>
                       <BookOpen size={24} />
                     </div>
                     <div style={{ textAlign: 'right' }}>
-                      <div style={{ fontSize: '1.5rem', fontWeight: 'bold', lineHeight: 1 }}>3</div>
-                      <div style={{ fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: '#888', marginTop: '4px' }}>языка</div>
+                      <div style={{ fontSize: '1.5rem', fontWeight: 'bold', lineHeight: 1 }}>{Object.keys(translations).length}</div>
+                      <div style={{ fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: theme === 'white' ? '#64748b' : '#888', marginTop: '4px' }}>языка</div>
                     </div>
                   </div>
                   <div style={{ marginTop: 'auto', position: 'relative', zIndex: 1 }}>
-                    <div style={{ fontSize: '0.65rem', fontFamily: 'monospace', textTransform: 'uppercase', letterSpacing: '0.2em', color: '#888', marginBottom: '8px' }}>Тексты и переводы</div>
+                    <div style={{ fontSize: '0.65rem', fontFamily: 'monospace', textTransform: 'uppercase', letterSpacing: '0.2em', color: theme === 'white' ? '#64748b' : '#888', marginBottom: '8px' }}>Тексты и переводы</div>
                     <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '12px' }}>Контент</h2>
-                    <p style={{ fontSize: '0.85rem', color: '#aaa', marginBottom: '24px', lineHeight: 1.5 }}>Редактируйте все тексты сайта на русском, казахском и английском языках.</p>
+                    <p style={{ fontSize: '0.85rem', color: theme === 'white' ? '#475569' : '#aaa', marginBottom: '24px', lineHeight: 1.5 }}>Редактируйте все тексты сайта на русском, казахском и английском языках.</p>
                     <div style={{ fontSize: '0.85rem', fontWeight: 500, color: '#eab308' }}>Редактировать →</div>
                   </div>
                 </div>
 
                 {/* 5. Pages */}
-                <div style={{ position: 'relative', overflow: 'hidden', borderRadius: '12px', background: '#111', border: '1px solid rgba(236, 72, 153, 0.3)', padding: '24px', display: 'flex', flexDirection: 'column', cursor: 'pointer', transition: 'transform 0.2s' }}>
+                <div onClick={() => setActiveAdminSection('pages')} style={{ position: 'relative', overflow: 'hidden', borderRadius: '12px', background: theme === 'white' ? '#fff' : '#111', border: theme === 'white' ? '1px solid rgba(236, 72, 153, 0.4)' : '1px solid rgba(236, 72, 153, 0.3)', padding: '24px', display: 'flex', flexDirection: 'column', cursor: 'pointer', transition: 'transform 0.2s', boxShadow: theme === 'white' ? '0 4px 20px rgba(0,0,0,0.05)' : 'none' }}>
                   <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '100px', background: 'linear-gradient(to bottom, rgba(236, 72, 153, 0.15), transparent)', pointerEvents: 'none' }}></div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '40px', position: 'relative', zIndex: 1 }}>
-                    <div style={{ background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.05)', padding: '8px', borderRadius: '8px', color: '#ec4899' }}>
+                    <div style={{ background: theme === 'white' ? 'rgba(236, 72, 153, 0.1)' : 'rgba(0,0,0,0.4)', border: theme === 'white' ? '1px solid rgba(236, 72, 153, 0.2)' : '1px solid rgba(255,255,255,0.05)', padding: '8px', borderRadius: '8px', color: '#ec4899' }}>
                       <FileText size={24} />
                     </div>
                     <div style={{ textAlign: 'right' }}>
-                      <div style={{ fontSize: '1.5rem', fontWeight: 'bold', lineHeight: 1 }}>7</div>
-                      <div style={{ fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: '#888', marginTop: '4px' }}>страниц</div>
+                      <div style={{ fontSize: '1.5rem', fontWeight: 'bold', lineHeight: 1 }}>
+                        {MENU_STRUCTURE[language].reduce((acc, curr) => acc + 1 + (curr.items ? curr.items.length : 0), 0)}
+                      </div>
+                      <div style={{ fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: theme === 'white' ? '#64748b' : '#888', marginTop: '4px' }}>страниц</div>
                     </div>
                   </div>
                   <div style={{ marginTop: 'auto', position: 'relative', zIndex: 1 }}>
-                    <div style={{ fontSize: '0.65rem', fontFamily: 'monospace', textTransform: 'uppercase', letterSpacing: '0.2em', color: '#888', marginBottom: '8px' }}>Структура сайта</div>
+                    <div style={{ fontSize: '0.65rem', fontFamily: 'monospace', textTransform: 'uppercase', letterSpacing: '0.2em', color: theme === 'white' ? '#64748b' : '#888', marginBottom: '8px' }}>Структура сайта</div>
                     <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '12px' }}>Страницы</h2>
-                    <p style={{ fontSize: '0.85rem', color: '#aaa', marginBottom: '24px', lineHeight: 1.5 }}>Управляйте порядком блоков, скрывайте секции и настраивайте мета-данные.</p>
+                    <p style={{ fontSize: '0.85rem', color: theme === 'white' ? '#475569' : '#aaa', marginBottom: '24px', lineHeight: 1.5 }}>Управляйте порядком блоков, скрывайте секции и настраивайте мета-данные.</p>
                     <div style={{ fontSize: '0.85rem', fontWeight: 500, color: '#ec4899' }}>Управление →</div>
                   </div>
                 </div>
 
                 {/* 6. Settings */}
-                <div style={{ position: 'relative', overflow: 'hidden', borderRadius: '12px', background: '#111', border: '1px solid rgba(107, 114, 128, 0.3)', padding: '24px', display: 'flex', flexDirection: 'column', cursor: 'pointer', transition: 'transform 0.2s' }}>
+                <div onClick={() => setActiveAdminSection('settings')} style={{ position: 'relative', overflow: 'hidden', borderRadius: '12px', background: theme === 'white' ? '#fff' : '#111', border: theme === 'white' ? '1px solid rgba(107, 114, 128, 0.4)' : '1px solid rgba(107, 114, 128, 0.3)', padding: '24px', display: 'flex', flexDirection: 'column', cursor: 'pointer', transition: 'transform 0.2s', boxShadow: theme === 'white' ? '0 4px 20px rgba(0,0,0,0.05)' : 'none' }}>
                   <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '100px', background: 'linear-gradient(to bottom, rgba(107, 114, 128, 0.15), transparent)', pointerEvents: 'none' }}></div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '40px', position: 'relative', zIndex: 1 }}>
-                    <div style={{ background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.05)', padding: '8px', borderRadius: '8px', color: '#9ca3af' }}>
+                    <div style={{ background: theme === 'white' ? 'rgba(107, 114, 128, 0.1)' : 'rgba(0,0,0,0.4)', border: theme === 'white' ? '1px solid rgba(107, 114, 128, 0.2)' : '1px solid rgba(255,255,255,0.05)', padding: '8px', borderRadius: '8px', color: '#9ca3af' }}>
                       <Settings size={24} />
                     </div>
                   </div>
                   <div style={{ marginTop: 'auto', position: 'relative', zIndex: 1 }}>
-                    <div style={{ fontSize: '0.65rem', fontFamily: 'monospace', textTransform: 'uppercase', letterSpacing: '0.2em', color: '#888', marginBottom: '8px' }}>Глобальные параметры</div>
+                    <div style={{ fontSize: '0.65rem', fontFamily: 'monospace', textTransform: 'uppercase', letterSpacing: '0.2em', color: theme === 'white' ? '#64748b' : '#888', marginBottom: '8px' }}>Глобальные параметры</div>
                     <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '12px' }}>Настройки</h2>
-                    <p style={{ fontSize: '0.85rem', color: '#aaa', marginBottom: '24px', lineHeight: 1.5 }}>Название компании, цвета, логотип, контактная информация и SEO.</p>
+                    <p style={{ fontSize: '0.85rem', color: theme === 'white' ? '#475569' : '#aaa', marginBottom: '24px', lineHeight: 1.5 }}>Название компании, цвета, логотип, контактная информация и SEO.</p>
                     <div style={{ fontSize: '0.85rem', fontWeight: 500, color: '#9ca3af' }}>Настроить →</div>
                   </div>
                 </div>
 
                 {/* 7. Bot */}
-                <div style={{ position: 'relative', overflow: 'hidden', borderRadius: '12px', background: '#111', border: '1px solid rgba(6, 182, 212, 0.3)', padding: '24px', display: 'flex', flexDirection: 'column', cursor: 'pointer', transition: 'transform 0.2s' }}>
+                <div onClick={() => setActiveAdminSection('bot')} style={{ position: 'relative', overflow: 'hidden', borderRadius: '12px', background: theme === 'white' ? '#fff' : '#111', border: theme === 'white' ? '1px solid rgba(6, 182, 212, 0.4)' : '1px solid rgba(6, 182, 212, 0.3)', padding: '24px', display: 'flex', flexDirection: 'column', cursor: 'pointer', transition: 'transform 0.2s', boxShadow: theme === 'white' ? '0 4px 20px rgba(0,0,0,0.05)' : 'none' }}>
                   <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '100px', background: 'linear-gradient(to bottom, rgba(6, 182, 212, 0.15), transparent)', pointerEvents: 'none' }}></div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '40px', position: 'relative', zIndex: 1 }}>
-                    <div style={{ background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.05)', padding: '8px', borderRadius: '8px', color: '#06b6d4' }}>
+                    <div style={{ background: theme === 'white' ? 'rgba(6, 182, 212, 0.1)' : 'rgba(0,0,0,0.4)', border: theme === 'white' ? '1px solid rgba(6, 182, 212, 0.2)' : '1px solid rgba(255,255,255,0.05)', padding: '8px', borderRadius: '8px', color: '#06b6d4' }}>
                       <Bot size={24} />
                     </div>
                   </div>
                   <div style={{ marginTop: 'auto', position: 'relative', zIndex: 1 }}>
-                    <div style={{ fontSize: '0.65rem', fontFamily: 'monospace', textTransform: 'uppercase', letterSpacing: '0.2em', color: '#888', marginBottom: '8px' }}>Настройки чат-бота</div>
+                    <div style={{ fontSize: '0.65rem', fontFamily: 'monospace', textTransform: 'uppercase', letterSpacing: '0.2em', color: theme === 'white' ? '#64748b' : '#888', marginBottom: '8px' }}>Настройки чат-бота</div>
                     <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '12px' }}>SPENGEO_ASSISTANT</h2>
-                    <p style={{ fontSize: '0.85rem', color: '#aaa', marginBottom: '24px', lineHeight: 1.5 }}>Приветствия, FAQ, авто-ответы, телефон поддержки и имя ассистента.</p>
+                    <p style={{ fontSize: '0.85rem', color: theme === 'white' ? '#475569' : '#aaa', marginBottom: '24px', lineHeight: 1.5 }}>Приветствия, FAQ, авто-ответы, телефон поддержки и имя ассистента.</p>
                     <div style={{ fontSize: '0.85rem', fontWeight: 500, color: '#06b6d4' }}>Настроить ассистента →</div>
                   </div>
                 </div>
@@ -2474,36 +2551,36 @@ function App() {
 
               {/* Bottom stats row like in the screenshot */}
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px', marginTop: '20px' }}>
-                <div style={{ background: '#111', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '8px', padding: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ fontSize: '0.85rem', color: '#888' }}>Новых лидов</span>
+                <div style={{ background: theme === 'white' ? '#fff' : '#111', border: theme === 'white' ? '1px solid rgba(0,0,0,0.05)' : '1px solid rgba(255,255,255,0.05)', borderRadius: '8px', padding: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', boxShadow: theme === 'white' ? '0 2px 10px rgba(0,0,0,0.02)' : 'none' }}>
+                  <span style={{ fontSize: '0.85rem', color: theme === 'white' ? '#64748b' : '#888' }}>Новых лидов</span>
                   <span style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#10b981' }}>{inquiries.length}</span>
                 </div>
-                <div style={{ background: '#111', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '8px', padding: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ fontSize: '0.85rem', color: '#888' }}>Услуг на сайте</span>
-                  <span style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#3b82f6' }}>7</span>
+                <div style={{ background: theme === 'white' ? '#fff' : '#111', border: theme === 'white' ? '1px solid rgba(0,0,0,0.05)' : '1px solid rgba(255,255,255,0.05)', borderRadius: '8px', padding: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', boxShadow: theme === 'white' ? '0 2px 10px rgba(0,0,0,0.02)' : 'none' }}>
+                  <span style={{ fontSize: '0.85rem', color: theme === 'white' ? '#64748b' : '#888' }}>Услуг на сайте</span>
+                  <span style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#3b82f6' }}>{Object.keys(SERVICES_DATA).length}</span>
                 </div>
-                <div style={{ background: '#111', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '8px', padding: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ fontSize: '0.85rem', color: '#888' }}>Активных ботов</span>
+                <div style={{ background: theme === 'white' ? '#fff' : '#111', border: theme === 'white' ? '1px solid rgba(0,0,0,0.05)' : '1px solid rgba(255,255,255,0.05)', borderRadius: '8px', padding: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', boxShadow: theme === 'white' ? '0 2px 10px rgba(0,0,0,0.02)' : 'none' }}>
+                  <span style={{ fontSize: '0.85rem', color: theme === 'white' ? '#64748b' : '#888' }}>Активных ботов</span>
                   <span style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#06b6d4' }}>1</span>
                 </div>
               </div>
-
-              {/* Inquiries List under cards */}
+              
+              {/* Inquiries List on Dashboard */}
               <div style={{ marginTop: '60px' }}>
-                <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '20px' }}>Список заявок</h3>
+                <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '20px', color: theme === 'white' ? '#0f172a' : '#fff' }}>Последние заявки</h3>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                   {inquiries.length === 0 ? (
-                    <div style={{ padding: '40px', textAlign: 'center', border: '1px dashed rgba(255,255,255,0.1)', borderRadius: '12px', color: '#888' }}>База данных пуста.</div>
+                    <div style={{ padding: '40px', textAlign: 'center', border: theme === 'white' ? '1px dashed rgba(0,0,0,0.1)' : '1px dashed rgba(255,255,255,0.1)', borderRadius: '12px', color: theme === 'white' ? '#64748b' : '#888' }}>База данных пуста.</div>
                   ) : (
                     inquiries.map(inq => (
-                      <div key={inq.id} style={{ background: '#111', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <div key={inq.id} style={{ background: theme === 'white' ? '#fff' : '#111', border: theme === 'white' ? '1px solid rgba(0,0,0,0.05)' : '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', boxShadow: theme === 'white' ? '0 2px 10px rgba(0,0,0,0.02)' : 'none' }}>
                         <div>
-                          <div style={{ fontWeight: 'bold', fontSize: '1.1rem', marginBottom: '8px' }}>{inq.name} <span style={{ fontSize: '0.7rem', padding: '2px 6px', borderRadius: '4px', background: 'rgba(6, 182, 212, 0.1)', color: '#06b6d4', marginLeft: '8px' }}>{inq.service_type}</span></div>
-                          <div style={{ fontSize: '0.9rem', color: '#aaa', marginBottom: '8px' }}>{inq.message}</div>
-                          <a href={`tel:${inq.phone}`} style={{ fontSize: '0.85rem', color: '#fff', display: 'inline-flex', alignItems: 'center', gap: '6px', textDecoration: 'none' }}><Phone size={12}/> {inq.phone}</a>
+                          <div style={{ fontWeight: 'bold', fontSize: '1.1rem', marginBottom: '8px', color: theme === 'white' ? '#0f172a' : '#fff' }}>{inq.name} <span style={{ fontSize: '0.7rem', padding: '2px 6px', borderRadius: '4px', background: 'rgba(6, 182, 212, 0.1)', color: '#06b6d4', marginLeft: '8px' }}>{inq.service_type}</span></div>
+                          <div style={{ fontSize: '0.9rem', color: theme === 'white' ? '#475569' : '#aaa', marginBottom: '8px' }}>{inq.message}</div>
+                          <a href={`tel:${inq.phone}`} style={{ fontSize: '0.85rem', color: theme === 'white' ? '#0f172a' : '#fff', display: 'inline-flex', alignItems: 'center', gap: '6px', textDecoration: 'none' }}><Phone size={12} color={theme === 'white' ? '#0f172a' : '#fff'}/> {inq.phone}</a>
                         </div>
                         <div style={{ textAlign: 'right' }}>
-                          <div style={{ fontSize: '0.8rem', color: '#888', marginBottom: '16px' }}>{new Date(inq.created_at).toLocaleString('ru-RU')}</div>
+                          <div style={{ fontSize: '0.8rem', color: theme === 'white' ? '#64748b' : '#888', marginBottom: '16px' }}>{new Date(inq.created_at).toLocaleString('ru-RU')}</div>
                           <button onClick={() => handleClearInquiry(inq.id)} style={{ background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer' }}><Trash2 size={16}/></button>
                         </div>
                       </div>
@@ -2511,6 +2588,166 @@ function App() {
                   )}
                 </div>
               </div>
+              </>
+              )}
+
+              {/* ===== ADMIN SUB-PAGES ===== */}
+              {activeAdminSection === 'leads' && (
+                <div style={{ background: theme === 'white' ? '#fff' : '#111', border: theme === 'white' ? '1px solid rgba(0,0,0,0.05)' : '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', padding: '30px', boxShadow: theme === 'white' ? '0 4px 20px rgba(0,0,0,0.05)' : 'none' }}>
+                  <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '20px', color: theme === 'white' ? '#0f172a' : '#fff' }}>Входящие заявки ({inquiries.length})</h3>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                    {inquiries.length === 0 ? (
+                      <div style={{ padding: '40px', textAlign: 'center', border: theme === 'white' ? '1px dashed rgba(0,0,0,0.1)' : '1px dashed rgba(255,255,255,0.1)', borderRadius: '12px', color: theme === 'white' ? '#64748b' : '#888' }}>База данных пуста.</div>
+                    ) : (
+                      inquiries.map(inq => (
+                        <div key={inq.id} style={{ background: theme === 'white' ? '#f8fafc' : '#1a1a1a', border: theme === 'white' ? '1px solid rgba(0,0,0,0.05)' : '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                          <div>
+                            <div style={{ fontWeight: 'bold', fontSize: '1.1rem', marginBottom: '8px', color: theme === 'white' ? '#0f172a' : '#fff' }}>{inq.name} <span style={{ fontSize: '0.7rem', padding: '2px 6px', borderRadius: '4px', background: 'rgba(6, 182, 212, 0.1)', color: '#06b6d4', marginLeft: '8px' }}>{inq.service_type}</span></div>
+                            <div style={{ fontSize: '0.9rem', color: theme === 'white' ? '#475569' : '#aaa', marginBottom: '8px' }}>{inq.message}</div>
+                            <a href={`tel:${inq.phone}`} style={{ fontSize: '0.85rem', color: theme === 'white' ? '#0f172a' : '#fff', display: 'inline-flex', alignItems: 'center', gap: '6px', textDecoration: 'none' }}><Phone size={12} color={theme === 'white' ? '#0f172a' : '#fff'}/> {inq.phone}</a>
+                          </div>
+                          <div style={{ textAlign: 'right' }}>
+                            <div style={{ fontSize: '0.8rem', color: theme === 'white' ? '#64748b' : '#888', marginBottom: '16px' }}>{new Date(inq.created_at).toLocaleString('ru-RU')}</div>
+                            <button onClick={() => handleClearInquiry(inq.id)} style={{ background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', padding: '8px', borderRadius: '4px', background: 'rgba(239, 68, 68, 0.1)' }}>Удалить <Trash2 size={16} style={{ verticalAlign: 'middle', marginLeft: '4px' }}/></button>
+                          </div>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {activeAdminSection === 'services' && (
+                <div style={{ background: theme === 'white' ? '#fff' : '#111', border: theme === 'white' ? '1px solid rgba(0,0,0,0.05)' : '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', padding: '30px', boxShadow: theme === 'white' ? '0 4px 20px rgba(0,0,0,0.05)' : 'none' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                    <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', color: theme === 'white' ? '#0f172a' : '#fff' }}>Услуги ({Object.keys(SERVICES_DATA).length})</h3>
+                    <button style={{ background: '#3b82f6', color: '#fff', border: 'none', padding: '8px 16px', borderRadius: '6px', cursor: 'pointer' }}>+ Добавить услугу</button>
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                    {Object.entries(SERVICES_DATA).map(([key, service]) => (
+                      <div key={key} style={{ padding: '16px', border: theme === 'white' ? '1px solid #e2e8f0' : '1px solid #333', borderRadius: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <div>
+                          <div style={{ fontWeight: 'bold', color: theme === 'white' ? '#0f172a' : '#fff' }}>{service.title}</div>
+                          <div style={{ fontSize: '0.8rem', color: theme === 'white' ? '#64748b' : '#888', marginTop: '4px' }}>Код: {service.code}</div>
+                        </div>
+                        <button style={{ background: 'none', border: 'none', color: '#3b82f6', cursor: 'pointer' }}>Редактировать</button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {activeAdminSection === 'content' && (
+                <div style={{ background: theme === 'white' ? '#fff' : '#111', border: theme === 'white' ? '1px solid rgba(0,0,0,0.05)' : '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', padding: '30px', boxShadow: theme === 'white' ? '0 4px 20px rgba(0,0,0,0.05)' : 'none' }}>
+                  <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '20px', color: theme === 'white' ? '#0f172a' : '#fff' }}>Тексты и переводы</h3>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px' }}>
+                    {Object.keys(translations).map(lang => (
+                      <div key={lang} style={{ padding: '20px', border: theme === 'white' ? '1px solid #e2e8f0' : '1px solid #333', borderRadius: '8px', textAlign: 'center' }}>
+                        <div style={{ fontSize: '2rem', marginBottom: '10px' }}>{lang === 'ru' ? '🇷🇺' : lang === 'kk' ? '🇰🇿' : '🇬🇧'}</div>
+                        <div style={{ fontWeight: 'bold', textTransform: 'uppercase', color: theme === 'white' ? '#0f172a' : '#fff', marginBottom: '10px' }}>{lang}</div>
+                        <button style={{ background: '#eab308', color: '#000', border: 'none', padding: '8px 16px', borderRadius: '6px', cursor: 'pointer', width: '100%' }}>Редактировать</button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {activeAdminSection === 'pages' && (
+                <div style={{ background: theme === 'white' ? '#fff' : '#111', border: theme === 'white' ? '1px solid rgba(0,0,0,0.05)' : '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', padding: '30px', boxShadow: theme === 'white' ? '0 4px 20px rgba(0,0,0,0.05)' : 'none' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                    <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', color: theme === 'white' ? '#0f172a' : '#fff' }}>
+                      Структура сайта ({MENU_STRUCTURE[language].reduce((acc, curr) => acc + 1 + (curr.items ? curr.items.length : 0), 0)} страниц)
+                    </h3>
+                    <button style={{ background: '#ec4899', color: '#fff', border: 'none', padding: '8px 16px', borderRadius: '6px', cursor: 'pointer' }}>+ Добавить страницу</button>
+                  </div>
+                  
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                    {MENU_STRUCTURE[language].map((page, idx) => (
+                      <div key={idx} style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                        {/* Parent Page */}
+                        <div style={{ padding: '16px', background: theme === 'white' ? '#f8fafc' : '#1a1a1a', border: theme === 'white' ? '1px solid #e2e8f0' : '1px solid #333', borderRadius: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                          <div>
+                            <div style={{ fontWeight: 'bold', color: theme === 'white' ? '#0f172a' : '#fff', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                              <Folder size={16} color="#ec4899" /> {page.title}
+                            </div>
+                            <div style={{ fontSize: '0.8rem', color: theme === 'white' ? '#64748b' : '#888', marginTop: '4px', marginLeft: '24px' }}>Path: /{page.page}</div>
+                          </div>
+                          <div style={{ display: 'flex', gap: '10px' }}>
+                            <button style={{ background: 'none', border: 'none', color: '#ec4899', cursor: 'pointer' }}>SEO</button>
+                            <button style={{ background: 'none', border: 'none', color: '#3b82f6', cursor: 'pointer' }}>Настроить</button>
+                          </div>
+                        </div>
+                        
+                        {/* Subpages */}
+                        {page.items && page.items.length > 0 && (
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', paddingLeft: '32px', position: 'relative' }}>
+                            <div style={{ position: 'absolute', left: '16px', top: '0', bottom: '20px', width: '2px', background: theme === 'white' ? '#e2e8f0' : '#333' }}></div>
+                            {page.items.map((sub, subIdx) => (
+                              <div key={subIdx} style={{ position: 'relative', padding: '12px 16px', border: theme === 'white' ? '1px solid #e2e8f0' : '1px solid #2a2a2a', borderRadius: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: theme === 'white' ? '#fff' : '#111' }}>
+                                <div style={{ position: 'absolute', left: '-16px', top: '50%', width: '16px', height: '2px', background: theme === 'white' ? '#e2e8f0' : '#333' }}></div>
+                                <div>
+                                  <div style={{ fontWeight: '500', color: theme === 'white' ? '#334155' : '#ccc', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                    <FileText size={14} color="#64748b" /> {sub.name}
+                                  </div>
+                                  <div style={{ fontSize: '0.75rem', color: theme === 'white' ? '#94a3b8' : '#666', marginTop: '4px', marginLeft: '22px' }}>
+                                    Action: {sub.action?.type} {sub.action?.subpage ? `(${sub.action.subpage})` : ''}
+                                  </div>
+                                </div>
+                                <div style={{ display: 'flex', gap: '10px' }}>
+                                  <button style={{ background: 'none', border: 'none', color: '#ec4899', cursor: 'pointer', fontSize: '0.85rem' }}>SEO</button>
+                                  <button style={{ background: 'none', border: 'none', color: '#3b82f6', cursor: 'pointer', fontSize: '0.85rem' }}>Контент</button>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {activeAdminSection === 'settings' && (
+                <div style={{ background: theme === 'white' ? '#fff' : '#111', border: theme === 'white' ? '1px solid rgba(0,0,0,0.05)' : '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', padding: '30px', boxShadow: theme === 'white' ? '0 4px 20px rgba(0,0,0,0.05)' : 'none' }}>
+                  <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '20px', color: theme === 'white' ? '#0f172a' : '#fff' }}>Глобальные настройки</h3>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                    <div>
+                      <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.9rem', color: theme === 'white' ? '#475569' : '#ccc' }}>Название компании</label>
+                      <input type="text" defaultValue="ТОО «СпецИнжГео»" style={{ width: '100%', padding: '12px', borderRadius: '6px', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #333', background: theme === 'white' ? '#f8fafc' : '#000', color: theme === 'white' ? '#0f172a' : '#fff' }} />
+                    </div>
+                    <div>
+                      <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.9rem', color: theme === 'white' ? '#475569' : '#ccc' }}>Основной телефон</label>
+                      <input type="text" defaultValue="+7 (705) 555-44-33" style={{ width: '100%', padding: '12px', borderRadius: '6px', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #333', background: theme === 'white' ? '#f8fafc' : '#000', color: theme === 'white' ? '#0f172a' : '#fff' }} />
+                    </div>
+                    <div>
+                      <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.9rem', color: theme === 'white' ? '#475569' : '#ccc' }}>Email для уведомлений</label>
+                      <input type="text" defaultValue="info@spengeo.kz" style={{ width: '100%', padding: '12px', borderRadius: '6px', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #333', background: theme === 'white' ? '#f8fafc' : '#000', color: theme === 'white' ? '#0f172a' : '#fff' }} />
+                    </div>
+                    <button style={{ background: '#10b981', color: '#fff', border: 'none', padding: '12px', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold', marginTop: '10px' }}>Сохранить настройки</button>
+                  </div>
+                </div>
+              )}
+
+              {activeAdminSection === 'bot' && (
+                <div style={{ background: theme === 'white' ? '#fff' : '#111', border: theme === 'white' ? '1px solid rgba(0,0,0,0.05)' : '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', padding: '30px', boxShadow: theme === 'white' ? '0 4px 20px rgba(0,0,0,0.05)' : 'none' }}>
+                  <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '20px', color: theme === 'white' ? '#0f172a' : '#fff' }}>Настройки Чат-бота</h3>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                    <div>
+                      <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.9rem', color: theme === 'white' ? '#475569' : '#ccc' }}>Имя ассистента</label>
+                      <input type="text" defaultValue="SPENGEO_ASSISTANT" style={{ width: '100%', padding: '12px', borderRadius: '6px', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #333', background: theme === 'white' ? '#f8fafc' : '#000', color: theme === 'white' ? '#0f172a' : '#fff' }} />
+                    </div>
+                    <div>
+                      <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.9rem', color: theme === 'white' ? '#475569' : '#ccc' }}>Приветственное сообщение</label>
+                      <textarea rows="4" defaultValue="Здравствуйте! Я автоматический ассистент СпецИнжГео. Чем могу помочь?" style={{ width: '100%', padding: '12px', borderRadius: '6px', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #333', background: theme === 'white' ? '#f8fafc' : '#000', color: theme === 'white' ? '#0f172a' : '#fff', resize: 'vertical' }}></textarea>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                      <input type="checkbox" id="bot_active" defaultChecked style={{ width: '20px', height: '20px' }} />
+                      <label htmlFor="bot_active" style={{ color: theme === 'white' ? '#0f172a' : '#fff' }}>Бот активен на сайте</label>
+                    </div>
+                    <button style={{ background: '#06b6d4', color: '#fff', border: 'none', padding: '12px', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold', marginTop: '10px' }}>Сохранить конфигурацию</button>
+                  </div>
+                </div>
+              )}
 
             </div>
           </div>
@@ -2700,21 +2937,124 @@ function App() {
         </div>
       )}
 
-      {/* Floating Visual Builder Toolbar */}
+      {/* PROFESSIONAL VISUAL BUILDER PANELS */}
       {isVisualBuilder && (
-        <div style={{ position: 'fixed', bottom: 30, left: '50%', transform: 'translateX(-50%)', background: 'var(--bg-card)', border: '1px solid var(--color-accent)', color: 'var(--color-text-primary)', padding: '15px 25px', borderRadius: '30px', zIndex: 9999, display: 'flex', gap: '20px', alignItems: 'center', boxShadow: '0 10px 40px rgba(245, 158, 11, 0.3)', backdropFilter: 'blur(10px)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <Edit3 size={20} color="var(--color-accent)" />
-            <span style={{ fontWeight: 'bold' }}>VISUAL BUILDER ACTIVE</span>
+        <>
+          {/* Top Panel */}
+          <div style={{ position: 'fixed', top: 0, left: 0, right: 0, height: '60px', background: '#0a0a0a', borderBottom: '1px solid #222', zIndex: 10000, display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 20px', color: '#fff', boxShadow: '0 4px 20px rgba(0,0,0,0.5)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+              <div style={{ background: 'linear-gradient(45deg, var(--color-cyan), var(--color-accent))', padding: '6px', borderRadius: '8px' }}>
+                <Edit3 size={18} color="#000" />
+              </div>
+              <span style={{ fontWeight: 'bold', letterSpacing: '1px', fontSize: '1.1rem' }}>SPENGEO BUILDER</span>
+            </div>
+            
+            <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', background: '#1a1a1a', padding: '6px 16px', borderRadius: '8px', border: '1px solid #333' }}>
+                <span style={{ fontSize: '0.85rem', color: '#888' }}>Страница:</span>
+                <select 
+                  value={activePage} 
+                  onChange={(e) => setActivePage(e.target.value)}
+                  style={{ background: 'transparent', border: 'none', color: '#fff', outline: 'none', fontWeight: 'bold', cursor: 'pointer', fontSize: '0.9rem' }}
+                >
+                  {MENU_STRUCTURE.ru.map(m => (
+                    <option key={m.page} value={m.page} style={{ background: '#111' }}>{m.title}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+              <button className="btn btn-secondary" onClick={() => setIsVisualBuilder(false)} style={{ padding: '8px 16px', fontSize: '0.85rem', border: '1px solid #444', color: '#ccc' }}>
+                Выйти
+              </button>
+              <button className="btn btn-primary" onClick={() => setIsVisualBuilder(false)} style={{ padding: '8px 20px', fontSize: '0.85rem', display: 'flex', gap: '8px', alignItems: 'center', background: 'var(--color-cyan)', color: '#000', fontWeight: 'bold' }}>
+                <Check size={16} /> Опубликовать
+              </button>
+            </div>
           </div>
-          <div style={{ width: '1px', height: '20px', background: 'var(--border-color)' }}></div>
-          <span style={{ fontSize: '0.9rem', color: 'var(--color-text-secondary)' }}>Кликните на текст, чтобы изменить</span>
-          <button onClick={() => setIsVisualBuilder(false)} className="btn btn-primary" style={{ padding: '8px 20px', fontSize: '0.9rem', minWidth: '120px' }}>
-            Сохранить и выйти
-          </button>
-        </div>
+
+          {/* Left Panel */}
+          <div style={{ position: 'fixed', top: '60px', left: 0, bottom: 0, width: '300px', background: '#0a0a0a', borderRight: '1px solid #222', zIndex: 10000, display: 'flex', flexDirection: 'column', boxShadow: '4px 0 20px rgba(0,0,0,0.5)' }}>
+            <div style={{ padding: '20px', borderBottom: '1px solid #222', fontSize: '0.8rem', fontWeight: 'bold', color: '#888', textTransform: 'uppercase', letterSpacing: '1.5px' }}>
+              Слои и Блоки
+            </div>
+            <div style={{ padding: '20px', flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              {['Top Navigation', 'Hero Section', 'Features Grid', 'About Company', 'Services Tabs', 'Projects Filter', 'Call to Action', 'Footer'].map((layer, i) => (
+                <div key={i} style={{ padding: '12px 16px', background: '#111', border: '1px solid #222', borderRadius: '8px', fontSize: '0.85rem', color: '#ccc', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', transition: 'all 0.2s' }} onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--color-cyan)'; e.currentTarget.style.background = '#1a1a1a'; }} onMouseLeave={(e) => { e.currentTarget.style.borderColor = '#222'; e.currentTarget.style.background = '#111'; }}>
+                  <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+                    <Layers size={14} color={i === 1 ? 'var(--color-cyan)' : '#666'} /> 
+                    <span style={{ color: i === 1 ? '#fff' : '#ccc', fontWeight: i === 1 ? 'bold' : 'normal' }}>{layer}</span>
+                  </div>
+                  <Eye size={14} color={i === 1 ? 'var(--color-cyan)' : '#444'} />
+                </div>
+              ))}
+            </div>
+            <div style={{ padding: '20px', borderTop: '1px solid #222' }}>
+              <button className="btn btn-secondary" style={{ width: '100%', fontSize: '0.85rem', border: '1px dashed #444', color: '#aaa', padding: '10px' }}>
+                + Добавить блок
+              </button>
+            </div>
+          </div>
+
+          {/* Right Panel */}
+          <div style={{ position: 'fixed', top: '60px', right: 0, bottom: 0, width: '300px', background: '#0a0a0a', borderLeft: '1px solid #222', zIndex: 10000, display: 'flex', flexDirection: 'column', boxShadow: '-4px 0 20px rgba(0,0,0,0.5)' }}>
+            <div style={{ padding: '20px', borderBottom: '1px solid #222', fontSize: '0.8rem', fontWeight: 'bold', color: '#888', textTransform: 'uppercase', letterSpacing: '1.5px' }}>
+              Свойства элемента
+            </div>
+            <div style={{ padding: '20px', flex: 1, overflowY: 'auto' }}>
+              <div style={{ marginBottom: '25px' }}>
+                <label style={{ display: 'block', fontSize: '0.75rem', color: '#666', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '1px' }}>Выбранный элемент</label>
+                <div style={{ padding: '12px', background: 'rgba(6, 182, 212, 0.05)', border: '1px solid rgba(6, 182, 212, 0.2)', borderRadius: '8px', color: 'var(--color-cyan)', fontSize: '0.85rem', display: 'inline-flex', alignItems: 'center', gap: '8px', fontWeight: 'bold' }}>
+                  <Edit3 size={14} /> EditableText #hero_title
+                </div>
+              </div>
+              
+              <div style={{ marginBottom: '25px' }}>
+                <label style={{ display: 'block', fontSize: '0.75rem', color: '#666', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '1px' }}>Текст (HTML)</label>
+                <textarea rows="6" style={{ width: '100%', background: '#111', border: '1px solid #333', borderRadius: '8px', color: '#fff', padding: '12px', fontSize: '0.9rem', lineHeight: '1.5', outline: 'none' }} defaultValue="Инженерно-<br/>геологические<br/>изыскания" onFocus={(e) => e.target.style.borderColor = 'var(--color-cyan)'} onBlur={(e) => e.target.style.borderColor = '#333'} />
+              </div>
+
+              <div style={{ marginBottom: '25px' }}>
+                <label style={{ display: 'block', fontSize: '0.75rem', color: '#666', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '1px' }}>Отступы (Margin / Padding)</label>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                  <input type="text" placeholder="Margin (px)" style={{ background: '#111', border: '1px solid #333', borderRadius: '8px', color: '#fff', padding: '10px', fontSize: '0.85rem', outline: 'none' }} onFocus={(e) => e.target.style.borderColor = 'var(--color-cyan)'} onBlur={(e) => e.target.style.borderColor = '#333'} />
+                  <input type="text" placeholder="Padding (px)" style={{ background: '#111', border: '1px solid #333', borderRadius: '8px', color: '#fff', padding: '10px', fontSize: '0.85rem', outline: 'none' }} onFocus={(e) => e.target.style.borderColor = 'var(--color-cyan)'} onBlur={(e) => e.target.style.borderColor = '#333'} />
+                </div>
+              </div>
+              
+              <div style={{ marginBottom: '25px' }}>
+                <label style={{ display: 'block', fontSize: '0.75rem', color: '#666', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '1px' }}>Типографика</label>
+                <select style={{ width: '100%', background: '#111', border: '1px solid #333', borderRadius: '8px', color: '#fff', padding: '10px', fontSize: '0.85rem', marginBottom: '12px', outline: 'none', appearance: 'none', cursor: 'pointer' }}>
+                  <option>Display Font (Unbounded)</option>
+                  <option>Body Font (Inter)</option>
+                  <option>Mono Font (JetBrains)</option>
+                </select>
+                <div style={{ display: 'flex', gap: '12px' }}>
+                  <input type="text" defaultValue="3.5rem" style={{ flex: 1, background: '#111', border: '1px solid #333', borderRadius: '8px', color: '#fff', padding: '10px', fontSize: '0.85rem', outline: 'none' }} onFocus={(e) => e.target.style.borderColor = 'var(--color-cyan)'} onBlur={(e) => e.target.style.borderColor = '#333'} />
+                  <input type="text" defaultValue="800" style={{ width: '80px', background: '#111', border: '1px solid #333', borderRadius: '8px', color: '#fff', padding: '10px', fontSize: '0.85rem', outline: 'none', textAlign: 'center' }} onFocus={(e) => e.target.style.borderColor = 'var(--color-cyan)'} onBlur={(e) => e.target.style.borderColor = '#333'} />
+                </div>
+              </div>
+
+              <div style={{ marginBottom: '25px' }}>
+                <label style={{ display: 'block', fontSize: '0.75rem', color: '#666', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '1px' }}>Цвет</label>
+                <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                  <div style={{ width: '30px', height: '30px', background: 'var(--color-text-primary)', borderRadius: '6px', border: '1px solid #444' }}></div>
+                  <input type="text" defaultValue="var(--color-text-primary)" style={{ flex: 1, background: '#111', border: '1px solid #333', borderRadius: '8px', color: '#fff', padding: '10px', fontSize: '0.85rem', outline: 'none' }} />
+                </div>
+              </div>
+            </div>
+            <div style={{ padding: '20px', borderTop: '1px solid #222' }}>
+              <button className="btn btn-secondary" style={{ width: '100%', fontSize: '0.85rem', border: '1px solid #333', background: '#111', color: '#ef4444', padding: '10px' }}>
+                <Trash2 size={14} style={{ display: 'inline', verticalAlign: 'middle', marginRight: '5px' }} /> Удалить блок
+              </button>
+            </div>
+          </div>
+        </>
       )}
 
+      </div>
+      </div>
     </>
   );
 }
