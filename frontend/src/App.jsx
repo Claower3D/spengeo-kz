@@ -964,7 +964,7 @@ function App() {
                  <EditableText as="h2" id="stats_title" defaultText={t.stats.title} isVisualBuilder={isVisualBuilder} style={{ fontSize: '3.2rem', textShadow: '0 0 40px rgba(255,255,255,0.2)' }} />
               </div>
               
-              <section className="container bento-grid" style={{ marginBottom: '100px', position: 'relative', zIndex: 10 }}>
+              <section className="container bento-grid" style={{ paddingBottom: '100px', position: 'relative', zIndex: 10 }}>
                 {/* 2x2 Large Card */}
                 <div className="glow-card-premium bento-card bento-large float-slow">
                   <div style={{ position: 'absolute', right: '-40px', bottom: '-40px', opacity: 0.03 }}><Hammer size={300} /></div>
@@ -2327,99 +2327,191 @@ function App() {
 
         {/* ==================== PAGE: ADMIN ==================== */}
         {activePage === 'admin' && (
-          <div className="page-wrapper page-enter">
-            <div>
-              <div className="admin-header">
-                <div>
-                  <span className="hero-subtitle">ADMIN CONTROL PANEL</span>
-                  <h2>Панель обработки заявок</h2>
+          <div className="page-wrapper page-enter" style={{ background: '#0a0a0a', margin: '-50px', padding: '50px', minHeight: '100vh', borderRadius: '12px' }}>
+            <div style={{ maxWidth: '1200px', margin: '0 auto', color: '#fff', fontFamily: 'sans-serif' }}>
+              <div style={{ marginBottom: '40px' }}>
+                <h1 style={{ fontSize: '2rem', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '-0.02em', marginBottom: '8px', color: '#fff' }}>
+                  Выберите раздел для управления
+                </h1>
+                <p style={{ fontSize: '0.9rem', color: '#888' }}>
+                  Нажмите на плитку чтобы открыть нужный раздел администрирования.
+                </p>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px' }}>
+                {/* 1. Leads */}
+                <div style={{ position: 'relative', overflow: 'hidden', borderRadius: '12px', background: '#111', border: '1px solid rgba(16, 185, 129, 0.3)', padding: '24px', display: 'flex', flexDirection: 'column', cursor: 'pointer', transition: 'transform 0.2s' }}>
+                  <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '100px', background: 'linear-gradient(to bottom, rgba(16, 185, 129, 0.15), transparent)', pointerEvents: 'none' }}></div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '40px', position: 'relative', zIndex: 1 }}>
+                    <div style={{ background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.05)', padding: '8px', borderRadius: '8px', color: '#10b981' }}>
+                      <Database size={24} />
+                    </div>
+                    <div style={{ textAlign: 'right' }}>
+                      <div style={{ fontSize: '1.5rem', fontWeight: 'bold', lineHeight: 1 }}>{inquiries.length}</div>
+                      <div style={{ fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: '#888', marginTop: '4px' }}>заявок</div>
+                    </div>
+                  </div>
+                  <div style={{ marginTop: 'auto', position: 'relative', zIndex: 1 }}>
+                    <div style={{ fontSize: '0.65rem', fontFamily: 'monospace', textTransform: 'uppercase', letterSpacing: '0.2em', color: '#888', marginBottom: '8px' }}>Обработка лидов</div>
+                    <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '12px' }}>Входящие заявки</h2>
+                    <p style={{ fontSize: '0.85rem', color: '#aaa', marginBottom: '24px', lineHeight: 1.5 }}>Управляйте входящими лидами с сайта. Звоните клиентам и меняйте статусы.</p>
+                    <div style={{ fontSize: '0.85rem', fontWeight: 500, color: '#10b981' }}>Управление →</div>
+                  </div>
                 </div>
-                <div style={{ display: 'flex', gap: '10px' }}>
-                  <button className="btn btn-primary" onClick={() => { setIsVisualBuilder(true); setActivePage('home'); }} style={{ padding: '8px 16px', fontSize: '0.85rem' }}>
-                    <Edit3 size={14} /> Визуал Билдер
-                  </button>
-                  <button className="btn btn-secondary" onClick={fetchInquiries} style={{ padding: '8px 16px', fontSize: '0.85rem' }}>
-                    <RefreshCw size={14} /> Обновить БД
-                  </button>
-                  <button className="btn btn-secondary" onClick={() => setActivePage('home')} style={{ padding: '8px 16px', fontSize: '0.85rem' }}>
-                    На главную
-                  </button>
+
+                {/* 2. Services */}
+                <div style={{ position: 'relative', overflow: 'hidden', borderRadius: '12px', background: '#111', border: '1px solid rgba(59, 130, 246, 0.3)', padding: '24px', display: 'flex', flexDirection: 'column', cursor: 'pointer', transition: 'transform 0.2s' }}>
+                  <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '100px', background: 'linear-gradient(to bottom, rgba(59, 130, 246, 0.15), transparent)', pointerEvents: 'none' }}></div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '40px', position: 'relative', zIndex: 1 }}>
+                    <div style={{ background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.05)', padding: '8px', borderRadius: '8px', color: '#3b82f6' }}>
+                      <Briefcase size={24} />
+                    </div>
+                    <div style={{ textAlign: 'right' }}>
+                      <div style={{ fontSize: '1.5rem', fontWeight: 'bold', lineHeight: 1 }}>7</div>
+                      <div style={{ fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: '#888', marginTop: '4px' }}>услуг</div>
+                    </div>
+                  </div>
+                  <div style={{ marginTop: 'auto', position: 'relative', zIndex: 1 }}>
+                    <div style={{ fontSize: '0.65rem', fontFamily: 'monospace', textTransform: 'uppercase', letterSpacing: '0.2em', color: '#888', marginBottom: '8px' }}>Список услуг</div>
+                    <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '12px' }}>Услуги</h2>
+                    <p style={{ fontSize: '0.85rem', color: '#aaa', marginBottom: '24px', lineHeight: 1.5 }}>Управляйте описанием услуг, изображениями, видео и переводами.</p>
+                    <div style={{ fontSize: '0.85rem', fontWeight: 500, color: '#3b82f6' }}>Управление →</div>
+                  </div>
+                </div>
+
+                {/* 3. Visual Builder */}
+                <div onClick={() => { setIsVisualBuilder(true); setActivePage('home'); }} style={{ position: 'relative', overflow: 'hidden', borderRadius: '12px', background: '#111', border: '1px solid rgba(168, 85, 247, 0.3)', padding: '24px', display: 'flex', flexDirection: 'column', cursor: 'pointer', transition: 'transform 0.2s' }}>
+                  <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '100px', background: 'linear-gradient(to bottom, rgba(168, 85, 247, 0.15), transparent)', pointerEvents: 'none' }}></div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '40px', position: 'relative', zIndex: 1 }}>
+                    <div style={{ background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.05)', padding: '8px', borderRadius: '8px', color: '#a855f7' }}>
+                      <Edit3 size={24} />
+                    </div>
+                    <div style={{ textAlign: 'right' }}>
+                      <div style={{ fontSize: '1.5rem', fontWeight: 'bold', lineHeight: 1 }}>5</div>
+                      <div style={{ fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: '#888', marginTop: '4px' }}>страниц</div>
+                    </div>
+                  </div>
+                  <div style={{ marginTop: 'auto', position: 'relative', zIndex: 1 }}>
+                    <div style={{ fontSize: '0.65rem', fontFamily: 'monospace', textTransform: 'uppercase', letterSpacing: '0.2em', color: '#888', marginBottom: '8px' }}>Конструктор страниц</div>
+                    <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '12px' }}>Visual Builder</h2>
+                    <p style={{ fontSize: '0.85rem', color: '#aaa', marginBottom: '24px', lineHeight: 1.5 }}>Редактируйте тексты, заголовки и блоки прямо на страницах сайта.</p>
+                    <div style={{ fontSize: '0.85rem', fontWeight: 500, color: '#a855f7' }}>Открыть Builder →</div>
+                  </div>
+                </div>
+
+                {/* 4. Content */}
+                <div style={{ position: 'relative', overflow: 'hidden', borderRadius: '12px', background: '#111', border: '1px solid rgba(234, 179, 8, 0.3)', padding: '24px', display: 'flex', flexDirection: 'column', cursor: 'pointer', transition: 'transform 0.2s' }}>
+                  <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '100px', background: 'linear-gradient(to bottom, rgba(234, 179, 8, 0.15), transparent)', pointerEvents: 'none' }}></div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '40px', position: 'relative', zIndex: 1 }}>
+                    <div style={{ background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.05)', padding: '8px', borderRadius: '8px', color: '#eab308' }}>
+                      <BookOpen size={24} />
+                    </div>
+                    <div style={{ textAlign: 'right' }}>
+                      <div style={{ fontSize: '1.5rem', fontWeight: 'bold', lineHeight: 1 }}>3</div>
+                      <div style={{ fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: '#888', marginTop: '4px' }}>языка</div>
+                    </div>
+                  </div>
+                  <div style={{ marginTop: 'auto', position: 'relative', zIndex: 1 }}>
+                    <div style={{ fontSize: '0.65rem', fontFamily: 'monospace', textTransform: 'uppercase', letterSpacing: '0.2em', color: '#888', marginBottom: '8px' }}>Тексты и переводы</div>
+                    <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '12px' }}>Контент</h2>
+                    <p style={{ fontSize: '0.85rem', color: '#aaa', marginBottom: '24px', lineHeight: 1.5 }}>Редактируйте все тексты сайта на русском, казахском и английском языках.</p>
+                    <div style={{ fontSize: '0.85rem', fontWeight: 500, color: '#eab308' }}>Редактировать →</div>
+                  </div>
+                </div>
+
+                {/* 5. Pages */}
+                <div style={{ position: 'relative', overflow: 'hidden', borderRadius: '12px', background: '#111', border: '1px solid rgba(236, 72, 153, 0.3)', padding: '24px', display: 'flex', flexDirection: 'column', cursor: 'pointer', transition: 'transform 0.2s' }}>
+                  <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '100px', background: 'linear-gradient(to bottom, rgba(236, 72, 153, 0.15), transparent)', pointerEvents: 'none' }}></div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '40px', position: 'relative', zIndex: 1 }}>
+                    <div style={{ background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.05)', padding: '8px', borderRadius: '8px', color: '#ec4899' }}>
+                      <FileText size={24} />
+                    </div>
+                    <div style={{ textAlign: 'right' }}>
+                      <div style={{ fontSize: '1.5rem', fontWeight: 'bold', lineHeight: 1 }}>7</div>
+                      <div style={{ fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: '#888', marginTop: '4px' }}>страниц</div>
+                    </div>
+                  </div>
+                  <div style={{ marginTop: 'auto', position: 'relative', zIndex: 1 }}>
+                    <div style={{ fontSize: '0.65rem', fontFamily: 'monospace', textTransform: 'uppercase', letterSpacing: '0.2em', color: '#888', marginBottom: '8px' }}>Структура сайта</div>
+                    <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '12px' }}>Страницы</h2>
+                    <p style={{ fontSize: '0.85rem', color: '#aaa', marginBottom: '24px', lineHeight: 1.5 }}>Управляйте порядком блоков, скрывайте секции и настраивайте мета-данные.</p>
+                    <div style={{ fontSize: '0.85rem', fontWeight: 500, color: '#ec4899' }}>Управление →</div>
+                  </div>
+                </div>
+
+                {/* 6. Settings */}
+                <div style={{ position: 'relative', overflow: 'hidden', borderRadius: '12px', background: '#111', border: '1px solid rgba(107, 114, 128, 0.3)', padding: '24px', display: 'flex', flexDirection: 'column', cursor: 'pointer', transition: 'transform 0.2s' }}>
+                  <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '100px', background: 'linear-gradient(to bottom, rgba(107, 114, 128, 0.15), transparent)', pointerEvents: 'none' }}></div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '40px', position: 'relative', zIndex: 1 }}>
+                    <div style={{ background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.05)', padding: '8px', borderRadius: '8px', color: '#9ca3af' }}>
+                      <Settings size={24} />
+                    </div>
+                  </div>
+                  <div style={{ marginTop: 'auto', position: 'relative', zIndex: 1 }}>
+                    <div style={{ fontSize: '0.65rem', fontFamily: 'monospace', textTransform: 'uppercase', letterSpacing: '0.2em', color: '#888', marginBottom: '8px' }}>Глобальные параметры</div>
+                    <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '12px' }}>Настройки</h2>
+                    <p style={{ fontSize: '0.85rem', color: '#aaa', marginBottom: '24px', lineHeight: 1.5 }}>Название компании, цвета, логотип, контактная информация и SEO.</p>
+                    <div style={{ fontSize: '0.85rem', fontWeight: 500, color: '#9ca3af' }}>Настроить →</div>
+                  </div>
+                </div>
+
+                {/* 7. Bot */}
+                <div style={{ position: 'relative', overflow: 'hidden', borderRadius: '12px', background: '#111', border: '1px solid rgba(6, 182, 212, 0.3)', padding: '24px', display: 'flex', flexDirection: 'column', cursor: 'pointer', transition: 'transform 0.2s' }}>
+                  <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '100px', background: 'linear-gradient(to bottom, rgba(6, 182, 212, 0.15), transparent)', pointerEvents: 'none' }}></div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '40px', position: 'relative', zIndex: 1 }}>
+                    <div style={{ background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.05)', padding: '8px', borderRadius: '8px', color: '#06b6d4' }}>
+                      <Bot size={24} />
+                    </div>
+                  </div>
+                  <div style={{ marginTop: 'auto', position: 'relative', zIndex: 1 }}>
+                    <div style={{ fontSize: '0.65rem', fontFamily: 'monospace', textTransform: 'uppercase', letterSpacing: '0.2em', color: '#888', marginBottom: '8px' }}>Настройки чат-бота</div>
+                    <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '12px' }}>SPENGEO_ASSISTANT</h2>
+                    <p style={{ fontSize: '0.85rem', color: '#aaa', marginBottom: '24px', lineHeight: 1.5 }}>Приветствия, FAQ, авто-ответы, телефон поддержки и имя ассистента.</p>
+                    <div style={{ fontSize: '0.85rem', fontWeight: 500, color: '#06b6d4' }}>Настроить ассистента →</div>
+                  </div>
                 </div>
               </div>
 
-                <div className="admin-grid">
-                  <div className="admin-sidebar">
-                    <div className="admin-stats-card">
-                      <span className="spec-label">Всего обращений</span>
-                      <div className="admin-stat-num">{inquiries.length} лидов</div>
-                    </div>
+              {/* Bottom stats row like in the screenshot */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px', marginTop: '20px' }}>
+                <div style={{ background: '#111', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '8px', padding: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontSize: '0.85rem', color: '#888' }}>Новых лидов</span>
+                  <span style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#10b981' }}>{inquiries.length}</span>
+                </div>
+                <div style={{ background: '#111', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '8px', padding: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontSize: '0.85rem', color: '#888' }}>Услуг на сайте</span>
+                  <span style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#3b82f6' }}>7</span>
+                </div>
+                <div style={{ background: '#111', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '8px', padding: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontSize: '0.85rem', color: '#888' }}>Активных ботов</span>
+                  <span style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#06b6d4' }}>1</span>
+                </div>
+              </div>
 
-                    <div className="admin-stats-card">
-                      <span className="spec-label" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                        <BarChart2 size={13} /> Аналитика типов работ
-                      </span>
-                      <div className="bar-chart-container">
-                        <div className="bar-item">
-                          <div className="bar-fill" style={{ height: `${Math.max(10, (inquiries.filter(i=>i.service_type==='geology').length / Math.max(1, inquiries.length))*120)}px` }}></div>
-                          <span className="bar-label">Геология</span>
+              {/* Inquiries List under cards */}
+              <div style={{ marginTop: '60px' }}>
+                <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '20px' }}>Список заявок</h3>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                  {inquiries.length === 0 ? (
+                    <div style={{ padding: '40px', textAlign: 'center', border: '1px dashed rgba(255,255,255,0.1)', borderRadius: '12px', color: '#888' }}>База данных пуста.</div>
+                  ) : (
+                    inquiries.map(inq => (
+                      <div key={inq.id} style={{ background: '#111', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <div>
+                          <div style={{ fontWeight: 'bold', fontSize: '1.1rem', marginBottom: '8px' }}>{inq.name} <span style={{ fontSize: '0.7rem', padding: '2px 6px', borderRadius: '4px', background: 'rgba(6, 182, 212, 0.1)', color: '#06b6d4', marginLeft: '8px' }}>{inq.service_type}</span></div>
+                          <div style={{ fontSize: '0.9rem', color: '#aaa', marginBottom: '8px' }}>{inq.message}</div>
+                          <a href={`tel:${inq.phone}`} style={{ fontSize: '0.85rem', color: '#fff', display: 'inline-flex', alignItems: 'center', gap: '6px', textDecoration: 'none' }}><Phone size={12}/> {inq.phone}</a>
                         </div>
-                        <div className="bar-item">
-                          <div className="bar-fill" style={{ height: `${Math.max(10, (inquiries.filter(i=>i.service_type==='geodesy').length / Math.max(1, inquiries.length))*120)}px`, background: 'var(--color-cyan)' }}></div>
-                          <span className="bar-label">Геодезия</span>
-                        </div>
-                        <div className="bar-item">
-                          <div className="bar-fill" style={{ height: `${Math.max(10, (inquiries.filter(i=>i.service_type==='both').length / Math.max(1, inquiries.length))*120)}px` }}></div>
-                          <span className="bar-label">Комплекс</span>
+                        <div style={{ textAlign: 'right' }}>
+                          <div style={{ fontSize: '0.8rem', color: '#888', marginBottom: '16px' }}>{new Date(inq.created_at).toLocaleString('ru-RU')}</div>
+                          <button onClick={() => handleClearInquiry(inq.id)} style={{ background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer' }}><Trash2 size={16}/></button>
                         </div>
                       </div>
-                    </div>
-                  </div>
-
-                  <div>
-                    <h3 style={{ marginBottom: '20px', fontSize: '1.2rem' }}>Входящие заявки</h3>
-                    
-                    <div className="inquiry-list">
-                      {inquiries.length === 0 ? (
-                        <div style={{ padding: '40px', textAlign: 'center', border: '1px dashed rgba(255,255,255,0.08)', borderRadius: '12px', color: 'var(--color-text-muted)' }}>
-                          База данных пуста.
-                        </div>
-                      ) : (
-                        inquiries.map(inq => (
-                          <div key={inq.id} style={{ position: 'relative' }}>
-                            <HudCard>
-                              <div className="inquiry-card-header">
-                                <div>
-                                  <span style={{ fontWeight: 700, fontSize: '1.05rem', marginRight: '10px' }}>{inq.name}</span>
-                                  <span className="inquiry-tag" style={{ backgroundColor: inq.service_type === 'geodesy' ? 'var(--color-cyan-glow)' : '', color: inq.service_type === 'geodesy' ? 'var(--color-cyan)' : '' }}>
-                                    {inq.service_type}
-                                  </span>
-                                </div>
-                                <span className="inquiry-date">
-                                  {new Date(inq.created_at).toLocaleString('ru-RU')}
-                                </span>
-                              </div>
-                              <div className="inquiry-body">
-                                <p style={{ fontSize: '0.95rem', color: 'var(--color-text-secondary)', marginBlock: '8px 12px' }}>{inq.message}</p>
-                                <a href={`tel:${inq.phone}`} className="inquiry-contact-link">
-                                  <Phone size={13} /> {inq.phone}
-                                </a>
-                              </div>
-
-                              <button 
-                                type="button" 
-                                onClick={() => handleClearInquiry(inq.id)}
-                                style={{ position: 'absolute', bottom: '20px', right: '20px', background: 'none', border: 'none', color: 'var(--color-text-muted)', cursor: 'pointer' }}
-                                title="Удалить лид"
-                              >
-                                <Trash2 size={16} />
-                              </button>
-                            </HudCard>
-                          </div>
-                        ))
-                      )}
-                    </div>
-                  </div>
+                    ))
+                  )}
+                </div>
               </div>
+
             </div>
           </div>
         )}
