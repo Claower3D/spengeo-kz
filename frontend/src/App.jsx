@@ -2925,7 +2925,7 @@ function App() {
 
                 </div>
                 );
-              })}
+              })()}
 
               {activeAdminSection === 'blocks' && (
                 <div style={{ background: theme === 'white' ? '#fff' : '#111', border: theme === 'white' ? '1px solid rgba(0,0,0,0.05)' : '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', padding: '30px', boxShadow: theme === 'white' ? '0 4px 20px rgba(0,0,0,0.05)' : 'none' }}>
