@@ -4056,3 +4056,13 @@ html { scroll-behavior: smooth; }
 :is([data-theme="white"], [data-theme="light-gray"]) .spec-value {
   color: var(--color-text-primary);
 }
+
+/* Light Theme Dropdown Hover Override */
+:is([data-theme="white"], [data-theme="light-gray"]) .dropdown-item:hover {
+  color: var(--color-cyan);
+  background: rgba(6, 182, 212, 0.08);
+  font-weight: 600;
+}
+:is([data-theme="white"], [data-theme="light-gray"]) .dropdown-item.active {
+  color: var(--color-accent);
+}
