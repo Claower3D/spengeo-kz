@@ -396,7 +396,7 @@ function App() {
       if (!parsed.dynamicLists) {
         parsed.dynamicLists = {};
       }
-      if (!parsed.dynamicLists['about_licenses']) {
+      if (!parsed.dynamicLists['about_licenses'] || parsed.dynamicLists['about_licenses'].length === 0) {
         parsed.dynamicLists['about_licenses'] = DOCUMENTS_DATA;
       }
       if (!parsed.menu) {
