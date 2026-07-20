@@ -396,8 +396,8 @@ function App() {
       if (!parsed.dynamicLists) {
         parsed.dynamicLists = {};
       }
-      if (!parsed.dynamicLists['about_licenses'] || parsed.dynamicLists['about_licenses'].length === 0) {
-        parsed.dynamicLists['about_licenses'] = DOCUMENTS_DATA;
+      if (!parsed.dynamicLists['about_documents'] || parsed.dynamicLists['about_documents'].length === 0) {
+        parsed.dynamicLists['about_documents'] = DOCUMENTS_DATA;
       }
       if (!parsed.menu) {
         parsed.menu = MENU_STRUCTURE;
@@ -411,7 +411,7 @@ function App() {
       services: Object.entries(SERVICES_DATA).map(([k, v]) => ({ id: k, ...v, image: `/images/services/${k}.jpg` })),
       team: [{ name: 'Шенвизов Рудольф', role: 'Константинович', badge: 'ОСНОВАТЕЛЬ И ГЛАВНЫЙ ГЕОЛОГ', desc: 'Мы строим нашу работу на безупречной точности...', img: '/images/director.png' }],
       articles: BLOG_POSTS,
-      dynamicLists: { 'about_licenses': DOCUMENTS_DATA },
+      dynamicLists: { 'about_documents': DOCUMENTS_DATA },
       bot: { 
         name: 'SPENGEO_ASSISTANT', 
         welcomeMsg: 'Здравствуйте! Я автоматический ассистент СпецИнжГео. Чем могу помочь?', 
@@ -1581,7 +1581,7 @@ function App() {
                 <EditableText as="h2" id="lic_title" defaultText={t.sections.licensesTitle} isVisualBuilder={isVisualBuilder} style={{ fontSize: '3.2rem', textShadow: '0 0 40px rgba(255,255,255,0.2)' }} />
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '30px', position: 'relative', zIndex: 2 }}>
-                {(adminData.dynamicLists?.['about_licenses'] || DOCUMENTS_DATA).slice(0, 3).map((doc, idx) => { doc.id = doc.id || idx; return (
+                {(adminData.dynamicLists?.['about_documents'] || DOCUMENTS_DATA).slice(0, 3).map((doc, idx) => { doc.id = doc.id || idx; return (
                   <div key={doc.id || Math.random()} className="glow-card-premium" style={{ padding: '40px 30px', textAlign: 'center', position: 'relative', overflow: 'hidden', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                     
                     {/* Background faint huge icon */}
@@ -2199,7 +2199,7 @@ function App() {
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '30px' }}>
-              {(adminData.dynamicLists?.['about_licenses'] || DOCUMENTS_DATA).map((doc, idx) => { doc.id = doc.id || idx; return (
+              {(adminData.dynamicLists?.['about_documents'] || DOCUMENTS_DATA).map((doc, idx) => { doc.id = doc.id || idx; return (
                 <HudCard key={doc.id || Math.random()} style={{ padding: '30px', textAlign: 'center' }}>
                   <div style={{ fontSize: '3rem', marginBottom: '20px' }}>
                     {doc.id === 'lic-gsl' && '🛡️'}
