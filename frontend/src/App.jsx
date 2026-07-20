@@ -754,7 +754,7 @@ function App() {
                 <span>ТОО СПЕЦИНЖГЕО // СТАТУС СИСТЕМЫ: АКТИВЕН</span>
               </div>
               <div>
-                <span>БЭКЕНД: GOLANG (PORT 8083) | ФРОНТЕНД: REACT (PORT 5174) | ЛИЦЕНЗИЯ: ГСЛ №19004562</span>
+                <span>БЭКЕНД: GOLANG | ФРОНТЕНД: REACT | ЛИЦЕНЗИЯ: ГСЛ №19004562</span>
               </div>
             </div>
           </div>
