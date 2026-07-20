@@ -2018,7 +2018,7 @@ function App() {
                          <div style={{ width: '100%', height: '220px', overflow: 'hidden', background: 'rgba(0,0,0,0.2)' }}>
                             {item.image.includes('youtube.com') || item.image.includes('youtu.be') || item.image.includes('vimeo.com') ? (
                                 <iframe width="100%" height="100%" src={item.image.replace('watch?v=', 'embed/').replace('youtu.be/', 'youtube.com/embed/')} frameBorder="0" allowFullScreen></iframe>
-                            ) : item.image.startsWith('data:video/') || item.image.toLowerCase().endsWith('.mp4') || item.image.toLowerCase().endsWith('.webm') ? (
+                            ) : item.image.startsWith('data:video/') || item.image.startsWith('blob:') || item.image.toLowerCase().endsWith('.mp4') || item.image.toLowerCase().endsWith('.webm') || activeSubPage === 'videos' ? (
                                 <video src={item.image} controls style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                             ) : (
                                 <img src={item.image} alt={item.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
