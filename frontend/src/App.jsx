@@ -2830,7 +2830,26 @@ function App() {
                   </h3>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '15px' }}>
                     {MENU_STRUCTURE['ru'].find(m => m.page === activeAdminSection.replace('cms_', ''))?.items.map((sub, sidx) => (
-                      <div key={sidx} style={{ padding: '20px', background: theme === 'white' ? '#f8fafc' : 'rgba(255,255,255,0.02)', border: theme === 'white' ? '1px solid #e2e8f0' : '1px solid rgba(255,255,255,0.05)', borderRadius: '8px', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }} onClick={() => { setActiveAdminSection('content'); }}>
+                      <div key={sidx} style={{ padding: '20px', background: theme === 'white' ? '#f8fafc' : 'rgba(255,255,255,0.02)', border: theme === 'white' ? '1px solid #e2e8f0' : '1px solid rgba(255,255,255,0.05)', borderRadius: '8px', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }} onClick={() => {
+                        if (sub.action) {
+                          if (sub.action.type === 'page') {
+                            setActivePage(sub.action.val);
+                            if (sub.action.subpage) {
+                              setActiveSubPage(sub.action.subpage);
+                            }
+                          } else if (sub.action.type === 'service') {
+                            setActivePage('services');
+                            // If you have activeServiceTab or similar, you'd set it here.
+                            // Assuming setActiveServiceTab exists based on our search.
+                            if (typeof setActiveServiceTab === 'function') {
+                              setActiveServiceTab(sub.action.val);
+                            }
+                          } else if (sub.action.type === 'link') {
+                            setActivePage(sub.action.val);
+                          }
+                        }
+                        setIsVisualBuilder(true);
+                      }}>
                         <div style={{ fontWeight: '500', color: theme === 'white' ? '#334155' : '#cbd5e1' }}>{sub.name}</div>
                         <Edit3 size={16} color="var(--color-cyan)" />
                       </div>
