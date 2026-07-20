@@ -1754,6 +1754,25 @@ function App() {
               </div>
             </section>
             )}
+
+            {activeSubPage && activeSubPage !== 'history' && activeSubPage !== 'team' && activeSubPage !== 'advantages' && adminData.dynamicLists?.['about_' + activeSubPage] && adminData.dynamicLists['about_' + activeSubPage].length > 0 && (
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '30px', marginBottom: '60px' }}>
+                {adminData.dynamicLists['about_' + activeSubPage].map((item, idx) => (
+                  <HudCard key={item.id || idx} style={{ padding: '0', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+                     {item.image && (
+                         <div style={{ width: '100%', height: '220px', overflow: 'hidden', background: 'rgba(0,0,0,0.2)' }}>
+                            <img src={item.image} alt={item.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                         </div>
+                     )}
+                     <div style={{ padding: '25px', display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                         {item.title && <h3 style={{ margin: 0, fontSize: '1.25rem', color: 'var(--color-text-primary)' }}>{item.title}</h3>}
+                         {item.coeff && <span style={{ display: 'inline-block', padding: '4px 8px', background: 'rgba(6, 182, 212, 0.1)', color: 'var(--color-cyan)', borderRadius: '4px', fontSize: '0.85rem', width: 'fit-content' }}>{item.coeff}</span>}
+                         {item.desc && <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--color-text-secondary)', lineHeight: '1.6', whiteSpace: 'pre-wrap' }}>{item.desc}</p>}
+                     </div>
+                  </HudCard>
+                ))}
+              </div>
+            )}
           </div>
         )}
         {/* END SERVICES */}
@@ -1990,6 +2009,27 @@ function App() {
                   </p>
                 </div>
               </>
+            ) : adminData.dynamicLists?.['blog_' + activeSubPage] && adminData.dynamicLists['blog_' + activeSubPage].length > 0 ? (
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '30px', marginBottom: '60px' }}>
+                {adminData.dynamicLists['blog_' + activeSubPage].map((item, idx) => (
+                  <HudCard key={item.id || idx} style={{ padding: '0', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+                     {item.image && (
+                         <div style={{ width: '100%', height: '220px', overflow: 'hidden', background: 'rgba(0,0,0,0.2)' }}>
+                            {item.image.includes('youtube.com') || item.image.includes('youtu.be') || item.image.includes('vimeo.com') ? (
+                                <iframe width="100%" height="100%" src={item.image.replace('watch?v=', 'embed/').replace('youtu.be/', 'youtube.com/embed/')} frameBorder="0" allowFullScreen></iframe>
+                            ) : (
+                                <img src={item.image} alt={item.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                            )}
+                         </div>
+                     )}
+                     <div style={{ padding: '25px', display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                         {item.title && <h3 style={{ margin: 0, fontSize: '1.25rem', color: 'var(--color-text-primary)' }}>{item.title}</h3>}
+                         {item.coeff && <span style={{ display: 'inline-block', padding: '4px 8px', background: 'rgba(6, 182, 212, 0.1)', color: 'var(--color-cyan)', borderRadius: '4px', fontSize: '0.85rem', width: 'fit-content' }}>{item.coeff}</span>}
+                         {item.desc && <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--color-text-secondary)', lineHeight: '1.6', whiteSpace: 'pre-wrap' }}>{item.desc}</p>}
+                     </div>
+                  </HudCard>
+                ))}
+              </div>
             ) : (
               <div style={{ padding: '60px', textAlign: 'center', border: '1px dashed var(--color-cyan)', borderRadius: '12px', marginBottom: '60px', background: 'rgba(6, 182, 212, 0.02)' }}>
                 <h3 style={{ fontSize: '1.5rem', marginBottom: '15px', color: 'var(--color-cyan)' }}>Раздел "{activeSubPage}" в стадии наполнения</h3>
@@ -3090,7 +3130,7 @@ function App() {
                                      newMenu['ru'][catIndex].items[sidx].name = e.target.value;
                                      setAdminData({...adminData, menu: newMenu});
                                  }
-                             }} style={{ fontSize: '1.1rem', fontWeight: 'bold', background: 'transparent', border: '1px solid transparent', outline: 'none', color: theme === 'white' ? '#0f172a' : '#fff', flex: 1, padding: '4px 8px', marginLeft: '-8px', borderRadius: '6px', transition: 'border 0.2s' }} onFocus={(e) => e.target.style.border = theme === 'white' ? '1px dashed #cbd5e1' : '1px dashed #444'} onBlur={(e) => e.target.style.border = '1px solid transparent'} />
+                             }} style={{ fontSize: '1.1rem', fontWeight: 'bold', background: 'transparent', border: '1px solid transparent', outline: 'none', color: theme === 'white' ? '#0f172a' : '#fff', flex: 1, minWidth: 0, textOverflow: 'ellipsis', padding: '4px 8px', marginLeft: '-8px', borderRadius: '6px', transition: 'border 0.2s' }} onFocus={(e) => e.target.style.border = theme === 'white' ? '1px dashed #cbd5e1' : '1px dashed #444'} onBlur={(e) => e.target.style.border = '1px solid transparent'} />
                              <button onClick={() => {
                                  const newMenu = JSON.parse(JSON.stringify(dynamicMenu));
                                  const catIndex = newMenu['ru'].findIndex(m => m.page === activeAdminSection.replace('cms_', ''));
