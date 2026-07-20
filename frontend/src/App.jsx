@@ -1,11 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { 
   Hammer, Compass, Award, Phone, ShieldCheck, Mail, 
   MapPin, Send, Cpu, CheckCircle, ChevronRight, Lock, 
   Eye, Trash2, Calendar, FileText, Check, Database, 
   RefreshCw, BarChart2, UserCheck, Menu, X, ArrowUpRight,
   Printer, HardDrive, AlertTriangle, Layers, Clock, Settings,
-  BookOpen, FileSpreadsheet, Search, MessageCircle, Bot, ArrowUp, Sun, Moon, Briefcase, Edit3, Folder
+  BookOpen, FileSpreadsheet, Search, MessageCircle, Bot, ArrowUp, Sun, Moon, Briefcase, Edit3, Folder, Users
 } from 'lucide-react';
 import { MapContainer, TileLayer, Marker, Popup, Tooltip, useMap, GeoJSON, ZoomControl } from 'react-leaflet';
 import L from 'leaflet';
@@ -281,7 +282,7 @@ const MENU_STRUCTURE = {
       items: [
         { name: 'История', action: { type: 'page', val: 'about', subpage: 'history' } },
         { name: 'Команда', action: { type: 'page', val: 'about', subpage: 'team' } },
-        { name: 'Наши преимущества', action: { type: 'scroll', page: 'home', target: 'advantages' } },
+        { name: 'Наши преимущества', action: { type: 'page', val: 'about', subpage: 'advantages' } },
         { name: 'Лицензии', action: { type: 'page', val: 'documents' } },
         { name: 'Сертификаты', action: { type: 'page', val: 'documents' } }
       ]
@@ -344,7 +345,74 @@ const MENU_STRUCTURE = {
   ]
 };
 
+
+function ImageUploadField({ value, onChange, theme }) {
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        onChange(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+  
+  const isLight = theme === 'white';
+
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', background: isLight ? '#fff' : '#000', padding: '6px', border: isLight ? '1px solid #cbd5e1' : '1px solid #444', borderRadius: '8px', flex: 1, boxShadow: isLight ? 'inset 0 1px 2px rgba(0,0,0,0.05)' : 'none' }}>
+      {value && <img src={value} style={{ width: '32px', height: '32px', objectFit: 'cover', borderRadius: '4px', border: isLight ? '1px solid #e2e8f0' : '1px solid #222' }} alt="" onError={(e) => { e.target.style.display = 'none'; }} onLoad={(e) => { e.target.style.display = 'block'; }} />}
+      <label style={{ background: isLight ? '#eff6ff' : 'rgba(59, 130, 246, 0.2)', color: '#3b82f6', border: isLight ? '1px solid #bfdbfe' : '1px solid rgba(59, 130, 246, 0.5)', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer', fontSize: '0.8rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap', transition: 'all 0.2s' }}>
+        <Folder size={14} /> Выбрать
+        <input type="file" accept="image/*" onChange={handleFileChange} style={{ display: 'none' }} />
+      </label>
+      <input 
+        value={value || ''} 
+        onChange={e => onChange(e.target.value)} 
+        placeholder="Или вставьте URL ссылки..." 
+        style={{ width: '100px', flex: 1, background: 'transparent', border: 'none', color: isLight ? '#0f172a' : '#fff', outline: 'none', padding: '0 5px', fontSize: '0.85rem' }} 
+      />
+    </div>
+  );
+}
+
 function App() {
+
+  // === ADMIN DATA FOR BLOCKS ===
+  const [adminData, setAdminData] = useState(() => {
+    const saved = localStorage.getItem('spengeo_admin_data');
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      if (!Array.isArray(parsed.team)) {
+        parsed.team = parsed.team ? [parsed.team] : [];
+      }
+      if (!parsed.bot) {
+        parsed.bot = { name: 'SPENGEO_ASSISTANT', welcomeMsg: 'Здравствуйте! Я автоматический ассистент СпецИнжГео. Чем могу помочь?', active: true, scenarios: [{ id: Date.now().toString(), keywords: 'цена, стоимость, прайс', answer: 'Для уточнения стоимости инженерных изысканий оставьте заявку, наш специалист свяжется с вами.' }] };
+      }
+      return parsed;
+    }
+    return {
+      projects: DETAILED_PROJECTS,
+      rigs: DRILLING_RIGS,
+      lab: LAB_EQUIP,
+      services: Object.entries(SERVICES_DATA).map(([k, v]) => ({ id: k, ...v, image: `/images/services/${k}.jpg` })),
+      team: [{ name: 'Шенвизов Рудольф', role: 'Константинович', badge: 'ОСНОВАТЕЛЬ И ГЛАВНЫЙ ГЕОЛОГ', desc: 'Мы строим нашу работу на безупречной точности...', img: '/images/director.png' }],
+      bot: { 
+        name: 'SPENGEO_ASSISTANT', 
+        welcomeMsg: 'Здравствуйте! Я автоматический ассистент СпецИнжГео. Чем могу помочь?', 
+        active: true, 
+        scenarios: [
+          { id: Date.now().toString(), keywords: 'цена, стоимость, прайс', answer: 'Для уточнения стоимости инженерных изысканий оставьте заявку, наш специалист свяжется с вами.' }
+        ] 
+      }
+    };
+  });
+  
+  useEffect(() => {
+    localStorage.setItem('spengeo_admin_data', JSON.stringify(adminData));
+  }, [adminData]);
+
   const markerRefs = useRef({});
   const [activeSubPage, setActiveSubPage] = useState(null);
   const [activePage, setActivePage] = useState(() => {
@@ -498,6 +566,7 @@ function App() {
   const [inquiries, setInquiries] = useState([]);
   const [adminError, setAdminError] = useState('');
   const [activeAdminSection, setActiveAdminSection] = useState('dashboard');
+  const [editingServiceIndex, setEditingServiceIndex] = useState(null);
 
   // Calculations
   const selectedSoilConfig = SOILS[activeSoil];
@@ -1478,7 +1547,7 @@ function App() {
               <div className="bg-glow-orb-2" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '600px', height: '600px', background: 'radial-gradient(circle, var(--color-cyan) 0%, transparent 70%)', opacity: 0.05 }}></div>
               <div className="glow-card-premium" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '0', alignItems: 'stretch', padding: '0', overflow: 'hidden', position: 'relative', zIndex: 2, background: 'var(--bg-card)', border: '1px solid var(--border-color)', boxShadow: '0 0 50px rgba(0,0,0,0.1)' }}>
                 <div style={{ position: 'relative', minHeight: '500px', overflow: 'hidden' }}>
-                  <img src="/images/director.png" alt="Шенвизов Рудольф Константинович" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', filter: 'contrast(1.1)', maskImage: 'linear-gradient(to right, black 60%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to right, black 60%, transparent 100%)' }} />
+                  <img src={adminData.team.img} alt="Шенвизов Рудольф Константинович" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', filter: 'contrast(1.1)', maskImage: 'linear-gradient(to right, black 60%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to right, black 60%, transparent 100%)' }} />
                   <div style={{ position: 'absolute', bottom: '-50px', left: '-50px', width: '200px', height: '200px', background: 'var(--color-cyan)', filter: 'blur(100px)', opacity: 0.15, zIndex: 0 }}></div>
                 </div>
                 
@@ -1602,11 +1671,13 @@ function App() {
               <h2>
                 {activeSubPage === 'history' ? 'История компании' : 
                  activeSubPage === 'team' ? 'Наша команда' : 
+                 activeSubPage === 'advantages' ? 'Наши преимущества' :
                  'О компании ТОО «СпецИнжГео»'}
               </h2>
               <p style={{ color: 'var(--color-text-secondary)' }}>
                 {activeSubPage === 'history' ? 'Путь развития нашей компании с 2019 года до сегодняшнего дня.' : 
                  activeSubPage === 'team' ? 'Познакомьтесь с нашими ведущими инженерами и специалистами.' : 
+                 activeSubPage === 'advantages' ? 'Узнайте, почему нам доверяют крупнейшие строительные компании.' :
                  'Комплексные инженерные изыскания для промышленного и гражданского строительства с 2019 года.'}
               </p>
             </div>
@@ -1614,7 +1685,7 @@ function App() {
             {(!activeSubPage || activeSubPage === 'history') && (
               <div className="glow-card-premium" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '0', alignItems: 'stretch', padding: '0', overflow: 'hidden', position: 'relative', zIndex: 2, background: 'var(--bg-card)', border: '1px solid var(--border-color)', boxShadow: '0 0 50px rgba(0,0,0,0.1)', marginBottom: '60px' }}>
                   <div style={{ position: 'relative', minHeight: '500px', overflow: 'hidden' }}>
-                    <img src="/images/director.png" alt="Шенвизов Рудольф Константинович" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', filter: 'contrast(1.1)', maskImage: 'linear-gradient(to right, black 60%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to right, black 60%, transparent 100%)' }} />
+                    <img src={adminData.team.img} alt="Шенвизов Рудольф Константинович" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', filter: 'contrast(1.1)', maskImage: 'linear-gradient(to right, black 60%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to right, black 60%, transparent 100%)' }} />
                     <div style={{ position: 'absolute', bottom: '-50px', left: '-50px', width: '200px', height: '200px', background: 'var(--color-cyan)', filter: 'blur(100px)', opacity: 0.15, zIndex: 0 }}></div>
                   </div>
                   
@@ -1640,12 +1711,34 @@ function App() {
             )}
 
             {activeSubPage === 'team' && (
-              <div style={{ padding: '60px', textAlign: 'center', border: '1px dashed var(--color-cyan)', borderRadius: '12px', marginBottom: '60px', background: 'rgba(6, 182, 212, 0.02)' }}>
-                <h3 style={{ fontSize: '1.5rem', marginBottom: '15px', color: 'var(--color-cyan)' }}>Раздел "Команда" в разработке</h3>
-                <p style={{ color: 'var(--color-text-secondary)', fontSize: '1.1rem' }}>Здесь будут представлены профили наших ведущих инженеров, геологов и геодезистов.</p>
+              <div style={{ marginBottom: '60px' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '40px' }}>
+                  {adminData.team.map((member, i) => (
+                    <div key={i} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                      <div style={{ position: 'relative', height: '400px', borderRadius: '12px', overflow: 'hidden', border: '1px solid var(--color-border)', boxShadow: '0 10px 30px rgba(0,0,0,0.1)' }}>
+                        <div className="hud-bracket hud-bracket-tl"></div><div className="hud-bracket hud-bracket-tr"></div><div className="hud-bracket hud-bracket-bl"></div><div className="hud-bracket hud-bracket-br"></div>
+                        <img src={member.img} alt={member.name} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }} />
+                        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '100px', background: 'linear-gradient(to top, var(--color-bg) 0%, transparent 100%)' }}></div>
+                      </div>
+                      <div>
+                        <div style={{ display: 'inline-block', padding: '6px 12px', background: 'var(--color-card-bg)', border: '1px solid var(--color-cyan)', color: 'var(--color-cyan)', borderRadius: '4px', fontSize: '0.8rem', fontWeight: 'bold', marginBottom: '15px', letterSpacing: '0.1em' }}>
+                          {member.badge || 'СПЕЦИАЛИСТ'}
+                        </div>
+                        <h3 style={{ fontSize: '2.2rem', marginBottom: '5px', color: 'var(--color-text-primary)', letterSpacing: '-0.02em' }}>{member.name}</h3>
+                        <div style={{ fontSize: '1.1rem', color: 'var(--color-accent)', marginBottom: '20px', fontWeight: '500' }}>
+                          {member.role}
+                        </div>
+                        <p style={{ color: 'var(--color-text-secondary)', fontSize: '1.05rem', lineHeight: 1.8, borderLeft: '3px solid var(--color-cyan)', paddingLeft: '20px', fontStyle: 'italic' }}>
+                          {member.desc}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
 
+            {(!activeSubPage || activeSubPage === 'advantages') && (
             <section style={{ marginBottom: '40px' }}>
               <h3 style={{ marginBottom: '20px' }}>Наши ценности и принципы</h3>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
@@ -1663,8 +1756,10 @@ function App() {
                 </HudCard>
               </div>
             </section>
+            )}
           </div>
         )}
+        {/* END SERVICES */}
 
         {/* ==================== PAGE: SERVICES ==================== */}
         {activePage === 'services' && (
@@ -1678,7 +1773,8 @@ function App() {
 
             <div className="equip-grid" style={{ marginBottom: '50px' }}>
               <div className="equip-list">
-                {Object.entries(SERVICES_DATA).map(([key, item]) => {
+                {adminData.services.map((item, index) => {
+                  const key = item.id;
                   const Icon = item.icon;
                   return (
                     <button
@@ -1709,15 +1805,15 @@ function App() {
                 <div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
                     <span className="hero-subtitle" style={{ fontSize: '0.72rem', color: 'var(--color-accent-secondary)', margin: 0 }}>
-                      УСЛУГА // {SERVICES_DATA[activeServiceTab].code}
+                      УСЛУГА // {adminData.services.find(s => s.id === activeServiceTab) || adminData.services[0].code}
                     </span>
                     <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.72rem', color: 'var(--color-accent)' }}>
-                      СТАНДАРТ: {SERVICES_DATA[activeServiceTab].reg}
+                      СТАНДАРТ: {adminData.services.find(s => s.id === activeServiceTab) || adminData.services[0].reg}
                     </span>
                   </div>
                   
                   <h3 style={{ fontSize: '1.8rem', color: 'var(--color-text-primary)', marginBottom: '20px' }}>
-                    {SERVICES_DATA[activeServiceTab].title}
+                    {adminData.services.find(s => s.id === activeServiceTab) || adminData.services[0].title}
                   </h3>
 
                   {(activeServiceTab === 'geodesy' || activeServiceTab === 'laboratory') && (
@@ -1728,7 +1824,7 @@ function App() {
                   )}
                   
                   <p style={{ color: 'var(--color-text-secondary)', fontSize: '1.05rem', lineHeight: '1.7', marginBottom: '30px' }}>
-                    {SERVICES_DATA[activeServiceTab].desc}
+                    {adminData.services.find(s => s.id === activeServiceTab) || adminData.services[0].desc}
                   </p>
                 </div>
 
@@ -1957,13 +2053,13 @@ function App() {
                     <span className="hero-subtitle" style={{ fontSize: '0.7rem', color: 'var(--color-accent-secondary)' }}>
                       CAD MODEL SPECIFICATION: ACTIVE
                     </span>
-                    <h3 style={{ fontSize: '1.8rem', color: 'var(--color-text-primary)', marginBottom: '15px' }}>{DRILLING_RIGS[selectedRig].name}</h3>
+                    <h3 style={{ fontSize: '1.8rem', color: 'var(--color-text-primary)', marginBottom: '15px' }}>{adminData.rigs[selectedRig].name}</h3>
                     <p style={{ color: 'var(--color-text-secondary)', fontSize: '0.95rem', marginBottom: '30px' }}>
-                      {DRILLING_RIGS[selectedRig].description}
+                      {adminData.rigs[selectedRig].description}
                     </p>
 
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginBottom: '30px' }}>
-                      {DRILLING_RIGS[selectedRig].cadSpecs.map(spec => (
+                      {adminData.rigs[selectedRig].cadSpecs.map(spec => (
                         <span key={spec} style={{ fontFamily: 'var(--font-mono)', fontSize: '0.75rem', backgroundColor: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', padding: '4px 10px', borderRadius: '4px', color: 'var(--color-accent)' }}>
                           {spec}
                         </span>
@@ -1974,19 +2070,19 @@ function App() {
                   <div className="spec-grid">
                     <div className="spec-card">
                       <div className="spec-label">Глубина бурения</div>
-                      <div className="spec-value">{DRILLING_RIGS[selectedRig].maxDepth}</div>
+                      <div className="spec-value">{adminData.rigs[selectedRig].maxDepth}</div>
                     </div>
                     <div className="spec-card">
                       <div className="spec-label">Крутящий момент</div>
-                      <div className="spec-value">{DRILLING_RIGS[selectedRig].torque}</div>
+                      <div className="spec-value">{adminData.rigs[selectedRig].torque}</div>
                     </div>
                     <div className="spec-card">
                       <div className="spec-label">Масса установки</div>
-                      <div className="spec-value">{DRILLING_RIGS[selectedRig].weight}</div>
+                      <div className="spec-value">{adminData.rigs[selectedRig].weight}</div>
                     </div>
                     <div className="spec-card">
                       <div className="spec-label">Транспортировка</div>
-                      <div className="spec-value">{DRILLING_RIGS[selectedRig].mobility}</div>
+                      <div className="spec-value">{adminData.rigs[selectedRig].mobility}</div>
                     </div>
                   </div>
                 </div>
@@ -2014,13 +2110,13 @@ function App() {
                     <span className="hero-subtitle" style={{ fontSize: '0.7rem', color: 'var(--color-accent-secondary)' }}>
                       LAB MODEL CALIBRATION: OK
                     </span>
-                    <h3 style={{ fontSize: '1.8rem', color: 'var(--color-text-primary)', marginBottom: '15px' }}>{LAB_EQUIP[selectedLab].name}</h3>
+                    <h3 style={{ fontSize: '1.8rem', color: 'var(--color-text-primary)', marginBottom: '15px' }}>{adminData.lab[selectedLab].name}</h3>
                     <p style={{ color: 'var(--color-text-secondary)', fontSize: '0.95rem', marginBottom: '30px' }}>
-                      {LAB_EQUIP[selectedLab].description}
+                      {adminData.lab[selectedLab].description}
                     </p>
 
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginBottom: '30px' }}>
-                      {LAB_EQUIP[selectedLab].cadSpecs.map(spec => (
+                      {adminData.lab[selectedLab].cadSpecs.map(spec => (
                         <span key={spec} style={{ fontFamily: 'var(--font-mono)', fontSize: '0.75rem', backgroundColor: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', padding: '4px 10px', borderRadius: '4px', color: 'var(--color-accent)' }}>
                           {spec}
                         </span>
@@ -2031,15 +2127,15 @@ function App() {
                   <div className="spec-grid">
                     <div className="spec-card" style={{ gridColumn: 'span 2' }}>
                       <div className="spec-label">Параметры испытаний</div>
-                      <div className="spec-value">{LAB_EQUIP[selectedLab].params}</div>
+                      <div className="spec-value">{adminData.lab[selectedLab].params}</div>
                     </div>
                     <div className="spec-card">
                       <div className="spec-label">Целевые свойства</div>
-                      <div className="spec-value">{LAB_EQUIP[selectedLab].purpose}</div>
+                      <div className="spec-value">{adminData.lab[selectedLab].purpose}</div>
                     </div>
                     <div className="spec-card">
                       <div className="spec-label">ГОСТ / Регламент</div>
-                      <div className="spec-value" style={{ color: 'var(--color-accent)' }}>{LAB_EQUIP[selectedLab].standard}</div>
+                      <div className="spec-value" style={{ color: 'var(--color-accent)' }}>{adminData.lab[selectedLab].standard}</div>
                     </div>
                   </div>
                 </div>
@@ -2440,7 +2536,7 @@ function App() {
                       <Briefcase size={24} />
                     </div>
                     <div style={{ textAlign: 'right' }}>
-                      <div style={{ fontSize: '1.5rem', fontWeight: 'bold', lineHeight: 1 }}>{Object.keys(SERVICES_DATA).length}</div>
+                      <div style={{ fontSize: '1.5rem', fontWeight: 'bold', lineHeight: 1 }}>{adminData.services.length}</div>
                       <div style={{ fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: theme === 'white' ? '#64748b' : '#888', marginTop: '4px' }}>услуг</div>
                     </div>
                   </div>
@@ -2516,6 +2612,27 @@ function App() {
                   </div>
                 </div>
 
+                
+                {/* 7. Blocks */}
+                <div onClick={() => setActiveAdminSection('blocks')} style={{ position: 'relative', overflow: 'hidden', borderRadius: '12px', background: theme === 'white' ? '#fff' : '#111', border: theme === 'white' ? '1px solid rgba(16, 185, 129, 0.4)' : '1px solid rgba(16, 185, 129, 0.3)', padding: '24px', display: 'flex', flexDirection: 'column', cursor: 'pointer', transition: 'transform 0.2s', boxShadow: theme === 'white' ? '0 4px 20px rgba(0,0,0,0.05)' : 'none' }}>
+                  <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '100px', background: 'linear-gradient(to bottom, rgba(16, 185, 129, 0.15), transparent)', pointerEvents: 'none' }}></div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '40px', position: 'relative', zIndex: 1 }}>
+                    <div style={{ background: theme === 'white' ? 'rgba(16, 185, 129, 0.1)' : 'rgba(0,0,0,0.4)', border: theme === 'white' ? '1px solid rgba(16, 185, 129, 0.2)' : '1px solid rgba(255,255,255,0.05)', padding: '8px', borderRadius: '8px', color: '#10b981' }}>
+                      <Database size={24} />
+                    </div>
+                    <div style={{ textAlign: 'right' }}>
+                      <div style={{ fontSize: '1.5rem', fontWeight: 'bold', lineHeight: 1 }}>4</div>
+                      <div style={{ fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: theme === 'white' ? '#64748b' : '#888', marginTop: '4px' }}>базы</div>
+                    </div>
+                  </div>
+                  <div style={{ marginTop: 'auto', position: 'relative', zIndex: 1 }}>
+                    <div style={{ fontSize: '0.65rem', fontFamily: 'monospace', textTransform: 'uppercase', letterSpacing: '0.2em', color: theme === 'white' ? '#64748b' : '#888', marginBottom: '8px' }}>Базы данных</div>
+                    <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '12px' }}>Блоки и Фото</h2>
+                    <p style={{ fontSize: '0.85rem', color: theme === 'white' ? '#475569' : '#aaa', marginBottom: '24px', lineHeight: 1.5 }}>Редактирование, добавление проектов, услуг, оборудования и команды с фото.</p>
+                    <div style={{ fontSize: '0.85rem', fontWeight: 500, color: '#10b981' }}>Управление →</div>
+                  </div>
+                </div>
+
                 {/* 6. Settings */}
                 <div onClick={() => setActiveAdminSection('settings')} style={{ position: 'relative', overflow: 'hidden', borderRadius: '12px', background: theme === 'white' ? '#fff' : '#111', border: theme === 'white' ? '1px solid rgba(107, 114, 128, 0.4)' : '1px solid rgba(107, 114, 128, 0.3)', padding: '24px', display: 'flex', flexDirection: 'column', cursor: 'pointer', transition: 'transform 0.2s', boxShadow: theme === 'white' ? '0 4px 20px rgba(0,0,0,0.05)' : 'none' }}>
                   <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '100px', background: 'linear-gradient(to bottom, rgba(107, 114, 128, 0.15), transparent)', pointerEvents: 'none' }}></div>
@@ -2557,7 +2674,7 @@ function App() {
                 </div>
                 <div style={{ background: theme === 'white' ? '#fff' : '#111', border: theme === 'white' ? '1px solid rgba(0,0,0,0.05)' : '1px solid rgba(255,255,255,0.05)', borderRadius: '8px', padding: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', boxShadow: theme === 'white' ? '0 2px 10px rgba(0,0,0,0.02)' : 'none' }}>
                   <span style={{ fontSize: '0.85rem', color: theme === 'white' ? '#64748b' : '#888' }}>Услуг на сайте</span>
-                  <span style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#3b82f6' }}>{Object.keys(SERVICES_DATA).length}</span>
+                  <span style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#3b82f6' }}>{adminData.services.length}</span>
                 </div>
                 <div style={{ background: theme === 'white' ? '#fff' : '#111', border: theme === 'white' ? '1px solid rgba(0,0,0,0.05)' : '1px solid rgba(255,255,255,0.05)', borderRadius: '8px', padding: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', boxShadow: theme === 'white' ? '0 2px 10px rgba(0,0,0,0.02)' : 'none' }}>
                   <span style={{ fontSize: '0.85rem', color: theme === 'white' ? '#64748b' : '#888' }}>Активных ботов</span>
@@ -2592,6 +2709,110 @@ function App() {
               )}
 
               {/* ===== ADMIN SUB-PAGES ===== */}
+
+              {activeAdminSection === 'blocks' && (
+                <div style={{ background: theme === 'white' ? '#fff' : '#111', border: theme === 'white' ? '1px solid rgba(0,0,0,0.05)' : '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', padding: '30px', boxShadow: theme === 'white' ? '0 4px 20px rgba(0,0,0,0.05)' : 'none' }}>
+                  <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '30px', color: theme === 'white' ? '#0f172a' : '#fff', borderBottom: theme === 'white' ? '1px solid #e2e8f0' : '1px solid #333', paddingBottom: '15px' }}>Управление Базами Данных</h3>
+                  
+                  {/* КОМАНДА */}
+                  <div style={{ marginBottom: '40px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <div style={{ background: 'rgba(6, 182, 212, 0.1)', padding: '8px', borderRadius: '8px', color: '#06b6d4' }}><Users size={20} /></div>
+                        <h4 style={{ color: theme === 'white' ? '#0f172a' : '#fff', fontSize: '1.2rem', margin: 0 }}>Команда</h4>
+                      </div>
+                      <button onClick={() => setAdminData({...adminData, team: [{name: 'Новый сотрудник', role: 'Должность', badge: 'СПЕЦИАЛИСТ', desc: '', img: ''}, ...adminData.team]})} style={{ background: '#06b6d4', color: '#fff', border: 'none', padding: '8px 16px', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold' }}>+ Добавить сотрудника</button>
+                    </div>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px' }}>
+                      {adminData.team.map((member, i) => (
+                        <div key={i} style={{ background: theme === 'white' ? '#f8fafc' : '#1a1a1a', border: theme === 'white' ? '1px solid #e2e8f0' : '1px solid #333', borderRadius: '12px', padding: '20px', display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                             <label style={{ fontSize: '0.8rem', color: theme === 'white' ? '#64748b' : '#888', fontWeight: 'bold' }}>Сотрудник #{i + 1}</label>
+                             <button onClick={() => { const arr = adminData.team.filter((_, idx) => idx !== i); setAdminData({...adminData, team: arr}); }} style={{ color: '#ef4444', background: 'rgba(239, 68, 68, 0.1)', padding: '6px', borderRadius: '6px', border: 'none', cursor: 'pointer' }}><Trash2 size={14} /></button>
+                          </div>
+                          <div>
+                            <label style={{ display: 'block', fontSize: '0.8rem', color: theme === 'white' ? '#64748b' : '#888', marginBottom: '5px' }}>Фамилия Имя</label>
+                            <input value={member.name} onChange={e => { const arr = [...adminData.team]; arr[i].name = e.target.value; setAdminData({...adminData, team: arr}); }} style={{ width: '100%', padding: '10px 12px', background: theme === 'white' ? '#fff' : '#000', color: theme === 'white' ? '#0f172a' : '#fff', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', borderRadius: '6px' }} />
+                          </div>
+                          <div>
+                            <label style={{ display: 'block', fontSize: '0.8rem', color: theme === 'white' ? '#64748b' : '#888', marginBottom: '5px' }}>Должность</label>
+                            <input value={member.role} onChange={e => { const arr = [...adminData.team]; arr[i].role = e.target.value; setAdminData({...adminData, team: arr}); }} style={{ width: '100%', padding: '10px 12px', background: theme === 'white' ? '#fff' : '#000', color: theme === 'white' ? '#0f172a' : '#fff', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', borderRadius: '6px' }} />
+                          </div>
+                          <div>
+                            <label style={{ display: 'block', fontSize: '0.8rem', color: theme === 'white' ? '#64748b' : '#888', marginBottom: '5px' }}>Бейдж (например: РУКОВОДСТВО)</label>
+                            <input value={member.badge || ''} onChange={e => { const arr = [...adminData.team]; arr[i].badge = e.target.value; setAdminData({...adminData, team: arr}); }} style={{ width: '100%', padding: '10px 12px', background: theme === 'white' ? '#fff' : '#000', color: theme === 'white' ? '#0f172a' : '#fff', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', borderRadius: '6px' }} />
+                          </div>
+                          <div>
+                            <label style={{ display: 'block', fontSize: '0.8rem', color: theme === 'white' ? '#64748b' : '#888', marginBottom: '5px' }}>Фотография</label>
+                            <ImageUploadField value={member.img} onChange={v => { const arr = [...adminData.team]; arr[i].img = v; setAdminData({...adminData, team: arr}); }} theme={theme} />
+                          </div>
+                          <div>
+                            <label style={{ display: 'block', fontSize: '0.8rem', color: theme === 'white' ? '#64748b' : '#888', marginBottom: '5px' }}>Описание</label>
+                            <textarea value={member.desc} onChange={e => { const arr = [...adminData.team]; arr[i].desc = e.target.value; setAdminData({...adminData, team: arr}); }} rows={3} style={{ width: '100%', padding: '10px 12px', background: theme === 'white' ? '#fff' : '#000', color: theme === 'white' ? '#0f172a' : '#fff', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', borderRadius: '6px', resize: 'vertical' }} />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* ПРОЕКТЫ */}
+                  <div style={{ marginBottom: '40px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <div style={{ background: 'rgba(59, 130, 246, 0.1)', padding: '8px', borderRadius: '8px', color: '#3b82f6' }}><MapPin size={20} /></div>
+                        <h4 style={{ color: theme === 'white' ? '#0f172a' : '#fff', fontSize: '1.2rem', margin: 0 }}>Проекты (Выполненные объекты)</h4>
+                      </div>
+                      <button onClick={() => setAdminData({...adminData, projects: [{id: Date.now().toString(), name: 'Новый проект', client: 'Клиент', type: 'Услуга', loc: 'Локация', specs: 'Описание', coords: [48, 66]}, ...adminData.projects]})} style={{ background: '#3b82f6', color: '#fff', border: 'none', padding: '8px 16px', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold' }}>+ Добавить проект</button>
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                      {adminData.projects.map((p, i) => (
+                        <div key={i} style={{ padding: '15px', border: theme === 'white' ? '1px solid #e2e8f0' : '1px solid #333', borderRadius: '10px', background: theme === 'white' ? '#f8fafc' : '#1a1a1a', display: 'flex', gap: '15px', alignItems: 'center', transition: 'all 0.2s' }}>
+                          <div style={{ display: 'flex', flexDirection: 'column', flex: 1, gap: '5px' }}>
+                            <label style={{ fontSize: '0.75rem', color: theme === 'white' ? '#64748b' : '#888' }}>Название объекта</label>
+                            <input value={p.name} onChange={e => { const arr = [...adminData.projects]; arr[i].name = e.target.value; setAdminData({...adminData, projects: arr}); }} style={{ padding: '8px 12px', background: theme === 'white' ? '#fff' : '#000', color: theme === 'white' ? '#0f172a' : '#fff', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', borderRadius: '6px' }} />
+                          </div>
+                          <div style={{ display: 'flex', flexDirection: 'column', flex: 1, gap: '5px' }}>
+                            <label style={{ fontSize: '0.75rem', color: theme === 'white' ? '#64748b' : '#888' }}>Заказчик</label>
+                            <input value={p.client} onChange={e => { const arr = [...adminData.projects]; arr[i].client = e.target.value; setAdminData({...adminData, projects: arr}); }} style={{ padding: '8px 12px', background: theme === 'white' ? '#fff' : '#000', color: theme === 'white' ? '#0f172a' : '#fff', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', borderRadius: '6px' }} />
+                          </div>
+                          <button onClick={() => { const arr = adminData.projects.filter((_, idx) => idx !== i); setAdminData({...adminData, projects: arr}); }} style={{ color: '#ef4444', background: 'rgba(239, 68, 68, 0.1)', padding: '10px', borderRadius: '8px', border: 'none', cursor: 'pointer', marginTop: '20px' }}><Trash2 size={18} /></button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* ОБОРУДОВАНИЕ */}
+                  <div style={{ marginBottom: '40px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <div style={{ background: 'rgba(16, 185, 129, 0.1)', padding: '8px', borderRadius: '8px', color: '#10b981' }}><Settings size={20} /></div>
+                        <h4 style={{ color: theme === 'white' ? '#0f172a' : '#fff', fontSize: '1.2rem', margin: 0 }}>Оборудование (Буровые установки)</h4>
+                      </div>
+                      <button onClick={() => setAdminData({...adminData, rigs: [{name: 'Новая установка', type: 'Тип', power: '', weight: '', maxDepth: '', description: '', image: ''}, ...adminData.rigs]})} style={{ background: '#10b981', color: '#fff', border: 'none', padding: '8px 16px', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold' }}>+ Добавить установку</button>
+                    </div>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px' }}>
+                      {adminData.rigs.map((r, i) => (
+                        <div key={i} style={{ padding: '20px', border: theme === 'white' ? '1px solid #e2e8f0' : '1px solid #333', borderRadius: '12px', background: theme === 'white' ? '#f8fafc' : '#1a1a1a', display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <input value={r.name} onChange={e => { const arr = [...adminData.rigs]; arr[i].name = e.target.value; setAdminData({...adminData, rigs: arr}); }} style={{ flex: 1, padding: '8px 12px', background: theme === 'white' ? '#fff' : '#000', color: theme === 'white' ? '#0f172a' : '#fff', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', borderRadius: '6px', fontWeight: 'bold', fontSize: '1.1rem' }} placeholder="Название установки" />
+                            <button onClick={() => { const arr = adminData.rigs.filter((_, idx) => idx !== i); setAdminData({...adminData, rigs: arr}); }} style={{ color: '#ef4444', background: 'rgba(239, 68, 68, 0.1)', padding: '8px', borderRadius: '6px', border: 'none', cursor: 'pointer', marginLeft: '10px' }}><Trash2 size={16} /></button>
+                          </div>
+                          <div>
+                            <label style={{ display: 'block', fontSize: '0.8rem', color: theme === 'white' ? '#64748b' : '#888', marginBottom: '5px' }}>Фотография</label>
+                            <ImageUploadField value={r.image} onChange={v => { const arr = [...adminData.rigs]; arr[i].image = v; setAdminData({...adminData, rigs: arr}); }} theme={theme} />
+                          </div>
+                          <div>
+                            <label style={{ display: 'block', fontSize: '0.8rem', color: theme === 'white' ? '#64748b' : '#888', marginBottom: '5px' }}>Описание</label>
+                            <textarea value={r.description} onChange={e => { const arr = [...adminData.rigs]; arr[i].description = e.target.value; setAdminData({...adminData, rigs: arr}); }} style={{ width: '100%', padding: '10px 12px', background: theme === 'white' ? '#fff' : '#000', color: theme === 'white' ? '#0f172a' : '#fff', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', borderRadius: '6px', resize: 'vertical' }} placeholder="Технические характеристики..." rows={3} />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                </div>
+              )}
+
               {activeAdminSection === 'leads' && (
                 <div style={{ background: theme === 'white' ? '#fff' : '#111', border: theme === 'white' ? '1px solid rgba(0,0,0,0.05)' : '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', padding: '30px', boxShadow: theme === 'white' ? '0 4px 20px rgba(0,0,0,0.05)' : 'none' }}>
                   <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '20px', color: theme === 'white' ? '#0f172a' : '#fff' }}>Входящие заявки ({inquiries.length})</h3>
@@ -2618,22 +2839,73 @@ function App() {
               )}
 
               {activeAdminSection === 'services' && (
-                <div style={{ background: theme === 'white' ? '#fff' : '#111', border: theme === 'white' ? '1px solid rgba(0,0,0,0.05)' : '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', padding: '30px', boxShadow: theme === 'white' ? '0 4px 20px rgba(0,0,0,0.05)' : 'none' }}>
+                <div style={{ background: theme === 'white' ? '#fff' : '#111', border: theme === 'white' ? '1px solid rgba(0,0,0,0.05)' : '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', padding: '30px', boxShadow: theme === 'white' ? '0 4px 20px rgba(0,0,0,0.05)' : 'none', position: 'relative' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-                    <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', color: theme === 'white' ? '#0f172a' : '#fff' }}>Услуги ({Object.keys(SERVICES_DATA).length})</h3>
-                    <button style={{ background: '#3b82f6', color: '#fff', border: 'none', padding: '8px 16px', borderRadius: '6px', cursor: 'pointer' }}>+ Добавить услугу</button>
+                    <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', color: theme === 'white' ? '#0f172a' : '#fff' }}>Услуги ({adminData.services.length})</h3>
+                    <button onClick={() => setAdminData({...adminData, services: [...adminData.services, {id: Date.now().toString(), title: 'Новая услуга', code: 'NEW-00', desc: '', reg: '', image: ''}]})} style={{ background: '#3b82f6', color: '#fff', border: 'none', padding: '8px 16px', borderRadius: '6px', cursor: 'pointer' }}>+ Добавить услугу</button>
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                    {Object.entries(SERVICES_DATA).map(([key, service]) => (
-                      <div key={key} style={{ padding: '16px', border: theme === 'white' ? '1px solid #e2e8f0' : '1px solid #333', borderRadius: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    {adminData.services.map((service, index) => { const key = service.id || index; return (
+                      <div key={key} style={{ padding: '16px', border: theme === 'white' ? '1px solid #e2e8f0' : '1px solid #333', borderRadius: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: theme === 'white' ? '#f8fafc' : '#1a1a1a' }}>
                         <div>
                           <div style={{ fontWeight: 'bold', color: theme === 'white' ? '#0f172a' : '#fff' }}>{service.title}</div>
                           <div style={{ fontSize: '0.8rem', color: theme === 'white' ? '#64748b' : '#888', marginTop: '4px' }}>Код: {service.code}</div>
                         </div>
-                        <button style={{ background: 'none', border: 'none', color: '#3b82f6', cursor: 'pointer' }}>Редактировать</button>
+                        <div style={{ display: 'flex', gap: '10px' }}>
+                          <button onClick={() => setEditingServiceIndex(index)} style={{ background: 'none', border: 'none', color: '#3b82f6', cursor: 'pointer', padding: '4px 8px' }}>Редактировать</button>
+                          <button onClick={() => { const arr = adminData.services.filter((_, idx) => idx !== index); setAdminData({...adminData, services: arr}); }} style={{ background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', padding: '4px 8px' }}>Удалить</button>
+                        </div>
                       </div>
-                    ))}
+                    ); })}
                   </div>
+
+                  {editingServiceIndex !== null && adminData.services[editingServiceIndex] && createPortal((
+                    <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: theme === 'white' ? 'rgba(15, 23, 42, 0.4)' : 'rgba(0,0,0,0.7)', backdropFilter: 'blur(4px)', zIndex: 100000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
+                      <div style={{ background: theme === 'white' ? '#ffffff' : '#0a0a0a', padding: '40px', borderRadius: '24px', width: '100%', maxWidth: '650px', border: theme === 'white' ? '1px solid #e2e8f0' : '1px solid #333', boxShadow: theme === 'white' ? '0 25px 50px -12px rgba(0, 0, 0, 0.15)' : '0 25px 50px -12px rgba(0, 0, 0, 0.8)', display: 'flex', flexDirection: 'column', gap: '25px', position: 'relative', overflowY: 'auto', maxHeight: '90vh' }}>
+                        
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: theme === 'white' ? '1px solid #f1f5f9' : '1px solid #1a1a1a', paddingBottom: '20px' }}>
+                          <div>
+                            <h3 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 'bold', color: theme === 'white' ? '#0f172a' : '#fff' }}>Настройка услуги</h3>
+                            <div style={{ fontSize: '0.85rem', color: theme === 'white' ? '#64748b' : '#666', marginTop: '5px' }}>Идентификатор: {adminData.services[editingServiceIndex].id || editingServiceIndex}</div>
+                          </div>
+                          <button onClick={() => setEditingServiceIndex(null)} style={{ background: theme === 'white' ? '#f1f5f9' : '#1a1a1a', border: 'none', color: theme === 'white' ? '#64748b' : '#888', cursor: 'pointer', width: '40px', height: '40px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'background 0.2s' }}><X size={20} /></button>
+                        </div>
+                        
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                          <div style={{ display: 'flex', gap: '20px' }}>
+                            <div style={{ flex: 3 }}>
+                              <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '600', color: theme === 'white' ? '#334155' : '#aaa', marginBottom: '8px' }}>Название услуги <span style={{ color: '#ef4444' }}>*</span></label>
+                              <input value={adminData.services[editingServiceIndex].title} onChange={e => { const arr = [...adminData.services]; arr[editingServiceIndex].title = e.target.value; setAdminData({...adminData, services: arr}); }} style={{ width: '100%', padding: '12px 16px', fontSize: '1rem', background: theme === 'white' ? '#f8fafc' : '#000', color: theme === 'white' ? '#0f172a' : '#fff', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', borderRadius: '10px', transition: 'border 0.2s', outline: 'none' }} />
+                            </div>
+                            <div style={{ flex: 1 }}>
+                              <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '600', color: theme === 'white' ? '#334155' : '#aaa', marginBottom: '8px' }}>Внутр. код</label>
+                              <input value={adminData.services[editingServiceIndex].code} onChange={e => { const arr = [...adminData.services]; arr[editingServiceIndex].code = e.target.value; setAdminData({...adminData, services: arr}); }} style={{ width: '100%', padding: '12px 16px', fontSize: '1rem', background: theme === 'white' ? '#f8fafc' : '#000', color: theme === 'white' ? '#0f172a' : '#fff', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', borderRadius: '10px', outline: 'none' }} />
+                            </div>
+                          </div>
+                          
+                          <div>
+                            <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '600', color: theme === 'white' ? '#334155' : '#aaa', marginBottom: '8px' }}>Обложка услуги (фото)</label>
+                            <ImageUploadField value={adminData.services[editingServiceIndex].image || ''} onChange={v => { const arr = [...adminData.services]; arr[editingServiceIndex].image = v; setAdminData({...adminData, services: arr}); }} theme={theme} />
+                          </div>
+
+                          <div>
+                            <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '600', color: theme === 'white' ? '#334155' : '#aaa', marginBottom: '8px' }}>Нормативная база (СНиП, ГОСТ)</label>
+                            <input value={adminData.services[editingServiceIndex].reg || ''} onChange={e => { const arr = [...adminData.services]; arr[editingServiceIndex].reg = e.target.value; setAdminData({...adminData, services: arr}); }} style={{ width: '100%', padding: '12px 16px', fontSize: '1rem', background: theme === 'white' ? '#f8fafc' : '#000', color: theme === 'white' ? '#0f172a' : '#fff', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', borderRadius: '10px', outline: 'none' }} placeholder="Например: СНиП РК 1.02-18-2004" />
+                          </div>
+
+                          <div>
+                            <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '600', color: theme === 'white' ? '#334155' : '#aaa', marginBottom: '8px' }}>Официальное описание (для каталога)</label>
+                            <textarea value={adminData.services[editingServiceIndex].desc || ''} onChange={e => { const arr = [...adminData.services]; arr[editingServiceIndex].desc = e.target.value; setAdminData({...adminData, services: arr}); }} rows={5} style={{ width: '100%', padding: '16px', fontSize: '1rem', background: theme === 'white' ? '#f8fafc' : '#000', color: theme === 'white' ? '#0f172a' : '#fff', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', borderRadius: '10px', resize: 'vertical', lineHeight: '1.6', outline: 'none' }} placeholder="Укажите подробное описание состава работ..." />
+                          </div>
+                          
+                          <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'flex-end', gap: '15px' }}>
+                            <button onClick={() => setEditingServiceIndex(null)} style={{ background: 'transparent', color: theme === 'white' ? '#64748b' : '#aaa', border: 'none', padding: '12px 24px', borderRadius: '10px', cursor: 'pointer', fontWeight: 'bold', fontSize: '1rem' }}>Отмена</button>
+                            <button onClick={() => setEditingServiceIndex(null)} style={{ background: 'var(--color-cyan)', color: '#fff', border: 'none', padding: '12px 30px', borderRadius: '10px', cursor: 'pointer', fontWeight: 'bold', fontSize: '1rem', boxShadow: '0 4px 14px rgba(6, 182, 212, 0.4)' }}>Сохранить изменения</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    ), document.body)                  }
                 </div>
               )}
 
@@ -2733,18 +3005,46 @@ function App() {
                   <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '20px', color: theme === 'white' ? '#0f172a' : '#fff' }}>Настройки Чат-бота</h3>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                     <div>
-                      <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.9rem', color: theme === 'white' ? '#475569' : '#ccc' }}>Имя ассистента</label>
-                      <input type="text" defaultValue="SPENGEO_ASSISTANT" style={{ width: '100%', padding: '12px', borderRadius: '6px', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #333', background: theme === 'white' ? '#f8fafc' : '#000', color: theme === 'white' ? '#0f172a' : '#fff' }} />
+                      <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.9rem', color: theme === 'white' ? '#475569' : '#ccc', fontWeight: 'bold' }}>Имя ассистента</label>
+                      <input type="text" value={adminData.bot.name} onChange={e => setAdminData({...adminData, bot: {...adminData.bot, name: e.target.value}})} style={{ width: '100%', padding: '12px', borderRadius: '8px', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', background: theme === 'white' ? '#f8fafc' : '#000', color: theme === 'white' ? '#0f172a' : '#fff', outline: 'none' }} />
                     </div>
                     <div>
-                      <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.9rem', color: theme === 'white' ? '#475569' : '#ccc' }}>Приветственное сообщение</label>
-                      <textarea rows="4" defaultValue="Здравствуйте! Я автоматический ассистент СпецИнжГео. Чем могу помочь?" style={{ width: '100%', padding: '12px', borderRadius: '6px', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #333', background: theme === 'white' ? '#f8fafc' : '#000', color: theme === 'white' ? '#0f172a' : '#fff', resize: 'vertical' }}></textarea>
+                      <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.9rem', color: theme === 'white' ? '#475569' : '#ccc', fontWeight: 'bold' }}>Приветственное сообщение</label>
+                      <textarea rows="3" value={adminData.bot.welcomeMsg} onChange={e => setAdminData({...adminData, bot: {...adminData.bot, welcomeMsg: e.target.value}})} style={{ width: '100%', padding: '12px', borderRadius: '8px', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', background: theme === 'white' ? '#f8fafc' : '#000', color: theme === 'white' ? '#0f172a' : '#fff', resize: 'vertical', outline: 'none' }}></textarea>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                      <input type="checkbox" id="bot_active" defaultChecked style={{ width: '20px', height: '20px' }} />
-                      <label htmlFor="bot_active" style={{ color: theme === 'white' ? '#0f172a' : '#fff' }}>Бот активен на сайте</label>
+                      <input type="checkbox" id="bot_active" checked={adminData.bot.active} onChange={e => setAdminData({...adminData, bot: {...adminData.bot, active: e.target.checked}})} style={{ width: '18px', height: '18px', cursor: 'pointer' }} />
+                      <label htmlFor="bot_active" style={{ color: theme === 'white' ? '#0f172a' : '#fff', cursor: 'pointer', fontWeight: 'bold' }}>Бот активен на сайте</label>
                     </div>
-                    <button style={{ background: '#06b6d4', color: '#fff', border: 'none', padding: '12px', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold', marginTop: '10px' }}>Сохранить конфигурацию</button>
+                    
+                    <hr style={{ border: 'none', borderTop: theme === 'white' ? '1px solid #e2e8f0' : '1px solid #333', margin: '10px 0' }} />
+                    
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <h4 style={{ fontSize: '1.1rem', margin: 0, color: theme === 'white' ? '#0f172a' : '#fff' }}>Сценарии ответов (Intents)</h4>
+                      <button onClick={() => setAdminData({...adminData, bot: {...adminData.bot, scenarios: [...adminData.bot.scenarios, { id: Date.now().toString(), keywords: '', answer: '' }]}})} style={{ background: 'var(--color-cyan)', color: '#fff', border: 'none', padding: '6px 14px', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold', fontSize: '0.85rem' }}>+ Добавить сценарий</button>
+                    </div>
+                    
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                      {adminData.bot.scenarios.map((scenario, index) => (
+                        <div key={scenario.id} style={{ background: theme === 'white' ? '#f1f5f9' : '#1a1a1a', border: theme === 'white' ? '1px solid #e2e8f0' : '1px solid #333', borderRadius: '10px', padding: '20px', position: 'relative' }}>
+                          <button onClick={() => { const arr = adminData.bot.scenarios.filter((_, idx) => idx !== index); setAdminData({...adminData, bot: {...adminData.bot, scenarios: arr}}); }} style={{ position: 'absolute', top: '15px', right: '15px', background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', border: 'none', padding: '6px', borderRadius: '6px', cursor: 'pointer' }}><Trash2 size={16} /></button>
+                          
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', paddingRight: '40px' }}>
+                            <div>
+                              <label style={{ display: 'block', fontSize: '0.8rem', color: theme === 'white' ? '#64748b' : '#888', marginBottom: '5px', fontWeight: 'bold' }}>Ключевые слова (через запятую)</label>
+                              <input value={scenario.keywords} onChange={e => { const arr = [...adminData.bot.scenarios]; arr[index].keywords = e.target.value; setAdminData({...adminData, bot: {...adminData.bot, scenarios: arr}}); }} placeholder="Например: привет, здравствуй, добрый день" style={{ width: '100%', padding: '10px', background: theme === 'white' ? '#fff' : '#000', color: theme === 'white' ? '#0f172a' : '#fff', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', borderRadius: '6px', outline: 'none' }} />
+                            </div>
+                            <div>
+                              <label style={{ display: 'block', fontSize: '0.8rem', color: theme === 'white' ? '#64748b' : '#888', marginBottom: '5px', fontWeight: 'bold' }}>Ответ бота</label>
+                              <textarea value={scenario.answer} onChange={e => { const arr = [...adminData.bot.scenarios]; arr[index].answer = e.target.value; setAdminData({...adminData, bot: {...adminData.bot, scenarios: arr}}); }} rows={3} style={{ width: '100%', padding: '10px', background: theme === 'white' ? '#fff' : '#000', color: theme === 'white' ? '#0f172a' : '#fff', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', borderRadius: '6px', resize: 'vertical', outline: 'none' }} />
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                      {adminData.bot.scenarios.length === 0 && (
+                        <div style={{ textAlign: 'center', padding: '30px', color: theme === 'white' ? '#64748b' : '#888', border: theme === 'white' ? '1px dashed #cbd5e1' : '1px dashed #444', borderRadius: '10px' }}>Нет сценариев. Добавьте сценарий, чтобы бот мог отвечать на вопросы.</div>
+                      )}
+                    </div>
                   </div>
                 </div>
               )}
