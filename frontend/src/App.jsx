@@ -1774,8 +1774,8 @@ function App() {
             <div className="equip-grid" style={{ marginBottom: '50px' }}>
               <div className="equip-list">
                 {adminData.services.map((item, index) => {
-                  const key = item.id;
-                  const Icon = item.icon;
+                  const key = item.id || `service-${index}`;
+                  const Icon = SERVICES_DATA[key]?.icon || ChevronRight;
                   return (
                     <button
                       key={key}
@@ -1785,13 +1785,7 @@ function App() {
                     >
                       <span style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                         <Icon size={16} />
-                        {key === 'geology' && 'Геология'}
-                        {key === 'geodesy' && 'Геодезия'}
-                        {key === 'cpt' && 'CPT'}
-                        {key === 'piles' && 'Испытания свай'}
-                        {key === 'plates' && 'Штамповые испытания'}
-                        {key === 'laboratory' && 'Лаборатория'}
-                        {key === 'hydrogeology' && 'Гидрогеология'}
+                        {item.title}
                       </span>
                       <ChevronRight size={14} />
                     </button>
@@ -1805,15 +1799,15 @@ function App() {
                 <div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
                     <span className="hero-subtitle" style={{ fontSize: '0.72rem', color: 'var(--color-accent-secondary)', margin: 0 }}>
-                      УСЛУГА // {adminData.services.find(s => s.id === activeServiceTab) || adminData.services[0].code}
+                      УСЛУГА // {(adminData.services.find(s => s.id === activeServiceTab) || adminData.services[0]).code}
                     </span>
                     <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.72rem', color: 'var(--color-accent)' }}>
-                      СТАНДАРТ: {adminData.services.find(s => s.id === activeServiceTab) || adminData.services[0].reg}
+                      СТАНДАРТ: {(adminData.services.find(s => s.id === activeServiceTab) || adminData.services[0]).reg}
                     </span>
                   </div>
                   
                   <h3 style={{ fontSize: '1.8rem', color: 'var(--color-text-primary)', marginBottom: '20px' }}>
-                    {adminData.services.find(s => s.id === activeServiceTab) || adminData.services[0].title}
+                    {(adminData.services.find(s => s.id === activeServiceTab) || adminData.services[0]).title}
                   </h3>
 
                   {(activeServiceTab === 'geodesy' || activeServiceTab === 'laboratory') && (
@@ -1824,7 +1818,7 @@ function App() {
                   )}
                   
                   <p style={{ color: 'var(--color-text-secondary)', fontSize: '1.05rem', lineHeight: '1.7', marginBottom: '30px' }}>
-                    {adminData.services.find(s => s.id === activeServiceTab) || adminData.services[0].desc}
+                    {(adminData.services.find(s => s.id === activeServiceTab) || adminData.services[0]).desc}
                   </p>
                 </div>
 
