@@ -283,8 +283,7 @@ const MENU_STRUCTURE = {
         { name: 'История', action: { type: 'page', val: 'about', subpage: 'history' } },
         { name: 'Команда', action: { type: 'page', val: 'about', subpage: 'team' } },
         { name: 'Наши преимущества', action: { type: 'page', val: 'about', subpage: 'advantages' } },
-        { name: 'Лицензии', action: { type: 'page', val: 'documents' } },
-        { name: 'Сертификаты', action: { type: 'page', val: 'documents' } }
+        { name: 'Лицензии и сертификаты', action: { type: 'page', val: 'about', subpage: 'documents' } }
       ]
     },
     {
@@ -401,6 +400,19 @@ function App() {
       }
       if (!parsed.menu) {
         parsed.menu = MENU_STRUCTURE;
+      } else if (parsed.menu.ru) {
+        // Repair legacy menu
+        parsed.menu.ru.forEach(cat => {
+          if (cat.items) {
+            cat.items.forEach(item => {
+              if (item.name === 'Лицензии' || item.name === 'Лицензии и сертификаты') {
+                 item.name = 'Лицензии и сертификаты';
+                 item.action = { type: 'page', val: 'about', subpage: 'documents' };
+              }
+            });
+            cat.items = cat.items.filter(item => item.name !== 'Сертификаты');
+          }
+        });
       }
       return parsed;
     }
