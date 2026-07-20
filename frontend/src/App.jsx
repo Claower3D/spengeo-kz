@@ -3512,7 +3512,7 @@ function App() {
                 <li><a href="#" onClick={(e) => { e.preventDefault(); setActivePage('about'); logEvent('Footer navigation: About'); }}>О компании</a></li>
                 <li><a href="#" onClick={(e) => { e.preventDefault(); setActivePage('services'); logEvent('Footer navigation: Services'); }}>Услуги изысканий</a></li>
                 <li><a href="#" onClick={(e) => { e.preventDefault(); setActivePage('projects'); logEvent('Footer navigation: Projects'); }}>Наши проекты</a></li>
-                <li><a href="#" onClick={(e) => { e.preventDefault(); setActivePage('admin'); logEvent('Footer navigation: Admin'); }} style={{ color: 'var(--color-cyan)', fontWeight: 600 }}>Админ-панель</a></li>
+
               </ul>
             </div>
 
@@ -3522,7 +3522,7 @@ function App() {
                 <li>📍 Республика Казахстан, г. Алматы</li>
                 <li>📞 +7 775 218 28 06</li>
                 <li>✉️ info@spengeo.kz</li>
-                <li>⚙️ API: Go REST Service Port 8083</li>
+                <li style={{ marginTop: '15px' }}>Разработано при помощи <a href="https://codix-style-line-production.up.railway.app/" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--color-cyan)', textDecoration: 'none', textShadow: '0 0 10px rgba(14, 165, 233, 0.5)', borderBottom: '1px dashed var(--color-cyan)', paddingBottom: '2px', fontWeight: 600, letterSpacing: '0.5px', transition: 'all 0.3s' }} onMouseOver={(e) => { e.currentTarget.style.color = '#fff'; e.currentTarget.style.textShadow = '0 0 15px rgba(255, 255, 255, 0.8)'; e.currentTarget.style.borderBottom = '1px solid #fff'; }} onMouseOut={(e) => { e.currentTarget.style.color = 'var(--color-cyan)'; e.currentTarget.style.textShadow = '0 0 10px rgba(14, 165, 233, 0.5)'; e.currentTarget.style.borderBottom = '1px dashed var(--color-cyan)'; }}>Codix Style Line</a></li>
               </ul>
     </div>
 
