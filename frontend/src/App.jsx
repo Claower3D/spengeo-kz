@@ -3058,8 +3058,27 @@ function App() {
                            }
                         }
                       }}>
-                        <div style={{ fontWeight: '500', color: theme === 'white' ? '#334155' : '#cbd5e1' }}>{sub.name}</div>
-                        <Edit3 size={16} color="var(--color-cyan)" />
+                        <input value={sub.name} onChange={(e) => {
+                             const newMenu = JSON.parse(JSON.stringify(dynamicMenu));
+                             const catIndex = newMenu['ru'].findIndex(m => m.page === activeAdminSection.replace('cms_', ''));
+                             if (catIndex !== -1) {
+                                 newMenu['ru'][catIndex].items[sidx].name = e.target.value;
+                                 setAdminData({...adminData, menu: newMenu});
+                             }
+                         }} onClick={(e) => e.stopPropagation()} style={{ fontSize: '1rem', fontWeight: 'bold', background: 'transparent', border: 'none', outline: 'none', color: theme === 'white' ? '#0f172a' : '#fff', flex: 1 }} />
+                         
+                         <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
+                             <div style={{ color: '#06b6d4' }}><Edit3 size={18}/></div>
+                             <button onClick={(e) => {
+                                 e.stopPropagation();
+                                 const newMenu = JSON.parse(JSON.stringify(dynamicMenu));
+                                 const catIndex = newMenu['ru'].findIndex(m => m.page === activeAdminSection.replace('cms_', ''));
+                                 if (catIndex !== -1) {
+                                     newMenu['ru'][catIndex].items.splice(sidx, 1);
+                                     setAdminData({...adminData, menu: newMenu});
+                                 }
+                             }} style={{ background: 'rgba(239, 68, 68, 0.1)', border: 'none', color: '#ef4444', cursor: 'pointer', padding: '6px', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Trash2 size={16}/></button>
+                         </div>
                       </div>
                     ))}
                   </div>
