@@ -410,6 +410,16 @@ function App() {
         parsed.dynamicLists['blog_articles'] = BLOG_POSTS;
       }
       
+
+      if (!parsed.dynamicLists['about_history'] || parsed.dynamicLists['about_history'].length === 0) parsed.dynamicLists['about_history'] = DEFAULT_HISTORY;
+      if (!parsed.dynamicLists['about_advantages'] || parsed.dynamicLists['about_advantages'].length === 0) parsed.dynamicLists['about_advantages'] = DEFAULT_ADVANTAGES;
+      if (!parsed.dynamicLists['about_team'] || parsed.dynamicLists['about_team'].length === 0) parsed.dynamicLists['about_team'] = DEFAULT_TEAM;
+      
+      if (!parsed.dynamicLists['blog_faq'] || parsed.dynamicLists['blog_faq'].length === 0) parsed.dynamicLists['blog_faq'] = DEFAULT_FAQ;
+      if (!parsed.dynamicLists['blog_methods'] || parsed.dynamicLists['blog_methods'].length === 0) parsed.dynamicLists['blog_methods'] = DEFAULT_METHODS;
+      if (!parsed.dynamicLists['blog_soils'] || parsed.dynamicLists['blog_soils'].length === 0) parsed.dynamicLists['blog_soils'] = DEFAULT_SOILS;
+      if (!parsed.dynamicLists['blog_norms'] || parsed.dynamicLists['blog_norms'].length === 0) parsed.dynamicLists['blog_norms'] = DEFAULT_NORMS;
+      
       return parsed;
     }
     return {
