@@ -6,7 +6,7 @@ import {
   Eye, Trash2, Calendar, FileText, Check, Database, 
   RefreshCw, BarChart2, UserCheck, Menu, X, ArrowUpRight,
   Printer, HardDrive, AlertTriangle, Layers, Clock, Settings,
-  BookOpen, FileSpreadsheet, Search, MessageCircle, Bot, ArrowUp, Sun, Moon, Briefcase, Edit3, Folder, Users
+  BookOpen, FileSpreadsheet, Search, MessageCircle, Bot, ArrowUp, Sun, Moon, Briefcase, Edit3, Folder, Users, Image
 } from 'lucide-react';
 import { MapContainer, TileLayer, Marker, Popup, Tooltip, useMap, GeoJSON, ZoomControl } from 'react-leaflet';
 import L from 'leaflet';
@@ -176,12 +176,12 @@ const LAB_EQUIP = [
 
 // Structural Projects list
 const DETAILED_PROJECTS = [
-  { id: 'bi-skyline', client: 'BI Group', name: 'ЖК «Skyline Almaty»', type: 'Инженерная геология и геодезия', loc: 'г. Алматы', specs: '12 скважин по 35м, штамповые испытания ШВ-60 в суглинках', year: '2025', coords: [43.2389, 76.8897] },
-  { id: 'bi-expo', client: 'BI Group', name: 'ЖК «Expo Boulevard III»', type: 'Статическое зондирование (CPT)', loc: 'г. Астана', specs: '18 точек CPT на глубину 20м, определение сжимаемости', year: '2024', coords: [51.1293, 71.4305] },
-  { id: 'air-astana-hangar', client: 'Air Astana', name: 'Новый авиационный ангар', type: 'Комплексные изыскания', loc: 'Аэропорт г. Алматы', specs: 'Бурение Bauer BG28 под буронабивные сваи, 45м глубины', year: '2025', coords: [43.3521, 77.0405] },
-  { id: 'mega-garden-mall', client: 'Mega Garden', name: 'ТРЦ «Mega Garden Almaty»', type: 'Гидрогеология и штампы', loc: 'г. Алматы', specs: 'Опытные откачки воды, модуль деформации гравийных грунтов', year: '2024', coords: [43.2014, 76.8926] },
-  { id: 'bi-botanic', client: 'BI Group', name: 'ЖК «Botanic Garden»', type: 'Геодезический мониторинг осадков', loc: 'г. Астана', specs: 'Высокоточное нивелирование фундаментов на слабых глинах', year: '2023', coords: [51.1158, 71.4187] },
-  { id: 'kaz-shaft', client: 'КарагандаУголь', name: 'Шахтный копер шахты Казахстанская', type: 'Сейсмоакустика и скальное бурение', loc: 'Карагандинская обл.', specs: 'Бурение 50м скважин в алевролитах и песчаниках', year: '2023', coords: [49.8019, 73.1021] }
+  { id: 'bi-skyline', client: 'BI Group', name: 'ЖК «Skyline Almaty»', type: 'Инженерная геология и геодезия', loc: 'г. Алматы', specs: '12 скважин по 35м, штамповые испытания ШВ-60 в суглинках', year: '2025', coords: [43.2389, 76.8897], image: '/images/rig.png' },
+  { id: 'bi-expo', client: 'BI Group', name: 'ЖК «Expo Boulevard III»', type: 'Статическое зондирование (CPT)', loc: 'г. Астана', specs: '18 точек CPT на глубину 20м, определение сжимаемости', year: '2024', coords: [51.1293, 71.4305], image: '/images/lab.png' },
+  { id: 'air-astana-hangar', client: 'Air Astana', name: 'Новый авиационный ангар', type: 'Комплексные изыскания', loc: 'Аэропорт г. Алматы', specs: 'Бурение Bauer BG28 под буронабивные сваи, 45м глубины', year: '2025', coords: [43.3521, 77.0405], image: '/images/geodesy.png' },
+  { id: 'mega-garden-mall', client: 'Mega Garden', name: 'ТРЦ «Mega Garden Almaty»', type: 'Гидрогеология и штампы', loc: 'г. Алматы', specs: 'Опытные откачки воды, модуль деформации гравийных грунтов', year: '2024', coords: [43.2014, 76.8926], image: '/images/rig.png' },
+  { id: 'bi-botanic', client: 'BI Group', name: 'ЖК «Botanic Garden»', type: 'Геодезический мониторинг осадков', loc: 'г. Астана', specs: 'Высокоточное нивелирование фундаментов на слабых глинах', year: '2023', coords: [51.1158, 71.4187], image: '/images/lab.png' },
+  { id: 'kaz-shaft', client: 'КарагандаУголь', name: 'Шахтный копер шахты Казахстанская', type: 'Сейсмоакустика и скальное бурение', loc: 'Карагандинская обл.', specs: 'Бурение 50м скважин в алевролитах и песчаниках', year: '2023', coords: [49.8019, 73.1021], image: '/images/geodesy.png' }
 ];
 
 // Blog Articles Database (100+ simulated articles, 3 detailed ones)
@@ -426,6 +426,9 @@ const DEFAULT_NORMS = [
       if (!Array.isArray(parsed.team)) {
         parsed.team = parsed.team ? [parsed.team] : [];
       }
+      if (!parsed.media) {
+        parsed.media = { rigBg: "/images/rig.jpg", labBg: "/images/lab.jpg", geoBg: "/images/geo.jpg" };
+      }
       if (!parsed.bot) {
         parsed.bot = { name: 'SPENGEO_ASSISTANT', welcomeMsg: 'Здравствуйте! Я автоматический ассистент СпецИнжГео. Чем могу помочь?', active: true, scenarios: [{ id: Date.now().toString(), keywords: 'цена, стоимость, прайс', answer: 'Для уточнения стоимости инженерных изысканий оставьте заявку, наш специалист свяжется с вами.' }] };
       }
@@ -470,6 +473,7 @@ const DEFAULT_NORMS = [
       team: [{ name: 'Шенвизов Рудольф', role: 'Константинович', badge: 'ОСНОВАТЕЛЬ И ГЛАВНЫЙ ГЕОЛОГ', desc: 'Мы строим нашу работу на безупречной точности...', img: '/images/director.png' }],
       articles: BLOG_POSTS,
       dynamicLists: { 'about_documents': DOCUMENTS_DATA },
+      media: { rigBg: "/images/rig.jpg", labBg: "/images/lab.jpg", geoBg: "/images/geo.jpg" },
       bot: { 
         name: 'SPENGEO_ASSISTANT', 
         welcomeMsg: 'Здравствуйте! Я автоматический ассистент СпецИнжГео. Чем могу помочь?', 
@@ -775,7 +779,8 @@ const DEFAULT_NORMS = [
     }
   };
 
-  const filteredProjects = DETAILED_PROJECTS.filter(p => 
+  const currentProjects = adminData.projects && adminData.projects.length > 0 ? adminData.projects : DETAILED_PROJECTS;
+  const filteredProjects = currentProjects.filter(p => 
     p.name.toLowerCase().includes(projectSearch.toLowerCase()) || 
     p.client.toLowerCase().includes(projectSearch.toLowerCase()) ||
     p.loc.toLowerCase().includes(projectSearch.toLowerCase()) ||
@@ -784,7 +789,12 @@ const DEFAULT_NORMS = [
 
   return (
     <>
-      <div style={isVisualBuilder ? { paddingTop: '60px', paddingLeft: '300px', paddingRight: '300px', height: '100vh', overflow: 'hidden', background: '#0a0a0a', transition: 'all 0.3s ease' } : {}}>
+      <div style={{
+        ...(isVisualBuilder ? { paddingTop: '60px', paddingLeft: '300px', paddingRight: '300px', height: '100vh', overflow: 'hidden', background: '#0a0a0a', transition: 'all 0.3s ease' } : {}),
+        '--crust-bg': adminData.media?.crustBg ? `url(${adminData.media.crustBg})` : 'url(/images/geodesy_surface_bg.png)',
+        '--aquifers-bg': adminData.media?.aquifersBg ? `url(${adminData.media.aquifersBg})` : 'url(/images/geology_bg_2.png)',
+        '--mantle-bg': adminData.media?.mantleBg ? `url(${adminData.media.mantleBg})` : 'url(/images/geology_bg_3.png)'
+      }}>
         <div style={isVisualBuilder ? { height: '100%', width: '100%', overflowY: 'auto', position: 'relative', boxShadow: '0 0 50px rgba(0,0,0,0.8)', borderLeft: '1px solid #333', borderRight: '1px solid #333', backgroundColor: 'var(--bg-main)' } : {}}>
       <div className="blueprint-bg"></div>
       <div className="bg-glow-orb bg-glow-orb-1"></div>
@@ -1268,7 +1278,7 @@ const DEFAULT_NORMS = [
   {/* 1. Geology - Wide */}
   <div className="service-bento-card wide" onClick={() => {setActiveServiceTab('geology'); setActivePage('services');}}>
     <div className="service-bento-bg">
-      <img src="/images/services/geology.jpg" onError={(e) => { e.target.src='/images/hero.png'; e.target.style.filter='brightness(0.7)'; }} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center right' }} alt="Service" />
+      <img src={adminData.services.find(s => s.id === 'geology')?.image || "/images/services/geology.jpg"} onError={(e) => { e.target.src='/images/hero.png'; e.target.style.filter='brightness(0.7)'; }} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center right' }} alt="Service" />
     </div><div className="service-bento-overlay"></div>
     <div className="service-bento-content">
       <h3 className="service-bento-title">Инженерно-геологические изыскания</h3>
@@ -1292,7 +1302,7 @@ const DEFAULT_NORMS = [
   {/* 2. Geodesy - Normal */}
   <div className="service-bento-card" onClick={() => {setActiveServiceTab('geodesy'); setActivePage('services');}}>
     <div className="service-bento-bg">
-      <img src="/images/services/geodesy.jpg" onError={(e) => { e.target.src='/images/hero.png'; e.target.style.filter='brightness(0.7)'; }} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center right' }} alt="Service" />
+      <img src={adminData.services.find(s => s.id === 'geodesy')?.image || "/images/services/geodesy.jpg"} onError={(e) => { e.target.src='/images/hero.png'; e.target.style.filter='brightness(0.7)'; }} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center right' }} alt="Service" />
     </div><div className="service-bento-overlay"></div>
     <div className="service-bento-content">
       <h3 className="service-bento-title">Геодезия и топосъемка</h3>
@@ -1315,7 +1325,7 @@ const DEFAULT_NORMS = [
   {/* 3. CPT - Normal */}
   <div className="service-bento-card" onClick={() => {setActiveServiceTab('cpt'); setActivePage('services');}}>
     <div className="service-bento-bg">
-      <img src="/images/services/cpt.jpg" onError={(e) => { e.target.src='/images/hero.png'; e.target.style.filter='brightness(0.7)'; }} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center right' }} alt="Service" />
+      <img src={adminData.services.find(s => s.id === 'cpt')?.image || "/images/services/cpt.jpg"} onError={(e) => { e.target.src='/images/hero.png'; e.target.style.filter='brightness(0.7)'; }} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center right' }} alt="Service" />
     </div><div className="service-bento-overlay"></div>
     <div className="service-bento-content">
       <h3 className="service-bento-title">CPT Зондирование</h3>
@@ -1338,7 +1348,7 @@ const DEFAULT_NORMS = [
   {/* 4. Piles - Normal */}
   <div className="service-bento-card" onClick={() => {setActiveServiceTab('piles'); setActivePage('services');}}>
     <div className="service-bento-bg">
-      <img src="/images/services/piles.jpg" onError={(e) => { e.target.src='/images/hero.png'; e.target.style.filter='brightness(0.7)'; }} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center right' }} alt="Service" />
+      <img src={adminData.services.find(s => s.id === 'piles')?.image || "/images/services/piles.jpg"} onError={(e) => { e.target.src='/images/hero.png'; e.target.style.filter='brightness(0.7)'; }} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center right' }} alt="Service" />
     </div><div className="service-bento-overlay"></div>
     <div className="service-bento-content">
       <h3 className="service-bento-title">Испытания свай</h3>
@@ -1361,7 +1371,7 @@ const DEFAULT_NORMS = [
   {/* 5. Plates - Normal */}
   <div className="service-bento-card" onClick={() => {setActiveServiceTab('plates'); setActivePage('services');}}>
     <div className="service-bento-bg">
-      <img src="/images/services/plates.jpg" onError={(e) => { e.target.src='/images/hero.png'; e.target.style.filter='brightness(0.7)'; }} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center right' }} alt="Service" />
+      <img src={adminData.services.find(s => s.id === 'plates')?.image || "/images/services/plates.jpg"} onError={(e) => { e.target.src='/images/hero.png'; e.target.style.filter='brightness(0.7)'; }} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center right' }} alt="Service" />
     </div><div className="service-bento-overlay"></div>
     <div className="service-bento-content">
       <h3 className="service-bento-title">Штамповые испытания</h3>
@@ -1384,7 +1394,7 @@ const DEFAULT_NORMS = [
   {/* 6. Laboratory - Full Width */}
   <div className="service-bento-card full" onClick={() => {setActiveServiceTab('laboratory'); setActivePage('services');}}>
     <div className="service-bento-bg">
-      <img src="/images/services/laboratory.jpg" onError={(e) => { e.target.src='/images/hero.png'; e.target.style.filter='brightness(0.7)'; }} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center right' }} alt="Service" />
+      <img src={adminData.services.find(s => s.id === 'laboratory')?.image || "/images/services/laboratory.jpg"} onError={(e) => { e.target.src='/images/hero.png'; e.target.style.filter='brightness(0.7)'; }} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center right' }} alt="Service" />
     </div><div className="service-bento-overlay"></div>
     <div className="service-bento-content">
       <h3 className="service-bento-title">Лаборатория грунтов</h3>
@@ -1607,7 +1617,7 @@ const DEFAULT_NORMS = [
               <div className="bg-glow-orb-2" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '600px', height: '600px', background: 'radial-gradient(circle, var(--color-cyan) 0%, transparent 70%)', opacity: 0.05 }}></div>
               <div className="glow-card-premium" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '0', alignItems: 'stretch', padding: '0', overflow: 'hidden', position: 'relative', zIndex: 2, background: 'var(--bg-card)', border: '1px solid var(--border-color)', boxShadow: '0 0 50px rgba(0,0,0,0.1)' }}>
                 <div style={{ position: 'relative', minHeight: '500px', overflow: 'hidden' }}>
-                  <img src={adminData.team.img} alt="Шенвизов Рудольф Константинович" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', filter: 'contrast(1.1)', maskImage: 'linear-gradient(to right, black 60%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to right, black 60%, transparent 100%)' }} />
+                  <img src={adminData.team[0]?.img || '/images/director.png'} alt="Шенвизов Рудольф Константинович" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', filter: 'contrast(1.1)', maskImage: 'linear-gradient(to right, black 60%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to right, black 60%, transparent 100%)' }} />
                   <div style={{ position: 'absolute', bottom: '-50px', left: '-50px', width: '200px', height: '200px', background: 'var(--color-cyan)', filter: 'blur(100px)', opacity: 0.15, zIndex: 0 }}></div>
                 </div>
                 
@@ -1746,7 +1756,7 @@ const DEFAULT_NORMS = [
               <>
               <div className="glow-card-premium" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '0', alignItems: 'stretch', padding: '0', overflow: 'hidden', position: 'relative', zIndex: 2, background: 'var(--bg-card)', border: '1px solid var(--border-color)', boxShadow: '0 0 50px rgba(0,0,0,0.1)', marginBottom: '60px' }}>
                   <div style={{ position: 'relative', minHeight: '500px', overflow: 'hidden' }}>
-                    <img src={adminData.team.img} alt="Шенвизов Рудольф Константинович" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', filter: 'contrast(1.1)', maskImage: 'linear-gradient(to right, black 60%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to right, black 60%, transparent 100%)' }} />
+                    <img src={adminData.team[0]?.img || '/images/director.png'} alt="Шенвизов Рудольф Константинович" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', filter: 'contrast(1.1)', maskImage: 'linear-gradient(to right, black 60%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to right, black 60%, transparent 100%)' }} />
                     <div style={{ position: 'absolute', bottom: '-50px', left: '-50px', width: '200px', height: '200px', background: 'var(--color-cyan)', filter: 'blur(100px)', opacity: 0.15, zIndex: 0 }}></div>
                   </div>
                   
@@ -1901,9 +1911,9 @@ const DEFAULT_NORMS = [
                     {(adminData.services.find(s => s.id === activeServiceTab) || adminData.services[0]).title}
                   </h3>
 
-                  {(activeServiceTab === 'geodesy' || activeServiceTab === 'laboratory') && (
-                    <div className="service-img-wrapper">
-                      <img src={`/images/${activeServiceTab === 'geodesy' ? 'geodesy.png' : 'lab.png'}`} alt={activeServiceTab} />
+                  {((adminData.services.find(s => s.id === activeServiceTab) || adminData.services[0]).image) && (
+                    <div className="service-img-wrapper" style={{ marginTop: '20px', marginBottom: '20px' }}>
+                      <img src={(adminData.services.find(s => s.id === activeServiceTab) || adminData.services[0]).image} alt={activeServiceTab} style={{ width: '100%', borderRadius: '8px', maxHeight: '300px', objectFit: 'cover' }} />
                       <div className="service-img-overlay"></div>
                     </div>
                   )}
@@ -2001,18 +2011,23 @@ const DEFAULT_NORMS = [
                 </div>
 
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '25px', marginBottom: '60px' }}>
-                  {filteredProjects.map(proj => (
-                    <HudCard key={proj.id} style={{ padding: '25px' }}>
+                  {filteredProjects.map(proj => {
+                    const fallbackImg = DETAILED_PROJECTS.find(d => d.id === proj.id)?.image || '/images/rig.png';
+                    const finalImg = proj.image || fallbackImg;
+                    return (
+                    <HudCard key={proj.id} style={{ padding: '25px', display: 'flex', flexDirection: 'column' }}>
+                      <img src={finalImg} alt={proj.name} style={{ width: '100%', height: '180px', objectFit: 'cover', borderRadius: '8px', marginBottom: '15px' }} />
                       <span className="spec-label" style={{ color: 'var(--color-accent)' }}>{proj.client}</span>
                       <h3 style={{ fontSize: '1.2rem', marginBlock: '8px 12px', color: 'var(--color-text-primary)' }}>{proj.name}</h3>
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', fontSize: '0.85rem', color: 'var(--color-text-secondary)' }}>
                         <span>📍 Локация: {proj.loc}</span>
                         <span>⚙️ Вид работ: {proj.type}</span>
                         <span>📊 Спецификация: {proj.specs}</span>
-                        <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.75rem', marginTop: '10px', color: 'var(--color-text-muted)' }}>ГОД СДАЧИ: {proj.year} // STATUS: ARCHIVED_OK</span>
+                        <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.75rem', marginTop: '10px', color: 'var(--color-text-muted)' }}>ГОД СДАЧИ: {proj.year || '2025'} // STATUS: ARCHIVED_OK</span>
                       </div>
                     </HudCard>
-                  ))}
+                    );
+                  })}
                 </div>
 
                 <div style={{ padding: '30px', textAlign: 'center', border: '1px dashed rgba(255,255,255,0.06)', borderRadius: '12px', backgroundColor: 'rgba(255,255,255,0.01)' }}>
@@ -2787,6 +2802,23 @@ const DEFAULT_NORMS = [
                   </div>
                 </div>
 
+                
+                {/* 8. Photos */}
+                <div onClick={() => setActiveAdminSection('photos')} style={{ position: 'relative', overflow: 'hidden', borderRadius: '12px', background: theme === 'white' ? '#fff' : '#111', border: theme === 'white' ? '1px solid rgba(168, 85, 247, 0.4)' : '1px solid rgba(168, 85, 247, 0.3)', padding: '24px', display: 'flex', flexDirection: 'column', cursor: 'pointer', transition: 'transform 0.2s', boxShadow: theme === 'white' ? '0 4px 20px rgba(0,0,0,0.05)' : 'none' }}>
+                  <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '100px', background: 'linear-gradient(to bottom, rgba(168, 85, 247, 0.15), transparent)', pointerEvents: 'none' }}></div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '40px', position: 'relative', zIndex: 1 }}>
+                    <div style={{ background: theme === 'white' ? 'rgba(168, 85, 247, 0.1)' : 'rgba(0,0,0,0.4)', border: theme === 'white' ? '1px solid rgba(168, 85, 247, 0.2)' : '1px solid rgba(255,255,255,0.05)', padding: '8px', borderRadius: '8px', color: '#a855f7' }}>
+                      <Image size={24} />
+                    </div>
+                  </div>
+                  <div style={{ marginTop: 'auto', position: 'relative', zIndex: 1 }}>
+                    <div style={{ fontSize: '0.65rem', fontFamily: 'monospace', textTransform: 'uppercase', letterSpacing: '0.2em', color: theme === 'white' ? '#64748b' : '#888', marginBottom: '8px' }}>Медиафайлы</div>
+                    <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '12px' }}>Фотографии</h2>
+                    <p style={{ fontSize: '0.85rem', color: theme === 'white' ? '#475569' : '#aaa', marginBottom: '24px', lineHeight: 1.5 }}>Управление фоновыми изображениями блоков на главной странице.</p>
+                    <div style={{ fontSize: '0.85rem', fontWeight: 500, color: '#a855f7' }}>Редактировать →</div>
+                  </div>
+                </div>
+
                 {/* 7. Bot */}
                 <div onClick={() => setActiveAdminSection('bot')} style={{ position: 'relative', overflow: 'hidden', borderRadius: '12px', background: theme === 'white' ? '#fff' : '#111', border: theme === 'white' ? '1px solid rgba(6, 182, 212, 0.4)' : '1px solid rgba(6, 182, 212, 0.3)', padding: '24px', display: 'flex', flexDirection: 'column', cursor: 'pointer', transition: 'transform 0.2s', boxShadow: theme === 'white' ? '0 4px 20px rgba(0,0,0,0.05)' : 'none' }}>
                   <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '100px', background: 'linear-gradient(to bottom, rgba(6, 182, 212, 0.15), transparent)', pointerEvents: 'none' }}></div>
@@ -3164,6 +3196,10 @@ const DEFAULT_NORMS = [
                             <label style={{ fontSize: '0.75rem', color: theme === 'white' ? '#64748b' : '#888' }}>Заказчик</label>
                             <input value={p.client} onChange={e => { const arr = [...adminData.projects]; arr[i].client = e.target.value; setAdminData({...adminData, projects: arr}); }} style={{ padding: '8px 12px', background: theme === 'white' ? '#fff' : '#000', color: theme === 'white' ? '#0f172a' : '#fff', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', borderRadius: '6px' }} />
                           </div>
+                          <div style={{ display: 'flex', flexDirection: 'column', flex: 1, gap: '5px' }}>
+                            <label style={{ fontSize: '0.75rem', color: theme === 'white' ? '#64748b' : '#888' }}>Фото объекта</label>
+                            <ImageUploadField value={p.image || ''} onChange={(val) => { const arr = [...adminData.projects]; arr[i].image = val; setAdminData({...adminData, projects: arr}); }} theme={theme} />
+                          </div>
                           <button onClick={() => { const arr = adminData.projects.filter((_, idx) => idx !== i); setAdminData({...adminData, projects: arr}); }} style={{ color: '#ef4444', background: 'rgba(239, 68, 68, 0.1)', padding: '10px', borderRadius: '8px', border: 'none', cursor: 'pointer', marginTop: '20px' }}><Trash2 size={18} /></button>
                         </div>
                       ))}
@@ -3458,20 +3494,97 @@ const DEFAULT_NORMS = [
                 </div>
               )}
 
-              {activeAdminSection === 'bot' && (
+              
+            {activeAdminSection === 'photos' && (
+              <div style={{ background: theme === 'white' ? '#fff' : '#111', border: theme === 'white' ? '1px solid rgba(0,0,0,0.05)' : '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', padding: '30px', boxShadow: theme === 'white' ? '0 4px 20px rgba(0,0,0,0.05)' : 'none' }}>
+                <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', color: theme === 'white' ? '#0f172a' : '#fff', marginBottom: '20px' }}>Управление фотографиями (Блоки главной страницы)</h3>
+                
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '30px' }}>
+                  
+                  {/* Оборудование и технологии */}
+                  <div>
+                    <h4 style={{ fontSize: '1.1rem', color: 'var(--color-cyan)', marginBottom: '15px', borderBottom: '1px solid rgba(6, 182, 212, 0.2)', paddingBottom: '10px' }}>Блок: Оборудование и технологии (3 карточки)</h4>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '15px' }}>
+                      <div style={{ padding: '15px', background: theme === 'white' ? '#f8fafc' : '#0a0a0a', borderRadius: '8px', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #333' }}>
+                        <div style={{ marginBottom: '8px', fontSize: '0.9rem', color: theme === 'white' ? '#334155' : '#ccc' }}>Буровая техника</div>
+                        <ImageUploadField value={adminData.media?.rigBg || ''} onChange={(val) => setAdminData({...adminData, media: {...adminData.media, rigBg: val}})} theme={theme} />
+                      </div>
+                      <div style={{ padding: '15px', background: theme === 'white' ? '#f8fafc' : '#0a0a0a', borderRadius: '8px', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #333' }}>
+                        <div style={{ marginBottom: '8px', fontSize: '0.9rem', color: theme === 'white' ? '#334155' : '#ccc' }}>Лаборатория грунтов</div>
+                        <ImageUploadField value={adminData.media?.labBg || ''} onChange={(val) => setAdminData({...adminData, media: {...adminData.media, labBg: val}})} theme={theme} />
+                      </div>
+                      <div style={{ padding: '15px', background: theme === 'white' ? '#f8fafc' : '#0a0a0a', borderRadius: '8px', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #333' }}>
+                        <div style={{ marginBottom: '8px', fontSize: '0.9rem', color: theme === 'white' ? '#334155' : '#ccc' }}>Инженерная геодезия</div>
+                        <ImageUploadField value={adminData.media?.geoBg || ''} onChange={(val) => setAdminData({...adminData, media: {...adminData.media, geoBg: val}})} theme={theme} />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Выполненные объекты (Услуги) */}
+                  <div>
+                    <h4 style={{ fontSize: '1.1rem', color: 'var(--color-cyan)', marginBottom: '15px', borderBottom: '1px solid rgba(6, 182, 212, 0.2)', paddingBottom: '10px' }}>Блок: Услуги (6 карточек на главной)</h4>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '15px' }}>
+                      {['geology', 'geodesy', 'cpt', 'piles', 'plates', 'laboratory'].map((id, idx) => {
+                        const service = adminData.services.find(s => s.id === id);
+                        const titles = ['Инженерно-геологические изыскания', 'Геодезия и топосъемка', 'CPT Зондирование', 'Испытания свай', 'Штамповые испытания', 'Лаборатория грунтов'];
+                        return (
+                          <div key={id} style={{ padding: '15px', background: theme === 'white' ? '#f8fafc' : '#0a0a0a', borderRadius: '8px', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #333' }}>
+                            <div style={{ marginBottom: '8px', fontSize: '0.9rem', color: theme === 'white' ? '#334155' : '#ccc' }}>{titles[idx]}</div>
+                            <ImageUploadField 
+                              value={service?.image || ''} 
+                              onChange={(val) => {
+                                const arr = [...adminData.services];
+                                const index = arr.findIndex(s => s.id === id);
+                                if(index > -1) { arr[index].image = val; setAdminData({...adminData, services: arr}); }
+                              }} 
+                              theme={theme} 
+                            />
+                          </div>
+                        )
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Лицензии и сертификаты (Директор) */}
+                  <div>
+                    <h4 style={{ fontSize: '1.1rem', color: 'var(--color-cyan)', marginBottom: '15px', borderBottom: '1px solid rgba(6, 182, 212, 0.2)', paddingBottom: '10px' }}>Блок: Лицензии и сертификаты (Фото директора)</h4>
+                    <div style={{ padding: '15px', background: theme === 'white' ? '#f8fafc' : '#0a0a0a', borderRadius: '8px', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #333', maxWidth: '400px' }}>
+                      <div style={{ marginBottom: '8px', fontSize: '0.9rem', color: theme === 'white' ? '#334155' : '#ccc' }}>Шенвизов Рудольф Константинович</div>
+                      <ImageUploadField 
+                        value={adminData.team[0]?.img || ''} 
+                        onChange={(val) => {
+                          const arr = [...adminData.team];
+                          if (arr.length > 0) {
+                              arr[0].img = val;
+                              setAdminData({...adminData, team: arr});
+                          }
+                        }} 
+                        theme={theme} 
+                      />
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            )}
+
+            {activeAdminSection === 'bot' && (
                 <div style={{ background: theme === 'white' ? '#fff' : '#111', border: theme === 'white' ? '1px solid rgba(0,0,0,0.05)' : '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', padding: '30px', boxShadow: theme === 'white' ? '0 4px 20px rgba(0,0,0,0.05)' : 'none' }}>
                   <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '20px', color: theme === 'white' ? '#0f172a' : '#fff' }}>Настройки Чат-бота</h3>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                     <div>
                       <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.9rem', color: theme === 'white' ? '#475569' : '#ccc', fontWeight: 'bold' }}>Имя ассистента</label>
-                      <input type="text" value={adminData.bot.name} onChange={e => setAdminData({...adminData, bot: {...adminData.bot, name: e.target.value}})} style={{ width: '100%', padding: '12px', borderRadius: '8px', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', background: theme === 'white' ? '#f8fafc' : '#000', color: theme === 'white' ? '#0f172a' : '#fff', outline: 'none' }} />
+                      <input type="text" value={adminData.bot.name} onChange={e => setAdminData({...adminData, media: { rigBg: "/images/rig.jpg", labBg: "/images/lab.jpg", geoBg: "/images/geo.jpg" },
+      bot: {...adminData.bot, name: e.target.value}})} style={{ width: '100%', padding: '12px', borderRadius: '8px', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', background: theme === 'white' ? '#f8fafc' : '#000', color: theme === 'white' ? '#0f172a' : '#fff', outline: 'none' }} />
                     </div>
                     <div>
                       <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.9rem', color: theme === 'white' ? '#475569' : '#ccc', fontWeight: 'bold' }}>Приветственное сообщение</label>
-                      <textarea rows="3" value={adminData.bot.welcomeMsg} onChange={e => setAdminData({...adminData, bot: {...adminData.bot, welcomeMsg: e.target.value}})} style={{ width: '100%', padding: '12px', borderRadius: '8px', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', background: theme === 'white' ? '#f8fafc' : '#000', color: theme === 'white' ? '#0f172a' : '#fff', resize: 'vertical', outline: 'none' }}></textarea>
+                      <textarea rows="3" value={adminData.bot.welcomeMsg} onChange={e => setAdminData({...adminData, media: { rigBg: "/images/rig.jpg", labBg: "/images/lab.jpg", geoBg: "/images/geo.jpg" },
+      bot: {...adminData.bot, welcomeMsg: e.target.value}})} style={{ width: '100%', padding: '12px', borderRadius: '8px', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', background: theme === 'white' ? '#f8fafc' : '#000', color: theme === 'white' ? '#0f172a' : '#fff', resize: 'vertical', outline: 'none' }}></textarea>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                      <input type="checkbox" id="bot_active" checked={adminData.bot.active} onChange={e => setAdminData({...adminData, bot: {...adminData.bot, active: e.target.checked}})} style={{ width: '18px', height: '18px', cursor: 'pointer' }} />
+                      <input type="checkbox" id="bot_active" checked={adminData.bot.active} onChange={e => setAdminData({...adminData, media: { rigBg: "/images/rig.jpg", labBg: "/images/lab.jpg", geoBg: "/images/geo.jpg" },
+      bot: {...adminData.bot, active: e.target.checked}})} style={{ width: '18px', height: '18px', cursor: 'pointer' }} />
                       <label htmlFor="bot_active" style={{ color: theme === 'white' ? '#0f172a' : '#fff', cursor: 'pointer', fontWeight: 'bold' }}>Бот активен на сайте</label>
                     </div>
                     
@@ -3479,22 +3592,26 @@ const DEFAULT_NORMS = [
                     
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                       <h4 style={{ fontSize: '1.1rem', margin: 0, color: theme === 'white' ? '#0f172a' : '#fff' }}>Сценарии ответов (Intents)</h4>
-                      <button onClick={() => setAdminData({...adminData, bot: {...adminData.bot, scenarios: [...adminData.bot.scenarios, { id: Date.now().toString(), keywords: '', answer: '' }]}})} style={{ background: 'var(--color-cyan)', color: '#fff', border: 'none', padding: '6px 14px', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold', fontSize: '0.85rem' }}>+ Добавить сценарий</button>
+                      <button onClick={() => setAdminData({...adminData, media: { rigBg: "/images/rig.jpg", labBg: "/images/lab.jpg", geoBg: "/images/geo.jpg" },
+      bot: {...adminData.bot, scenarios: [...adminData.bot.scenarios, { id: Date.now().toString(), keywords: '', answer: '' }]}})} style={{ background: 'var(--color-cyan)', color: '#fff', border: 'none', padding: '6px 14px', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold', fontSize: '0.85rem' }}>+ Добавить сценарий</button>
                     </div>
                     
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
                       {adminData.bot.scenarios.map((scenario, index) => (
                         <div key={scenario.id} style={{ background: theme === 'white' ? '#f1f5f9' : '#1a1a1a', border: theme === 'white' ? '1px solid #e2e8f0' : '1px solid #333', borderRadius: '10px', padding: '20px', position: 'relative' }}>
-                          <button onClick={() => { const arr = adminData.bot.scenarios.filter((_, idx) => idx !== index); setAdminData({...adminData, bot: {...adminData.bot, scenarios: arr}}); }} style={{ position: 'absolute', top: '15px', right: '15px', background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', border: 'none', padding: '6px', borderRadius: '6px', cursor: 'pointer' }}><Trash2 size={16} /></button>
+                          <button onClick={() => { const arr = adminData.bot.scenarios.filter((_, idx) => idx !== index); setAdminData({...adminData, media: { rigBg: "/images/rig.jpg", labBg: "/images/lab.jpg", geoBg: "/images/geo.jpg" },
+      bot: {...adminData.bot, scenarios: arr}}); }} style={{ position: 'absolute', top: '15px', right: '15px', background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', border: 'none', padding: '6px', borderRadius: '6px', cursor: 'pointer' }}><Trash2 size={16} /></button>
                           
                           <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', paddingRight: '40px' }}>
                             <div>
                               <label style={{ display: 'block', fontSize: '0.8rem', color: theme === 'white' ? '#64748b' : '#888', marginBottom: '5px', fontWeight: 'bold' }}>Ключевые слова (через запятую)</label>
-                              <input value={scenario.keywords} onChange={e => { const arr = [...adminData.bot.scenarios]; arr[index].keywords = e.target.value; setAdminData({...adminData, bot: {...adminData.bot, scenarios: arr}}); }} placeholder="Например: привет, здравствуй, добрый день" style={{ width: '100%', padding: '10px', background: theme === 'white' ? '#fff' : '#000', color: theme === 'white' ? '#0f172a' : '#fff', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', borderRadius: '6px', outline: 'none' }} />
+                              <input value={scenario.keywords} onChange={e => { const arr = [...adminData.bot.scenarios]; arr[index].keywords = e.target.value; setAdminData({...adminData, media: { rigBg: "/images/rig.jpg", labBg: "/images/lab.jpg", geoBg: "/images/geo.jpg" },
+      bot: {...adminData.bot, scenarios: arr}}); }} placeholder="Например: привет, здравствуй, добрый день" style={{ width: '100%', padding: '10px', background: theme === 'white' ? '#fff' : '#000', color: theme === 'white' ? '#0f172a' : '#fff', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', borderRadius: '6px', outline: 'none' }} />
                             </div>
                             <div>
                               <label style={{ display: 'block', fontSize: '0.8rem', color: theme === 'white' ? '#64748b' : '#888', marginBottom: '5px', fontWeight: 'bold' }}>Ответ бота</label>
-                              <textarea value={scenario.answer} onChange={e => { const arr = [...adminData.bot.scenarios]; arr[index].answer = e.target.value; setAdminData({...adminData, bot: {...adminData.bot, scenarios: arr}}); }} rows={3} style={{ width: '100%', padding: '10px', background: theme === 'white' ? '#fff' : '#000', color: theme === 'white' ? '#0f172a' : '#fff', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', borderRadius: '6px', resize: 'vertical', outline: 'none' }} />
+                              <textarea value={scenario.answer} onChange={e => { const arr = [...adminData.bot.scenarios]; arr[index].answer = e.target.value; setAdminData({...adminData, media: { rigBg: "/images/rig.jpg", labBg: "/images/lab.jpg", geoBg: "/images/geo.jpg" },
+      bot: {...adminData.bot, scenarios: arr}}); }} rows={3} style={{ width: '100%', padding: '10px', background: theme === 'white' ? '#fff' : '#000', color: theme === 'white' ? '#0f172a' : '#fff', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', borderRadius: '6px', resize: 'vertical', outline: 'none' }} />
                             </div>
                           </div>
                         </div>
