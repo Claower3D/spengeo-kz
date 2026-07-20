@@ -2936,7 +2936,22 @@ function App() {
                     {MENU_STRUCTURE['ru'].find(m => m.page === activeAdminSection.replace('cms_', ''))?.items.map((sub, sidx) => (
                       <div key={sidx} style={{ padding: '20px', background: theme === 'white' ? '#f8fafc' : 'rgba(255,255,255,0.02)', border: theme === 'white' ? '1px solid #e2e8f0' : '1px solid rgba(255,255,255,0.05)', borderRadius: '8px', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }} onClick={() => {
                         if (sub.action) {
-                           setActiveAdminSection('form_' + sub.action.val + '_' + (sub.action.subpage || ''));
+                           if (sub.action.type === 'service') {
+                               setActiveAdminSection('services');
+                               // We can also trigger editing the specific service if editingServiceIndex exists
+                               const sIndex = adminData.services.findIndex(s => s.id === sub.action.val || s.code?.toLowerCase().includes(sub.action.val));
+                               if (sIndex !== -1 && typeof setEditingServiceIndex === 'function') {
+                                   setEditingServiceIndex(sIndex);
+                               }
+                           } else if (sub.action.val === 'projects') {
+                               setActiveAdminSection('blocks');
+                           } else if (sub.action.val === 'about' && sub.action.subpage === 'team') {
+                               setActiveAdminSection('blocks');
+                           } else if (sub.action.val === 'blog' && sub.action.subpage === 'articles') {
+                               setActiveAdminSection('form_knowledge_articles');
+                           } else {
+                               setActiveAdminSection('form_' + sub.action.val + '_' + (sub.action.subpage || ''));
+                           }
                         }
                       }}>
                         <div style={{ fontWeight: '500', color: theme === 'white' ? '#334155' : '#cbd5e1' }}>{sub.name}</div>
