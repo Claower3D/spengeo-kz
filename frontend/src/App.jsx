@@ -6,7 +6,7 @@ import {
   Eye, Trash2, Calendar, FileText, Check, Database, 
   RefreshCw, BarChart2, UserCheck, Menu, X, ArrowUpRight,
   Printer, HardDrive, AlertTriangle, Layers, Clock, Settings,
-  BookOpen, FileSpreadsheet, Search, MessageCircle, Bot, ArrowUp, Sun, Moon, Briefcase, Edit3, Folder, Users, Image
+  BookOpen, FileSpreadsheet, Search, MessageCircle, Bot, ArrowUp, Sun, Moon, Briefcase, Edit3, Folder, Users, Image, Calculator
 } from 'lucide-react';
 import { MapContainer, TileLayer, Marker, Popup, Tooltip, useMap, GeoJSON, ZoomControl } from 'react-leaflet';
 import L from 'leaflet';
@@ -241,6 +241,17 @@ function EditableText({ id, defaultText, isVisualBuilder, dangerously = false, a
   const [text, setText] = useState(() => localStorage.getItem(`vb_${id}`) || defaultText);
 
   useEffect(() => {
+    const handleUpdate = (e) => {
+      if (e.detail.id === id) {
+        setText(e.detail.text);
+        localStorage.setItem(`vb_${id}`, e.detail.text);
+      }
+    };
+    window.addEventListener('vb_update', handleUpdate);
+    return () => window.removeEventListener('vb_update', handleUpdate);
+  }, [id]);
+
+  useEffect(() => {
     if (text !== defaultText && text !== localStorage.getItem(`vb_${id}`)) {
       localStorage.setItem(`vb_${id}`, text);
     }
@@ -263,7 +274,20 @@ function EditableText({ id, defaultText, isVisualBuilder, dangerously = false, a
       className={className}
       contentEditable={isVisualBuilder}
       suppressContentEditableWarning={true}
-      onBlur={(e) => setText(dangerously ? e.currentTarget.innerHTML : e.currentTarget.textContent)}
+      onClick={(e) => {
+        if (isVisualBuilder) {
+          e.stopPropagation();
+          e.preventDefault();
+          window.dispatchEvent(new CustomEvent('vb_select', { detail: { id, text } }));
+        }
+      }}
+      onBlur={(e) => {
+        const val = dangerously ? e.currentTarget.innerHTML : e.currentTarget.textContent;
+        setText(val);
+        if (isVisualBuilder) {
+          window.dispatchEvent(new CustomEvent('vb_select', { detail: { id, text: val } }));
+        }
+      }}
       dangerouslySetInnerHTML={dangerously ? { __html: text } : undefined}
       {...props}
     >
@@ -463,6 +487,17 @@ const DEFAULT_NORMS = [
       if (!parsed.dynamicLists['blog_soils'] || parsed.dynamicLists['blog_soils'].length === 0) parsed.dynamicLists['blog_soils'] = DEFAULT_SOILS;
       if (!parsed.dynamicLists['blog_norms'] || parsed.dynamicLists['blog_norms'].length === 0) parsed.dynamicLists['blog_norms'] = DEFAULT_NORMS;
       
+      if (!parsed.calc) {
+        parsed.calc = {
+          baseRate: 18500,
+          waterCoeff: 1.15,
+          seismicCoeff9: 1.1,
+          seismicCoeff6: 1.0,
+          holeAreaDivisor: 120,
+          drillSpeedPerDay: 22
+        };
+      }
+
       return parsed;
     }
     return {
@@ -481,6 +516,14 @@ const DEFAULT_NORMS = [
         scenarios: [
           { id: Date.now().toString(), keywords: 'цена, стоимость, прайс', answer: 'Для уточнения стоимости инженерных изысканий оставьте заявку, наш специалист свяжется с вами.' }
         ] 
+      },
+      calc: {
+        baseRate: 18500,
+        waterCoeff: 1.15,
+        seismicCoeff9: 1.1,
+        seismicCoeff6: 1.0,
+        holeAreaDivisor: 120,
+        drillSpeedPerDay: 22
       }
     };
   });
@@ -488,6 +531,15 @@ const DEFAULT_NORMS = [
   useEffect(() => {
     localStorage.setItem('spengeo_admin_data', JSON.stringify(adminData));
   }, [adminData]);
+
+  useEffect(() => {
+    const handleSelect = (e) => {
+      setActiveEditorElement(e.detail.id);
+      setActiveEditorText(e.detail.text);
+    };
+    window.addEventListener('vb_select', handleSelect);
+    return () => window.removeEventListener('vb_select', handleSelect);
+  }, []);
 
   const markerRefs = useRef({});
   const [activeSubPage, setActiveSubPage] = useState(null);
@@ -510,6 +562,8 @@ const DEFAULT_NORMS = [
 
   // Visual Builder States
   const [isVisualBuilder, setIsVisualBuilder] = useState(false);
+  const [activeEditorElement, setActiveEditorElement] = useState(null);
+  const [activeEditorText, setActiveEditorText] = useState("");
   const [vbHeroTitle, setVbHeroTitle] = useState(localStorage.getItem('vb_heroTitle') || '');
   const [vbHeroDesc, setVbHeroDesc] = useState(localStorage.getItem('vb_heroDesc') || '');
 
@@ -648,13 +702,15 @@ const DEFAULT_NORMS = [
 
   // Calculations
   const selectedSoilConfig = SOILS[activeSoil];
-  const holeCount = Math.max(3, Math.ceil(buildArea / 120) + (seismicZone === '9' ? 1 : 0));
+  const calcConfig = adminData.calc || { baseRate: 18500, waterCoeff: 1.15, seismicCoeff9: 1.1, seismicCoeff6: 1.0, holeAreaDivisor: 120, drillSpeedPerDay: 22 };
+  
+  const holeCount = Math.max(3, Math.ceil(buildArea / calcConfig.holeAreaDivisor) + (seismicZone === '9' ? 1 : 0));
   const totalDrillLength = holeCount * drillDepth;
-  const baseRate = 18500;
-  const waterCoeff = waterTable ? 1.15 : 1.0;
-  const seismicCoeff = seismicZone === '9' ? 1.1 : 1.0;
+  const baseRate = calcConfig.baseRate;
+  const waterCoeff = waterTable ? calcConfig.waterCoeff : 1.0;
+  const seismicCoeff = seismicZone === '9' ? calcConfig.seismicCoeff9 : calcConfig.seismicCoeff6;
   const estimatedCost = Math.round(totalDrillLength * baseRate * selectedSoilConfig.coeff * waterCoeff * seismicCoeff);
-  const estimatedDuration = Math.max(3, Math.ceil(totalDrillLength / 22));
+  const estimatedDuration = Math.max(3, Math.ceil(totalDrillLength / calcConfig.drillSpeedPerDay));
   const sampleCount = holeCount * Math.max(2, Math.floor(drillDepth / 5));
 
   const logEvent = (text, type = 'info') => {
@@ -1737,19 +1793,30 @@ const DEFAULT_NORMS = [
         {/* ==================== PAGE: ABOUT ==================== */}
         {activePage === 'about' && (
           <div className="page-wrapper page-enter">
-            <div style={{ marginBottom: '50px' }}>
-              <h2>
-                {activeSubPage === 'history' ? 'История компании' : 
-                 activeSubPage === 'team' ? 'Наша команда' : 
-                 activeSubPage === 'advantages' ? 'Наши преимущества' :
-                 'О компании ТОО «СпецИнжГео»'}
-              </h2>
-              <p style={{ color: 'var(--color-text-secondary)' }}>
-                {activeSubPage === 'history' ? 'Путь развития нашей компании с 2019 года до сегодняшнего дня.' : 
-                 activeSubPage === 'team' ? 'Познакомьтесь с нашими ведущими инженерами и специалистами.' : 
-                 activeSubPage === 'advantages' ? 'Узнайте, почему нам доверяют крупнейшие строительные компании.' :
-                 'Комплексные инженерные изыскания для промышленного и гражданского строительства с 2019 года.'}
-              </p>
+            <div key={activeSubPage || 'main'} style={{ marginBottom: '50px' }}>
+              <EditableText
+                as="h2"
+                id={`about_title_${activeSubPage || 'main'}`}
+                isVisualBuilder={isVisualBuilder}
+                defaultText={
+                  activeSubPage === 'history' ? 'История компании' : 
+                  activeSubPage === 'team' ? 'Наша команда' : 
+                  activeSubPage === 'advantages' ? 'Наши преимущества' :
+                  'О компании ТОО «СпецИнжГео»'
+                }
+              />
+              <EditableText
+                as="p"
+                id={`about_desc_${activeSubPage || 'main'}`}
+                isVisualBuilder={isVisualBuilder}
+                style={{ color: 'var(--color-text-secondary)' }}
+                defaultText={
+                  activeSubPage === 'history' ? 'Путь развития нашей компании с 2019 года до сегодняшнего дня.' : 
+                  activeSubPage === 'team' ? 'Познакомьтесь с нашими ведущими инженерами и специалистами.' : 
+                  activeSubPage === 'advantages' ? 'Узнайте, почему нам доверяют крупнейшие строительные компании.' :
+                  'Комплексные инженерные изыскания для промышленного и гражданского строительства с 2019 года.'
+                }
+              />
             </div>
 
             {(!activeSubPage || activeSubPage === 'history') && (
@@ -1764,18 +1831,12 @@ const DEFAULT_NORMS = [
                     <div style={{ position: 'absolute', top: '-10px', left: '20px', fontSize: '15rem', color: 'var(--color-cyan)', opacity: 0.05, fontFamily: 'Georgia, serif', lineHeight: 1, pointerEvents: 'none' }}>“</div>
                     
                     <div style={{ position: 'relative', zIndex: 2 }}>
-                      <h3 style={{ fontSize: '2.8rem', marginBottom: '5px', color: 'var(--color-text-primary)', letterSpacing: '-0.02em' }}>Шенвизов Рудольф</h3>
-                      <h3 style={{ fontSize: '2.2rem', marginBottom: '25px', color: 'var(--color-text-secondary)', fontWeight: 400 }}>Константинович</h3>
+                      <EditableText as="h3" id="ceo_name_first" defaultText="Шенвизов Рудольф" isVisualBuilder={isVisualBuilder} style={{ fontSize: '2.8rem', marginBottom: '5px', color: 'var(--color-text-primary)', letterSpacing: '-0.02em' }} />
+                      <EditableText as="h3" id="ceo_name_last" defaultText="Константинович" isVisualBuilder={isVisualBuilder} style={{ fontSize: '2.2rem', marginBottom: '25px', color: 'var(--color-text-secondary)', fontWeight: 400 }} />
                       
-                      <div style={{ display: 'inline-block', padding: '8px 16px', background: 'rgba(6, 182, 212, 0.1)', border: '1px solid rgba(6, 182, 212, 0.3)', borderRadius: '20px', color: 'var(--color-cyan)', fontSize: '0.85rem', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: '35px', fontWeight: 600 }}>
-                        Основатель и Главный Геолог
-                      </div>
+                      <EditableText as="div" id="ceo_badge" defaultText="Основатель и Главный Геолог" isVisualBuilder={isVisualBuilder} style={{ display: 'inline-block', padding: '8px 16px', background: 'rgba(6, 182, 212, 0.1)', border: '1px solid rgba(6, 182, 212, 0.3)', borderRadius: '20px', color: 'var(--color-cyan)', fontSize: '0.85rem', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: '35px', fontWeight: 600 }} />
                       
-                      <p style={{ color: 'var(--color-text-secondary)', fontSize: '1.1rem', lineHeight: 1.8, position: 'relative', zIndex: 2, fontStyle: 'italic', borderLeft: '3px solid var(--color-cyan)', paddingLeft: '25px' }}>
-                        Рудольф Константинович основал компанию в 2019 году в городе Алматы. Получив геологическое образование в Сибирском государственном университете (г. Томск, РФ), он собрал команду опытных буровых инженеров, геодезистов и лаборантов.
-                        <br /><br />
-                        Основным принципом работы компании является жесткое следование строительным регламентам СП РК и ГОСТ. Благодаря этому отчеты ТОО «СпецИнжГео» успешно и быстро проходят государственную вневедомственную экспертизу.
-                      </p>
+                      <EditableText as="p" id="ceo_desc" dangerously={true} defaultText="Рудольф Константинович основал компанию в 2019 году в городе Алматы. Получив геологическое образование в Сибирском государственном университете (г. Томск, РФ), он собрал команду опытных буровых инженеров, геодезистов и лаборантов.<br /><br />Основным принципом работы компании является жесткое следование строительным регламентам СП РК и ГОСТ. Благодаря этому отчеты ТОО «СпецИнжГео» успешно и быстро проходят государственную вневедомственную экспертизу." isVisualBuilder={isVisualBuilder} style={{ color: 'var(--color-text-secondary)', fontSize: '1.1rem', lineHeight: 1.8, position: 'relative', zIndex: 2, fontStyle: 'italic', borderLeft: '3px solid var(--color-cyan)', paddingLeft: '25px' }} />
                     </div>
                   </div>
                 </div>
@@ -1784,8 +1845,8 @@ const DEFAULT_NORMS = [
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px', marginTop: '40px', marginBottom: '60px' }}>
                   {(adminData.dynamicLists?.['about_history'] || DEFAULT_HISTORY).map((hist, i) => (
                     <HudCard key={i} style={{ padding: '25px', borderLeft: '4px solid var(--color-cyan)' }}>
-                      <h3 style={{ fontSize: '2rem', color: 'var(--color-text-primary)', marginBottom: '10px' }}>{hist.title}</h3>
-                      <p style={{ fontSize: '0.95rem', color: 'var(--color-text-secondary)', lineHeight: 1.6 }}>{hist.desc}</p>
+                      <EditableText as="h3" id={`hist_title_${i}`} defaultText={hist.title} isVisualBuilder={isVisualBuilder} style={{ fontSize: '2rem', color: 'var(--color-text-primary)', marginBottom: '10px' }} />
+                      <EditableText as="p" id={`hist_desc_${i}`} defaultText={hist.desc} isVisualBuilder={isVisualBuilder} style={{ fontSize: '0.95rem', color: 'var(--color-text-secondary)', lineHeight: 1.6 }} />
                     </HudCard>
                   ))}
                 </div>
@@ -1866,10 +1927,8 @@ const DEFAULT_NORMS = [
         {activePage === 'services' && (
           <div className="page-wrapper page-enter">
             <div style={{ marginBottom: '50px' }}>
-              <h2>Инженерные Услуги</h2>
-              <p style={{ color: 'var(--color-text-secondary)' }}>
-                Лицензированные изыскания «под ключ» по всей территории РК.
-              </p>
+              <EditableText as="h2" id="services_title" defaultText="Инженерные Услуги" isVisualBuilder={isVisualBuilder} />
+              <EditableText as="p" id="services_desc" defaultText="Лицензированные изыскания «под ключ» по всей территории РК." isVisualBuilder={isVisualBuilder} style={{ color: 'var(--color-text-secondary)' }} />
             </div>
 
             <div className="equip-grid" style={{ marginBottom: '50px' }}>
@@ -1895,33 +1954,34 @@ const DEFAULT_NORMS = [
               </div>
 
               {/* Sub-item detailed specs */}
-              <div className="cad-container" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+              <div key={activeServiceTab} className="cad-container" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                 <div className="cad-crosshairs"></div>
-                <div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
-                    <span className="hero-subtitle" style={{ fontSize: '0.72rem', color: 'var(--color-accent-secondary)', margin: 0 }}>
-                      УСЛУГА // {(adminData.services.find(s => s.id === activeServiceTab) || adminData.services[0]).code}
-                    </span>
-                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.72rem', color: 'var(--color-accent)' }}>
-                      СТАНДАРТ: {(adminData.services.find(s => s.id === activeServiceTab) || adminData.services[0]).reg}
-                    </span>
-                  </div>
-                  
-                  <h3 style={{ fontSize: '1.8rem', color: 'var(--color-text-primary)', marginBottom: '20px' }}>
-                    {(adminData.services.find(s => s.id === activeServiceTab) || adminData.services[0]).title}
-                  </h3>
+                {(() => {
+                  const currentService = adminData.services.find((s, idx) => (s.id || `service-${idx}`) === activeServiceTab) || adminData.services[0];
+                  return (
+                    <div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
+                        <span className="hero-subtitle" style={{ fontSize: '0.72rem', color: 'var(--color-accent-secondary)', margin: 0 }}>
+                          УСЛУГА // <EditableText id={`service_code_${activeServiceTab || '0'}`} defaultText={currentService.code} isVisualBuilder={isVisualBuilder} />
+                        </span>
+                        <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.72rem', color: 'var(--color-accent)' }}>
+                          СТАНДАРТ: <EditableText id={`service_reg_${activeServiceTab || '0'}`} defaultText={currentService.reg} isVisualBuilder={isVisualBuilder} />
+                        </span>
+                      </div>
+                      
+                      <EditableText as="h3" id={`service_title_${activeServiceTab || '0'}`} defaultText={currentService.title} isVisualBuilder={isVisualBuilder} style={{ fontSize: '1.8rem', color: 'var(--color-text-primary)', marginBottom: '20px' }} />
 
-                  {((adminData.services.find(s => s.id === activeServiceTab) || adminData.services[0]).image) && (
-                    <div className="service-img-wrapper" style={{ marginTop: '20px', marginBottom: '20px' }}>
-                      <img src={(adminData.services.find(s => s.id === activeServiceTab) || adminData.services[0]).image} alt={activeServiceTab} style={{ width: '100%', borderRadius: '8px', maxHeight: '300px', objectFit: 'cover' }} />
-                      <div className="service-img-overlay"></div>
+                      {currentService.image && (
+                        <div className="service-img-wrapper" style={{ marginTop: '20px', marginBottom: '20px' }}>
+                          <img src={currentService.image} alt={activeServiceTab} style={{ width: '100%', borderRadius: '8px', maxHeight: '300px', objectFit: 'cover' }} />
+                          <div className="service-img-overlay"></div>
+                        </div>
+                      )}
+                      
+                      <EditableText as="p" id={`service_desc_${activeServiceTab || '0'}`} defaultText={currentService.desc} isVisualBuilder={isVisualBuilder} style={{ color: 'var(--color-text-secondary)', fontSize: '1.05rem', lineHeight: '1.7', marginBottom: '30px' }} />
                     </div>
-                  )}
-                  
-                  <p style={{ color: 'var(--color-text-secondary)', fontSize: '1.05rem', lineHeight: '1.7', marginBottom: '30px' }}>
-                    {(adminData.services.find(s => s.id === activeServiceTab) || adminData.services[0]).desc}
-                  </p>
-                </div>
+                  );
+                })()}
 
                 <div style={{ borderTop: '1px dashed rgba(255,255,255,0.1)', paddingTop: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <span style={{ fontSize: '0.8rem', color: 'var(--color-text-muted)', fontFamily: 'var(--font-mono)' }}>
@@ -1936,35 +1996,33 @@ const DEFAULT_NORMS = [
 
             {/* Life cycle flowchart */}
             <HudCard style={{ marginBottom: '40px' }}>
-              <h3 style={{ marginBottom: '30px', fontFamily: 'var(--font-display)', fontSize: '1.3rem' }}>
-                🚀 Жизненный цикл инженерных изысканий
-              </h3>
+              <EditableText as="h3" id="services_lifecycle" defaultText="🚀 Жизненный цикл инженерных изысканий" isVisualBuilder={isVisualBuilder} style={{ marginBottom: '30px', fontFamily: 'var(--font-display)', fontSize: '1.3rem' }} />
               
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '20px', position: 'relative' }}>
                 <div style={{ textAlign: 'center', padding: '20px', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '8px', backgroundColor: 'rgba(0,0,0,0.2)' }}>
                   <div style={{ width: '40px', height: '40px', borderRadius: '50%', backgroundColor: 'var(--color-accent-glow)', border: '2px solid var(--color-accent)', display: 'flex', justifyContent: 'center', alignItems: 'center', margin: '0 auto 12px', fontWeight: 'bold' }}>1</div>
-                  <h4 style={{ fontSize: '0.9rem', marginBottom: '5px' }}>Техзадание</h4>
-                  <p style={{ fontSize: '0.75rem', color: 'var(--color-text-secondary)' }}>Согласование ТЗ и расчет глубины</p>
+                  <EditableText as="h4" id="lifecycle_t1" defaultText="Техзадание" isVisualBuilder={isVisualBuilder} style={{ fontSize: '0.9rem', marginBottom: '5px' }} />
+                  <EditableText as="p" id="lifecycle_d1" defaultText="Согласование ТЗ и расчет глубины" isVisualBuilder={isVisualBuilder} style={{ fontSize: '0.75rem', color: 'var(--color-text-secondary)' }} />
                 </div>
                 <div style={{ textAlign: 'center', padding: '20px', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '8px', backgroundColor: 'rgba(0,0,0,0.2)' }}>
                   <div style={{ width: '40px', height: '40px', borderRadius: '50%', backgroundColor: 'var(--color-cyan-glow)', border: '2px solid var(--color-cyan)', display: 'flex', justifyContent: 'center', alignItems: 'center', margin: '0 auto 12px', fontWeight: 'bold' }}>2</div>
-                  <h4 style={{ fontSize: '0.9rem', marginBottom: '5px' }}>Полевой этап</h4>
-                  <p style={{ fontSize: '0.75rem', color: 'var(--color-text-secondary)' }}>Мобилизация техники, бурение скважин</p>
+                  <EditableText as="h4" id="lifecycle_t2" defaultText="Полевой этап" isVisualBuilder={isVisualBuilder} style={{ fontSize: '0.9rem', marginBottom: '5px' }} />
+                  <EditableText as="p" id="lifecycle_d2" defaultText="Мобилизация техники, бурение скважин" isVisualBuilder={isVisualBuilder} style={{ fontSize: '0.75rem', color: 'var(--color-text-secondary)' }} />
                 </div>
                 <div style={{ textAlign: 'center', padding: '20px', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '8px', backgroundColor: 'rgba(0,0,0,0.2)' }}>
                   <div style={{ width: '40px', height: '40px', borderRadius: '50%', backgroundColor: 'var(--color-accent-glow)', border: '2px solid var(--color-accent)', display: 'flex', justifyContent: 'center', alignItems: 'center', margin: '0 auto 12px', fontWeight: 'bold' }}>3</div>
-                  <h4 style={{ fontSize: '0.9rem', marginBottom: '5px' }}>Лаборатория</h4>
-                  <p style={{ fontSize: '0.75rem', color: 'var(--color-text-secondary)' }}>Анализ прочности грунтов</p>
+                  <EditableText as="h4" id="lifecycle_t3" defaultText="Лаборатория" isVisualBuilder={isVisualBuilder} style={{ fontSize: '0.9rem', marginBottom: '5px' }} />
+                  <EditableText as="p" id="lifecycle_d3" defaultText="Анализ прочности грунтов" isVisualBuilder={isVisualBuilder} style={{ fontSize: '0.75rem', color: 'var(--color-text-secondary)' }} />
                 </div>
                 <div style={{ textAlign: 'center', padding: '20px', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '8px', backgroundColor: 'rgba(0,0,0,0.2)' }}>
                   <div style={{ width: '40px', height: '40px', borderRadius: '50%', backgroundColor: 'var(--color-cyan-glow)', border: '2px solid var(--color-cyan)', display: 'flex', justifyContent: 'center', alignItems: 'center', margin: '0 auto 12px', fontWeight: 'bold' }}>4</div>
-                  <h4 style={{ fontSize: '0.9rem', marginBottom: '5px' }}>Камералка</h4>
-                  <p style={{ fontSize: '0.75rem', color: 'var(--color-text-secondary)' }}>Составление отчета и 3D-разрезов</p>
+                  <EditableText as="h4" id="lifecycle_t4" defaultText="Камералка" isVisualBuilder={isVisualBuilder} style={{ fontSize: '0.9rem', marginBottom: '5px' }} />
+                  <EditableText as="p" id="lifecycle_d4" defaultText="Составление отчета и 3D-разрезов" isVisualBuilder={isVisualBuilder} style={{ fontSize: '0.75rem', color: 'var(--color-text-secondary)' }} />
                 </div>
                 <div style={{ textAlign: 'center', padding: '20px', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '8px', backgroundColor: 'rgba(0,0,0,0.2)' }}>
                   <div style={{ width: '40px', height: '40px', borderRadius: '50%', backgroundColor: 'var(--color-accent-glow)', border: '2px solid var(--color-success)', display: 'flex', justifyContent: 'center', alignItems: 'center', margin: '0 auto 12px', fontWeight: 'bold' }}>5</div>
-                  <h4 style={{ fontSize: '0.9rem', marginBottom: '5px' }}>Экспертиза</h4>
-                  <p style={{ fontSize: '0.75rem', color: 'var(--color-text-secondary)' }}>Сопровождение в Госэкспертизе РК</p>
+                  <EditableText as="h4" id="lifecycle_t5" defaultText="Экспертиза" isVisualBuilder={isVisualBuilder} style={{ fontSize: '0.9rem', marginBottom: '5px' }} />
+                  <EditableText as="p" id="lifecycle_d5" defaultText="Сопровождение в Госэкспертизе РК" isVisualBuilder={isVisualBuilder} style={{ fontSize: '0.75rem', color: 'var(--color-text-secondary)' }} />
                 </div>
               </div>
             </HudCard>
@@ -1974,17 +2032,26 @@ const DEFAULT_NORMS = [
         {/* ==================== PAGE: PROJECTS ==================== */}
         {activePage === 'projects' && (
           <div className="page-wrapper page-enter">
-            <div style={{ marginBottom: '50px' }}>
-              <h2>
-                {activeSubPage === 'regions' ? 'Проекты по регионам' :
-                 activeSubPage === 'services' ? 'Проекты по видам услуг' :
-                 activeSubPage === 'clients' ? 'Проекты по заказчикам' :
-                 activeSubPage === 'detail' ? 'Страница проекта' :
-                 'Завершенные Проекты ТОО «СпецИнжГео»'}
-              </h2>
-              <p style={{ color: 'var(--color-text-secondary)' }}>
-                Архив инженерно-геологических отчетов и геодезической привязки (более 50 крупных объектов).
-              </p>
+            <div key={activeSubPage || 'main'} style={{ marginBottom: '50px' }}>
+              <EditableText
+                as="h2"
+                id={`projects_title_${activeSubPage || 'main'}`}
+                isVisualBuilder={isVisualBuilder}
+                defaultText={
+                  activeSubPage === 'regions' ? 'Проекты по регионам' :
+                  activeSubPage === 'services' ? 'Проекты по видам услуг' :
+                  activeSubPage === 'clients' ? 'Проекты по заказчикам' :
+                  activeSubPage === 'detail' ? 'Страница проекта' :
+                  'Завершенные Проекты ТОО «СпецИнжГео»'
+                }
+              />
+              <EditableText
+                as="p"
+                id={`projects_desc_${activeSubPage || 'main'}`}
+                isVisualBuilder={isVisualBuilder}
+                style={{ color: 'var(--color-text-secondary)' }}
+                defaultText="Архив инженерно-геологических отчетов и геодезической привязки (более 50 крупных объектов)."
+              />
             </div>
 
             {activeSubPage === 'detail' ? (
@@ -2384,7 +2451,7 @@ const DEFAULT_NORMS = [
                 <div className="calc-form-group" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: 'rgba(255,255,255,0.02)', padding: '15px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.05)' }}>
                   <div>
                     <div style={{ fontSize: '0.9rem', fontWeight: 600 }}>Наличие грунтовых вод (водонасыщенность)</div>
-                    <span style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)' }}>Удорожание бурения на 15% (откачка, обсадка)</span>
+                    <span style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)' }}>Удорожание бурения на {Math.round((calcConfig.waterCoeff - 1) * 100)}% (откачка, обсадка)</span>
                   </div>
                   <input 
                     type="checkbox" 
@@ -2616,17 +2683,62 @@ const DEFAULT_NORMS = [
                      activeAdminSection === 'content' ? 'Управление контентом' :
                      activeAdminSection === 'pages' ? 'Структура страниц' :
                      activeAdminSection === 'settings' ? 'Глобальные настройки' :
-                     activeAdminSection === 'bot' ? 'Настройки ассистента' : 'Панель управления'}
+                     activeAdminSection === 'bot' ? 'Настройки ассистента' :
+                     activeAdminSection === 'calculator' ? 'Настройки калькулятора' : 'Панель управления'}
                   </h1>
                   <p style={{ fontSize: '0.9rem', color: theme === 'white' ? '#64748b' : '#888' }}>
                     {activeAdminSection === 'dashboard' ? 'Нажмите на плитку чтобы открыть нужный раздел администрирования.' : 'Вносите изменения и сохраняйте настройки.'}
                   </p>
                 </div>
-                {activeAdminSection !== 'dashboard' && (
-                  <button onClick={() => setActiveAdminSection('dashboard')} style={{ background: theme === 'white' ? '#f1f5f9' : '#222', color: theme === 'white' ? '#0f172a' : '#fff', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #333', padding: '10px 20px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}>
-                    ← Назад в панель
-                  </button>
-                )}
+                <div style={{ display: 'flex', gap: '15px' }}>
+                  {activeAdminSection === 'dashboard' && (
+                    <>
+                      <button onClick={() => {
+                        const fileInput = document.createElement('input');
+                        fileInput.type = 'file';
+                        fileInput.accept = '.json';
+                        fileInput.onchange = (e) => {
+                          const file = e.target.files[0];
+                          if (!file) return;
+                          const reader = new FileReader();
+                          reader.onload = (ev) => {
+                            try {
+                              const parsed = JSON.parse(ev.target.result);
+                              setAdminData(parsed);
+                              localStorage.setItem('spengeo_admin_data', JSON.stringify(parsed));
+                              alert('Данные успешно импортированы! Страница будет перезагружена.');
+                              window.location.reload();
+                            } catch(err) {
+                              alert('Ошибка при чтении файла JSON: ' + err.message);
+                            }
+                          };
+                          reader.readAsText(file);
+                        };
+                        fileInput.click();
+                      }} style={{ background: theme === 'white' ? '#f1f5f9' : 'rgba(6, 182, 212, 0.1)', color: theme === 'white' ? '#0f172a' : '#06b6d4', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid rgba(6, 182, 212, 0.3)', padding: '10px 20px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        📥 Импорт (JSON)
+                      </button>
+                      <button onClick={() => {
+                        const dataStr = JSON.stringify(adminData, null, 2);
+                        const blob = new Blob([dataStr], { type: 'application/json' });
+                        const url = URL.createObjectURL(blob);
+                        const link = document.createElement('a');
+                        link.href = url;
+                        link.download = 'spengeo_admin_backup_' + new Date().toISOString().split('T')[0] + '.json';
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                      }} style={{ background: theme === 'white' ? '#f1f5f9' : 'rgba(59, 130, 246, 0.1)', color: theme === 'white' ? '#0f172a' : '#3b82f6', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid rgba(59, 130, 246, 0.3)', padding: '10px 20px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        📤 Экспорт (JSON)
+                      </button>
+                    </>
+                  )}
+                  {activeAdminSection !== 'dashboard' && (
+                    <button onClick={() => setActiveAdminSection('dashboard')} style={{ background: theme === 'white' ? '#f1f5f9' : '#222', color: theme === 'white' ? '#0f172a' : '#fff', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #333', padding: '10px 20px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}>
+                      ← Назад в панель
+                    </button>
+                  )}
+                </div>
               </div>
 
               {activeAdminSection === 'dashboard' && (
@@ -2759,13 +2871,32 @@ const DEFAULT_NORMS = [
                   </div>
                   <div style={{ marginTop: 'auto', position: 'relative', zIndex: 1 }}>
                     <div style={{ fontSize: '0.65rem', fontFamily: 'monospace', textTransform: 'uppercase', letterSpacing: '0.2em', color: theme === 'white' ? '#64748b' : '#888', marginBottom: '8px' }}>Структура сайта</div>
-                    <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '12px' }}>Страницы</h2>
-                    <p style={{ fontSize: '0.85rem', color: theme === 'white' ? '#475569' : '#aaa', marginBottom: '24px', lineHeight: 1.5 }}>Управляйте порядком блоков, скрывайте секции и настраивайте мета-данные.</p>
-                    <div style={{ fontSize: '0.85rem', fontWeight: 500, color: '#ec4899' }}>Управление →</div>
+                    <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '12px' }}>Меню и Страницы</h2>
+                    <p style={{ fontSize: '0.85rem', color: theme === 'white' ? '#475569' : '#aaa', marginBottom: '24px', lineHeight: 1.5 }}>Управление пунктами навигации и иерархией страниц.</p>
+                    <div style={{ fontSize: '0.85rem', fontWeight: 500, color: '#ec4899' }}>Редактировать →</div>
                   </div>
                 </div>
 
-                
+                {/* 6. Calculator Settings */}
+                <div onClick={() => setActiveAdminSection('calculator')} style={{ position: 'relative', overflow: 'hidden', borderRadius: '12px', background: theme === 'white' ? '#fff' : '#111', border: theme === 'white' ? '1px solid rgba(245, 158, 11, 0.4)' : '1px solid rgba(245, 158, 11, 0.3)', padding: '24px', display: 'flex', flexDirection: 'column', cursor: 'pointer', transition: 'transform 0.2s', boxShadow: theme === 'white' ? '0 4px 20px rgba(0,0,0,0.05)' : 'none' }}>
+                  <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '100px', background: 'linear-gradient(to bottom, rgba(245, 158, 11, 0.15), transparent)', pointerEvents: 'none' }}></div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '40px', position: 'relative', zIndex: 1 }}>
+                    <div style={{ background: theme === 'white' ? 'rgba(245, 158, 11, 0.1)' : 'rgba(0,0,0,0.4)', border: theme === 'white' ? '1px solid rgba(245, 158, 11, 0.2)' : '1px solid rgba(255,255,255,0.05)', padding: '8px', borderRadius: '8px', color: '#f59e0b' }}>
+                      <Calculator size={24} />
+                    </div>
+                    <div style={{ textAlign: 'right' }}>
+                      <div style={{ fontSize: '1.5rem', fontWeight: 'bold', lineHeight: 1 }}>6</div>
+                      <div style={{ fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: theme === 'white' ? '#64748b' : '#888', marginTop: '4px' }}>параметров</div>
+                    </div>
+                  </div>
+                  <div style={{ marginTop: 'auto', position: 'relative', zIndex: 1 }}>
+                    <div style={{ fontSize: '0.65rem', fontFamily: 'monospace', textTransform: 'uppercase', letterSpacing: '0.2em', color: theme === 'white' ? '#64748b' : '#888', marginBottom: '8px' }}>Расчеты сметы</div>
+                    <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '12px' }}>Калькулятор</h2>
+                    <p style={{ fontSize: '0.85rem', color: theme === 'white' ? '#475569' : '#aaa', marginBottom: '24px', lineHeight: 1.5 }}>Настройка базовой стоимости бурения и повышающих коэффициентов.</p>
+                    <div style={{ fontSize: '0.85rem', fontWeight: 500, color: '#f59e0b' }}>Настроить →</div>
+                  </div>
+                </div>
+
                 {/* 7. Blocks */}
                 <div onClick={() => setActiveAdminSection('blocks')} style={{ position: 'relative', overflow: 'hidden', borderRadius: '12px', background: theme === 'white' ? '#fff' : '#111', border: theme === 'white' ? '1px solid rgba(16, 185, 129, 0.4)' : '1px solid rgba(16, 185, 129, 0.3)', padding: '24px', display: 'flex', flexDirection: 'column', cursor: 'pointer', transition: 'transform 0.2s', boxShadow: theme === 'white' ? '0 4px 20px rgba(0,0,0,0.05)' : 'none' }}>
                   <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '100px', background: 'linear-gradient(to bottom, rgba(16, 185, 129, 0.15), transparent)', pointerEvents: 'none' }}></div>
@@ -2876,6 +3007,81 @@ const DEFAULT_NORMS = [
                 </div>
               </div>
               </>
+              )}
+
+              {/* ===== ADMIN SUB-PAGES ===== */}
+
+              {activeAdminSection === 'calculator' && (
+                <div style={{ background: theme === 'white' ? '#fff' : '#111', border: theme === 'white' ? '1px solid rgba(0,0,0,0.05)' : '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', padding: '30px', boxShadow: theme === 'white' ? '0 4px 20px rgba(0,0,0,0.05)' : 'none' }}>
+                  <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '30px', color: theme === 'white' ? '#0f172a' : '#fff', borderBottom: theme === 'white' ? '1px solid #e2e8f0' : '1px solid #333', paddingBottom: '15px' }}>Настройки Калькулятора</h3>
+                  
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                      <label style={{ fontSize: '0.85rem', color: theme === 'white' ? '#64748b' : '#888', marginBottom: '8px' }}>Базовая ставка за 1 пог.м (₸)</label>
+                      <input 
+                        type="number" 
+                        value={adminData.calc?.baseRate || 18500} 
+                        onChange={e => setAdminData(prev => ({...prev, calc: {...prev.calc, baseRate: Number(e.target.value)}}))}
+                        style={{ padding: '12px', borderRadius: '8px', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #333', background: theme === 'white' ? '#fff' : '#000', color: theme === 'white' ? '#0f172a' : '#fff' }} 
+                      />
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                      <label style={{ fontSize: '0.85rem', color: theme === 'white' ? '#64748b' : '#888', marginBottom: '8px' }}>Коэф. грунтовых вод (удорожание)</label>
+                      <input 
+                        type="number" step="0.01"
+                        value={adminData.calc?.waterCoeff || 1.15} 
+                        onChange={e => setAdminData(prev => ({...prev, calc: {...prev.calc, waterCoeff: Number(e.target.value)}}))}
+                        style={{ padding: '12px', borderRadius: '8px', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #333', background: theme === 'white' ? '#fff' : '#000', color: theme === 'white' ? '#0f172a' : '#fff' }} 
+                      />
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                      <label style={{ fontSize: '0.85rem', color: theme === 'white' ? '#64748b' : '#888', marginBottom: '8px' }}>Сейсмика 9 баллов (Алматы)</label>
+                      <input 
+                        type="number" step="0.01"
+                        value={adminData.calc?.seismicCoeff9 || 1.1} 
+                        onChange={e => setAdminData(prev => ({...prev, calc: {...prev.calc, seismicCoeff9: Number(e.target.value)}}))}
+                        style={{ padding: '12px', borderRadius: '8px', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #333', background: theme === 'white' ? '#fff' : '#000', color: theme === 'white' ? '#0f172a' : '#fff' }} 
+                      />
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                      <label style={{ fontSize: '0.85rem', color: theme === 'white' ? '#64748b' : '#888', marginBottom: '8px' }}>Сейсмика 6-7 баллов (Астана)</label>
+                      <input 
+                        type="number" step="0.01"
+                        value={adminData.calc?.seismicCoeff6 || 1.0} 
+                        onChange={e => setAdminData(prev => ({...prev, calc: {...prev.calc, seismicCoeff6: Number(e.target.value)}}))}
+                        style={{ padding: '12px', borderRadius: '8px', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #333', background: theme === 'white' ? '#fff' : '#000', color: theme === 'white' ? '#0f172a' : '#fff' }} 
+                      />
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                      <label style={{ fontSize: '0.85rem', color: theme === 'white' ? '#64748b' : '#888', marginBottom: '8px' }}>Делитель площади на 1 скважину</label>
+                      <input 
+                        type="number" 
+                        value={adminData.calc?.holeAreaDivisor || 120} 
+                        onChange={e => setAdminData(prev => ({...prev, calc: {...prev.calc, holeAreaDivisor: Number(e.target.value)}}))}
+                        style={{ padding: '12px', borderRadius: '8px', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #333', background: theme === 'white' ? '#fff' : '#000', color: theme === 'white' ? '#0f172a' : '#fff' }} 
+                      />
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                      <label style={{ fontSize: '0.85rem', color: theme === 'white' ? '#64748b' : '#888', marginBottom: '8px' }}>Скорость бурения (пог.м/день)</label>
+                      <input 
+                        type="number" 
+                        value={adminData.calc?.drillSpeedPerDay || 22} 
+                        onChange={e => setAdminData(prev => ({...prev, calc: {...prev.calc, drillSpeedPerDay: Number(e.target.value)}}))}
+                        style={{ padding: '12px', borderRadius: '8px', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #333', background: theme === 'white' ? '#fff' : '#000', color: theme === 'white' ? '#0f172a' : '#fff' }} 
+                      />
+                    </div>
+                  </div>
+
+                  <div style={{ marginTop: '30px', paddingTop: '20px', borderTop: theme === 'white' ? '1px solid #e2e8f0' : '1px solid #333', display: 'flex', justifyContent: 'flex-end' }}>
+                    <button onClick={() => {
+                      localStorage.setItem('spengeo_admin_data', JSON.stringify(adminData));
+                      logEvent('Настройки калькулятора сохранены', 'success');
+                      alert('Сохранено!');
+                    }} style={{ background: '#f59e0b', color: '#fff', border: 'none', padding: '12px 30px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}>
+                      Сохранить настройки
+                    </button>
+                  </div>
+                </div>
               )}
 
               {/* ===== ADMIN SUB-PAGES ===== */}
@@ -3878,17 +4084,35 @@ const DEFAULT_NORMS = [
               Свойства элемента
             </div>
             <div style={{ padding: '20px', flex: 1, overflowY: 'auto' }}>
-              <div style={{ marginBottom: '25px' }}>
-                <label style={{ display: 'block', fontSize: '0.75rem', color: '#666', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '1px' }}>Выбранный элемент</label>
-                <div style={{ padding: '12px', background: 'rgba(6, 182, 212, 0.05)', border: '1px solid rgba(6, 182, 212, 0.2)', borderRadius: '8px', color: 'var(--color-cyan)', fontSize: '0.85rem', display: 'inline-flex', alignItems: 'center', gap: '8px', fontWeight: 'bold' }}>
-                  <Edit3 size={14} /> EditableText #hero_title
+              {activeEditorElement ? (
+                <>
+                  <div style={{ marginBottom: '25px' }}>
+                    <label style={{ display: 'block', fontSize: '0.75rem', color: '#666', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '1px' }}>Выбранный элемент</label>
+                    <div style={{ padding: '12px', background: 'rgba(6, 182, 212, 0.05)', border: '1px solid rgba(6, 182, 212, 0.2)', borderRadius: '8px', color: 'var(--color-cyan)', fontSize: '0.85rem', display: 'inline-flex', alignItems: 'center', gap: '8px', fontWeight: 'bold' }}>
+                      <Edit3 size={14} /> #{activeEditorElement}
+                    </div>
+                  </div>
+                  
+                  <div style={{ marginBottom: '25px' }}>
+                    <label style={{ display: 'block', fontSize: '0.75rem', color: '#666', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '1px' }}>Текст (HTML)</label>
+                    <textarea 
+                      rows="6" 
+                      style={{ width: '100%', background: '#111', border: '1px solid #333', borderRadius: '8px', color: '#fff', padding: '12px', fontSize: '0.9rem', lineHeight: '1.5', outline: 'none' }} 
+                      value={activeEditorText}
+                      onChange={(e) => {
+                        setActiveEditorText(e.target.value);
+                        window.dispatchEvent(new CustomEvent('vb_update', { detail: { id: activeEditorElement, text: e.target.value } }));
+                      }}
+                      onFocus={(e) => e.target.style.borderColor = 'var(--color-cyan)'} 
+                      onBlur={(e) => e.target.style.borderColor = '#333'} 
+                    />
+                  </div>
+                </>
+              ) : (
+                <div style={{ padding: '20px', color: '#666', textAlign: 'center', fontSize: '0.9rem', lineHeight: '1.6' }}>
+                  Кликните на любой пунктирный текстовый блок на сайте, чтобы начать его редактирование.
                 </div>
-              </div>
-              
-              <div style={{ marginBottom: '25px' }}>
-                <label style={{ display: 'block', fontSize: '0.75rem', color: '#666', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '1px' }}>Текст (HTML)</label>
-                <textarea rows="6" style={{ width: '100%', background: '#111', border: '1px solid #333', borderRadius: '8px', color: '#fff', padding: '12px', fontSize: '0.9rem', lineHeight: '1.5', outline: 'none' }} defaultValue="Инженерно-<br/>геологические<br/>изыскания" onFocus={(e) => e.target.style.borderColor = 'var(--color-cyan)'} onBlur={(e) => e.target.style.borderColor = '#333'} />
-              </div>
+              )}
 
               <div style={{ marginBottom: '25px' }}>
                 <label style={{ display: 'block', fontSize: '0.75rem', color: '#666', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '1px' }}>Отступы (Margin / Padding)</label>
