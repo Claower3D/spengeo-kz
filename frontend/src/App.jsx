@@ -396,6 +396,9 @@ function App() {
       if (!parsed.dynamicLists) {
         parsed.dynamicLists = {};
       }
+      if (!parsed.dynamicLists['about_licenses']) {
+        parsed.dynamicLists['about_licenses'] = DOCUMENTS_DATA;
+      }
       if (!parsed.menu) {
         parsed.menu = MENU_STRUCTURE;
       }
@@ -408,6 +411,7 @@ function App() {
       services: Object.entries(SERVICES_DATA).map(([k, v]) => ({ id: k, ...v, image: `/images/services/${k}.jpg` })),
       team: [{ name: 'Шенвизов Рудольф', role: 'Константинович', badge: 'ОСНОВАТЕЛЬ И ГЛАВНЫЙ ГЕОЛОГ', desc: 'Мы строим нашу работу на безупречной точности...', img: '/images/director.png' }],
       articles: BLOG_POSTS,
+      dynamicLists: { 'about_licenses': DOCUMENTS_DATA },
       bot: { 
         name: 'SPENGEO_ASSISTANT', 
         welcomeMsg: 'Здравствуйте! Я автоматический ассистент СпецИнжГео. Чем могу помочь?', 
@@ -1577,8 +1581,8 @@ function App() {
                 <EditableText as="h2" id="lic_title" defaultText={t.sections.licensesTitle} isVisualBuilder={isVisualBuilder} style={{ fontSize: '3.2rem', textShadow: '0 0 40px rgba(255,255,255,0.2)' }} />
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '30px', position: 'relative', zIndex: 2 }}>
-                {DOCUMENTS_DATA.slice(0, 3).map(doc => (
-                  <div key={doc.id} className="glow-card-premium" style={{ padding: '40px 30px', textAlign: 'center', position: 'relative', overflow: 'hidden', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                {(adminData.dynamicLists?.['about_licenses'] || DOCUMENTS_DATA).slice(0, 3).map((doc, idx) => { doc.id = doc.id || idx; return (
+                  <div key={doc.id || Math.random()} className="glow-card-premium" style={{ padding: '40px 30px', textAlign: 'center', position: 'relative', overflow: 'hidden', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                     
                     {/* Background faint huge icon */}
                     <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', opacity: 0.03, pointerEvents: 'none' }}>
@@ -1597,7 +1601,7 @@ function App() {
                     <h3 style={{ fontSize: '1.3rem', marginBottom: '15px', color: 'var(--color-text-primary)', fontWeight: 800, position: 'relative', zIndex: 2, lineHeight: 1.4 }}>{doc.title}</h3>
                     <span className="spec-label" style={{ color: doc.id === 'lic-gsl' ? '#ef4444' : doc.id === 'accreditation' ? 'var(--color-cyan)' : 'var(--color-accent)', fontSize: '0.9rem', letterSpacing: '0.15em', textShadow: `0 0 10px ${doc.id === 'lic-gsl' ? 'rgba(239, 68, 68, 0.4)' : doc.id === 'accreditation' ? 'rgba(6, 182, 212, 0.4)' : 'rgba(59, 130, 246, 0.4)'}`, position: 'relative', zIndex: 2 }}>{doc.subtitle}</span>
                   </div>
-                ))}
+                ); })}
               </div>
               <div style={{ textAlign: 'center', marginTop: '50px', position: 'relative', zIndex: 2 }}>
                 <button className="btn btn-primary" style={{ padding: '15px 45px', fontSize: '1.1rem', boxShadow: '0 0 30px rgba(6, 182, 212, 0.4)' }} onClick={() => setActivePage('documents')}>Все документы платформы</button>
@@ -2195,8 +2199,8 @@ function App() {
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '30px' }}>
-              {DOCUMENTS_DATA.map(doc => (
-                <HudCard key={doc.id} style={{ padding: '30px', textAlign: 'center' }}>
+              {(adminData.dynamicLists?.['about_licenses'] || DOCUMENTS_DATA).map((doc, idx) => { doc.id = doc.id || idx; return (
+                <HudCard key={doc.id || Math.random()} style={{ padding: '30px', textAlign: 'center' }}>
                   <div style={{ fontSize: '3rem', marginBottom: '20px' }}>
                     {doc.id === 'lic-gsl' && '🛡️'}
                     {doc.id === 'accreditation' && '🔬'}
@@ -2210,7 +2214,7 @@ function App() {
                     Просмотреть документ
                   </button>
                 </HudCard>
-              ))}
+              ); })}
             </div>
           </div>
         )}
