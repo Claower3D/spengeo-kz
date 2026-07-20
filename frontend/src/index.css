@@ -3469,7 +3469,7 @@ html { scroll-behavior: smooth; }
   width: 75%;
 }
 .service-bento-card.wide .service-bento-content {
-  width: 65%;
+  width: 55%;
 }
 .service-bento-card.full .service-bento-content {
   width: 50%;
@@ -3523,14 +3523,12 @@ html { scroll-behavior: smooth; }
   color: #0f172a;
 }
 [data-theme="white"] .service-bento-list li {
-  color: #334155;
+  color: #0f172a;
+  font-weight: 500;
+  font-size: 1rem;
 }
-[data-theme="white"] .service-bento-bg {
-  opacity: 0.3;
-}
-[data-theme="white"] .service-bento-card:hover .service-bento-bg {
-  opacity: 0.5;
-}
+
+
 
 @media (max-width: 1024px) {
   .service-bento-grid {
@@ -3603,7 +3601,7 @@ html { scroll-behavior: smooth; }
 
 /* Light Theme Overrides for Overlay */
 [data-theme="white"] .service-bento-overlay {
-  background: rgba(255, 255, 255, 0.95);
+  background: #ffffff;
 }
 
 .service-bento-content {
