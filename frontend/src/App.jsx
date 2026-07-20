@@ -1743,6 +1743,7 @@ const DEFAULT_NORMS = [
             </div>
 
             {(!activeSubPage || activeSubPage === 'history') && (
+              <>
               <div className="glow-card-premium" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '0', alignItems: 'stretch', padding: '0', overflow: 'hidden', position: 'relative', zIndex: 2, background: 'var(--bg-card)', border: '1px solid var(--border-color)', boxShadow: '0 0 50px rgba(0,0,0,0.1)', marginBottom: '60px' }}>
                   <div style={{ position: 'relative', minHeight: '500px', overflow: 'hidden' }}>
                     <img src={adminData.team.img} alt="Шенвизов Рудольф Константинович" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', filter: 'contrast(1.1)', maskImage: 'linear-gradient(to right, black 60%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to right, black 60%, transparent 100%)' }} />
@@ -1768,12 +1769,23 @@ const DEFAULT_NORMS = [
                     </div>
                   </div>
                 </div>
+                
+                {/* Timeline */}
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px', marginTop: '40px', marginBottom: '60px' }}>
+                  {(adminData.dynamicLists?.['about_history'] || DEFAULT_HISTORY).map((hist, i) => (
+                    <HudCard key={i} style={{ padding: '25px', borderLeft: '4px solid var(--color-cyan)' }}>
+                      <h3 style={{ fontSize: '2rem', color: 'var(--color-text-primary)', marginBottom: '10px' }}>{hist.title}</h3>
+                      <p style={{ fontSize: '0.95rem', color: 'var(--color-text-secondary)', lineHeight: 1.6 }}>{hist.desc}</p>
+                    </HudCard>
+                  ))}
+                </div>
+              </>
             )}
 
             {activeSubPage === 'team' && (
               <div style={{ marginBottom: '60px' }}>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '40px' }}>
-                  {adminData.team.map((member, i) => (
+                  {(adminData.dynamicLists?.['about_team'] || adminData.team).map((member, i) => (
                     <div key={i} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                       <div style={{ position: 'relative', height: '400px', borderRadius: '12px', overflow: 'hidden', border: '1px solid var(--color-border)', boxShadow: '0 10px 30px rgba(0,0,0,0.1)' }}>
                         <div className="hud-bracket hud-bracket-tl"></div><div className="hud-bracket hud-bracket-tr"></div><div className="hud-bracket hud-bracket-bl"></div><div className="hud-bracket hud-bracket-br"></div>
@@ -3101,7 +3113,7 @@ const DEFAULT_NORMS = [
                       <button onClick={() => setAdminData({...adminData, team: [{name: 'Новый сотрудник', role: 'Должность', badge: 'СПЕЦИАЛИСТ', desc: '', img: ''}, ...adminData.team]})} style={{ background: '#06b6d4', color: '#fff', border: 'none', padding: '8px 16px', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold' }}>+ Добавить сотрудника</button>
                     </div>
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px' }}>
-                      {adminData.team.map((member, i) => (
+                      {(adminData.dynamicLists?.['about_team'] || adminData.team).map((member, i) => (
                         <div key={i} style={{ background: theme === 'white' ? '#f8fafc' : '#1a1a1a', border: theme === 'white' ? '1px solid #e2e8f0' : '1px solid #333', borderRadius: '12px', padding: '20px', display: 'flex', flexDirection: 'column', gap: '15px' }}>
                           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                              <label style={{ fontSize: '0.8rem', color: theme === 'white' ? '#64748b' : '#888', fontWeight: 'bold' }}>Сотрудник #{i + 1}</label>
