@@ -396,6 +396,9 @@ function App() {
       if (!parsed.dynamicLists) {
         parsed.dynamicLists = {};
       }
+      if (!parsed.menu) {
+        parsed.menu = MENU_STRUCTURE;
+      }
       return parsed;
     }
     return {
@@ -573,6 +576,7 @@ function App() {
   const [inquiries, setInquiries] = useState([]);
   const [adminError, setAdminError] = useState('');
   const [activeAdminSection, setActiveAdminSection] = useState('dashboard');
+  const dynamicMenu = adminData.menu || MENU_STRUCTURE;
   const [editingServiceIndex, setEditingServiceIndex] = useState(null);
 
   // Calculations
@@ -748,7 +752,7 @@ function App() {
 
               <nav className="desktop-nav">
                 <ul className="nav-links">
-                  {(MENU_STRUCTURE[language] || MENU_STRUCTURE.ru).map((menu, i) => (
+                  {(dynamicMenu[language] || dynamicMenu.ru).map((menu, i) => (
                     <li key={i} className={menu.items ? "nav-item-with-dropdown" : ""}>
                       <button 
                         type="button" 
@@ -2502,7 +2506,7 @@ function App() {
                 <>
                   <h3 style={{fontSize: '1.25rem', marginBottom: '20px', color: theme === 'white' ? '#0f172a' : '#fff'}}>Управление структурой сайта</h3>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px', marginBottom: '40px' }}>
-                    {MENU_STRUCTURE['ru'].map((menuItem, idx) => {
+                    {dynamicMenu['ru'].map((menuItem, idx) => {
                       if (!menuItem.items) return null;
                       const colors = ['rgba(59, 130, 246', 'rgba(16, 185, 129', 'rgba(245, 158, 11', 'rgba(168, 85, 247', 'rgba(236, 72, 153', 'rgba(6, 182, 212'];
                       const col = colors[idx % colors.length];
@@ -2579,7 +2583,7 @@ function App() {
                     </div>
                     <div style={{ textAlign: 'right' }}>
                       <div style={{ fontSize: '1.5rem', fontWeight: 'bold', lineHeight: 1 }}>
-                        {MENU_STRUCTURE[language].reduce((acc, curr) => acc + 1 + (curr.items ? curr.items.length : 0), 0)}
+                        {dynamicMenu[language].reduce((acc, curr) => acc + 1 + (curr.items ? curr.items.length : 0), 0)}
                       </div>
                       <div style={{ fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: theme === 'white' ? '#64748b' : '#888', marginTop: '4px' }}>страниц</div>
                     </div>
@@ -2621,7 +2625,7 @@ function App() {
                     </div>
                     <div style={{ textAlign: 'right' }}>
                       <div style={{ fontSize: '1.5rem', fontWeight: 'bold', lineHeight: 1 }}>
-                        {MENU_STRUCTURE[language].reduce((acc, curr) => acc + 1 + (curr.items ? curr.items.length : 0), 0)}
+                        {dynamicMenu[language].reduce((acc, curr) => acc + 1 + (curr.items ? curr.items.length : 0), 0)}
                       </div>
                       <div style={{ fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: theme === 'white' ? '#64748b' : '#888', marginTop: '4px' }}>страниц</div>
                     </div>
@@ -3015,11 +3019,23 @@ function App() {
               
               {activeAdminSection.startsWith('cms_') && (
                 <div style={{ background: theme === 'white' ? '#fff' : '#111', border: theme === 'white' ? '1px solid rgba(0,0,0,0.05)' : '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', padding: '30px', boxShadow: theme === 'white' ? '0 4px 20px rgba(0,0,0,0.05)' : 'none' }}>
-                  <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '20px', color: theme === 'white' ? '#0f172a' : '#fff' }}>
-                    Подразделы: {MENU_STRUCTURE['ru'].find(m => m.page === activeAdminSection.replace('cms_', ''))?.title}
-                  </h3>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                    <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: theme === 'white' ? '#0f172a' : '#fff', margin: 0 }}>
+                      Подразделы: {dynamicMenu['ru'].find(m => m.page === activeAdminSection.replace('cms_', ''))?.title}
+                    </h3>
+                    <button onClick={() => {
+                        const newMenu = JSON.parse(JSON.stringify(dynamicMenu));
+                        const catIndex = newMenu['ru'].findIndex(m => m.page === activeAdminSection.replace('cms_', ''));
+                        if (catIndex !== -1) {
+                            const newSubId = 'sub_' + Date.now();
+                            if (!newMenu['ru'][catIndex].items) newMenu['ru'][catIndex].items = [];
+                            newMenu['ru'][catIndex].items.push({ name: 'Новый подраздел', action: { type: 'page', val: activeAdminSection.replace('cms_', ''), subpage: newSubId } });
+                            setAdminData({...adminData, menu: newMenu});
+                        }
+                    }} style={{ background: '#3b82f6', color: '#fff', border: 'none', padding: '8px 16px', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold' }}>+ Добавить подраздел</button>
+                  </div>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '15px' }}>
-                    {MENU_STRUCTURE['ru'].find(m => m.page === activeAdminSection.replace('cms_', ''))?.items.map((sub, sidx) => (
+                    {dynamicMenu['ru'].find(m => m.page === activeAdminSection.replace('cms_', ''))?.items.map((sub, sidx) => (
                       <div key={sidx} style={{ padding: '20px', background: theme === 'white' ? '#f8fafc' : 'rgba(255,255,255,0.02)', border: theme === 'white' ? '1px solid #e2e8f0' : '1px solid rgba(255,255,255,0.05)', borderRadius: '8px', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }} onClick={() => {
                         if (sub.action) {
                            if (sub.action.type === 'service') {
@@ -3165,13 +3181,13 @@ function App() {
                 <div style={{ background: theme === 'white' ? '#fff' : '#111', border: theme === 'white' ? '1px solid rgba(0,0,0,0.05)' : '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', padding: '30px', boxShadow: theme === 'white' ? '0 4px 20px rgba(0,0,0,0.05)' : 'none' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
                     <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', color: theme === 'white' ? '#0f172a' : '#fff' }}>
-                      Структура сайта ({MENU_STRUCTURE[language].reduce((acc, curr) => acc + 1 + (curr.items ? curr.items.length : 0), 0)} страниц)
+                      Структура сайта ({dynamicMenu[language].reduce((acc, curr) => acc + 1 + (curr.items ? curr.items.length : 0), 0)} страниц)
                     </h3>
                     <button style={{ background: '#ec4899', color: '#fff', border: 'none', padding: '8px 16px', borderRadius: '6px', cursor: 'pointer' }}>+ Добавить страницу</button>
                   </div>
                   
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                    {MENU_STRUCTURE[language].map((page, idx) => (
+                    {dynamicMenu[language].map((page, idx) => (
                       <div key={idx} style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                         {/* Parent Page */}
                         <div style={{ padding: '16px', background: theme === 'white' ? '#f8fafc' : '#1a1a1a', border: theme === 'white' ? '1px solid #e2e8f0' : '1px solid #333', borderRadius: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -3494,7 +3510,7 @@ function App() {
                   onChange={(e) => setActivePage(e.target.value)}
                   style={{ background: 'transparent', border: 'none', color: '#fff', outline: 'none', fontWeight: 'bold', cursor: 'pointer', fontSize: '0.9rem' }}
                 >
-                  {MENU_STRUCTURE.ru.map(m => (
+                  {dynamicMenu.ru.map(m => (
                     <option key={m.page} value={m.page} style={{ background: '#111' }}>{m.title}</option>
                   ))}
                 </select>
