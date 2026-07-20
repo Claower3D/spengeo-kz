@@ -398,6 +398,7 @@ function App() {
       lab: LAB_EQUIP,
       services: Object.entries(SERVICES_DATA).map(([k, v]) => ({ id: k, ...v, image: `/images/services/${k}.jpg` })),
       team: [{ name: 'Шенвизов Рудольф', role: 'Константинович', badge: 'ОСНОВАТЕЛЬ И ГЛАВНЫЙ ГЕОЛОГ', desc: 'Мы строим нашу работу на безупречной точности...', img: '/images/director.png' }],
+      articles: BLOG_POSTS,
       bot: { 
         name: 'SPENGEO_ASSISTANT', 
         welcomeMsg: 'Здравствуйте! Я автоматический ассистент СпецИнжГео. Чем могу помочь?', 
@@ -1944,8 +1945,14 @@ function App() {
             {(!activeSubPage || activeSubPage === 'articles') ? (
               <>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '30px', marginBottom: '60px' }}>
-                  {BLOG_POSTS.map(post => (
+                  {adminData.articles.map(post => (
                     <HudCard key={post.id} style={{ padding: '30px' }}>
+                      
+                      {post.image && (
+                          <div style={{ margin: '-30px -30px 20px -30px', height: '180px', overflow: 'hidden', borderRadius: '12px 12px 0 0' }}>
+                             <img src={post.image} alt={post.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                          </div>
+                      )}
                       <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.72rem', fontFamily: 'var(--font-mono)', color: 'var(--color-accent)', marginBottom: '12px' }}>
                         <span>{post.category}</span>
                         <span>{post.date}</span>
@@ -2719,6 +2726,103 @@ function App() {
 
               {/* ===== ADMIN SUB-PAGES ===== */}
 
+              {activeAdminSection === 'form_knowledge_articles' && (
+                <div style={{ background: theme === 'white' ? '#fff' : '#111', border: theme === 'white' ? '1px solid rgba(0,0,0,0.05)' : '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', padding: '30px', boxShadow: theme === 'white' ? '0 4px 20px rgba(0,0,0,0.05)' : 'none' }}>
+                  <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '30px', color: theme === 'white' ? '#0f172a' : '#fff', borderBottom: theme === 'white' ? '1px solid #e2e8f0' : '1px solid #333', paddingBottom: '15px' }}>Управление Базой Знаний: Статьи</h3>
+                  
+                  <div style={{ marginBottom: '40px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <div style={{ background: 'rgba(6, 182, 212, 0.1)', padding: '8px', borderRadius: '8px', color: '#06b6d4' }}><BookOpen size={20} /></div>
+                        <h4 style={{ color: theme === 'white' ? '#0f172a' : '#fff', fontSize: '1.2rem', margin: 0 }}>Статьи</h4>
+                      </div>
+                      <button onClick={() => setAdminData({...adminData, articles: [{id: Date.now().toString(), title: 'Новая статья', category: 'Статья', date: new Date().toISOString().split('T')[0], readTime: '5 мин', excerpt: '', content: '', image: ''}, ...adminData.articles]})} style={{ background: '#06b6d4', color: '#fff', border: 'none', padding: '8px 16px', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold' }}>+ Добавить статью</button>
+                    </div>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '20px' }}>
+                      {adminData.articles.map((article, i) => (
+                        <div key={i} style={{ background: theme === 'white' ? '#f8fafc' : '#1a1a1a', border: theme === 'white' ? '1px solid #e2e8f0' : '1px solid #333', borderRadius: '12px', padding: '20px', display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <span style={{ fontSize: '0.85rem', color: theme === 'white' ? '#64748b' : '#888' }}>Статья #{i+1}</span>
+                            <button onClick={() => {
+                              const newArr = [...adminData.articles];
+                              newArr.splice(i, 1);
+                              setAdminData({...adminData, articles: newArr});
+                            }} style={{ background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', border: 'none', padding: '6px', borderRadius: '6px', cursor: 'pointer' }}><Trash2 size={14}/></button>
+                          </div>
+                          
+                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
+                              <div>
+                                  <div style={{ fontSize: '0.75rem', color: theme === 'white' ? '#64748b' : '#888', marginBottom: '5px' }}>Заголовок</div>
+                                  <input type="text" value={article.title} onChange={e => {
+                                    const newArr = [...adminData.articles];
+                                    newArr[i].title = e.target.value;
+                                    setAdminData({...adminData, articles: newArr});
+                                  }} style={{ width: '100%', padding: '10px', background: theme === 'white' ? '#fff' : '#000', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', color: theme === 'white' ? '#0f172a' : '#fff', borderRadius: '6px' }} />
+                              </div>
+                              <div>
+                                  <div style={{ fontSize: '0.75rem', color: theme === 'white' ? '#64748b' : '#888', marginBottom: '5px' }}>Категория</div>
+                                  <input type="text" value={article.category} onChange={e => {
+                                    const newArr = [...adminData.articles];
+                                    newArr[i].category = e.target.value;
+                                    setAdminData({...adminData, articles: newArr});
+                                  }} style={{ width: '100%', padding: '10px', background: theme === 'white' ? '#fff' : '#000', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', color: theme === 'white' ? '#0f172a' : '#fff', borderRadius: '6px' }} />
+                              </div>
+                          </div>
+                          
+                          <div>
+                            <div style={{ fontSize: '0.75rem', color: theme === 'white' ? '#64748b' : '#888', marginBottom: '5px' }}>Фотография (обложка)</div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                              {article.image && <img src={article.image} alt={article.title} style={{ width: '60px', height: '60px', objectFit: 'cover', borderRadius: '6px' }} />}
+                              <button onClick={() => {
+                                const url = prompt('Введите URL картинки:', article.image || '/images/article_placeholder.jpg');
+                                if (url !== null) {
+                                  const newArr = [...adminData.articles];
+                                  newArr[i].image = url;
+                                  setAdminData({...adminData, articles: newArr});
+                                }
+                              }} style={{ padding: '8px 12px', background: 'rgba(6, 182, 212, 0.1)', color: '#06b6d4', border: 'none', borderRadius: '6px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                <Folder size={14}/> Выбрать фото
+                              </button>
+                              <input type="text" value={article.image || ''} readOnly style={{ flex: 1, padding: '10px', background: theme === 'white' ? '#fff' : '#000', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', color: theme === 'white' ? '#0f172a' : '#fff', borderRadius: '6px', opacity: 0.7 }} />
+                            </div>
+                          </div>
+
+                          <div>
+                            <div style={{ fontSize: '0.75rem', color: theme === 'white' ? '#64748b' : '#888', marginBottom: '5px' }}>Краткое описание (excerpt)</div>
+                            <textarea value={article.excerpt} onChange={e => {
+                              const newArr = [...adminData.articles];
+                              newArr[i].excerpt = e.target.value;
+                              setAdminData({...adminData, articles: newArr});
+                            }} rows={2} style={{ width: '100%', padding: '10px', background: theme === 'white' ? '#fff' : '#000', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', color: theme === 'white' ? '#0f172a' : '#fff', borderRadius: '6px', fontFamily: 'inherit' }} />
+                          </div>
+                          
+                          <div>
+                            <div style={{ fontSize: '0.75rem', color: theme === 'white' ? '#64748b' : '#888', marginBottom: '5px' }}>Полный текст (content)</div>
+                            <textarea value={article.content} onChange={e => {
+                              const newArr = [...adminData.articles];
+                              newArr[i].content = e.target.value;
+                              setAdminData({...adminData, articles: newArr});
+                            }} rows={5} style={{ width: '100%', padding: '10px', background: theme === 'white' ? '#fff' : '#000', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', color: theme === 'white' ? '#0f172a' : '#fff', borderRadius: '6px', fontFamily: 'inherit' }} />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+
+              
+              {activeAdminSection.startsWith('form_') && activeAdminSection !== 'form_knowledge_articles' && (
+                <div style={{ background: theme === 'white' ? '#fff' : '#111', border: theme === 'white' ? '1px solid rgba(0,0,0,0.05)' : '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', padding: '30px', boxShadow: theme === 'white' ? '0 4px 20px rgba(0,0,0,0.05)' : 'none', textAlign: 'center' }}>
+                  <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '20px', color: theme === 'white' ? '#0f172a' : '#fff' }}>Управление контентом ({activeAdminSection.replace('form_', '')})</h3>
+                  <div style={{ padding: '60px', border: theme === 'white' ? '1px dashed #cbd5e1' : '1px dashed #333', borderRadius: '12px', color: theme === 'white' ? '#64748b' : '#888' }}>
+                    Форма добавления и редактирования для этого раздела находится в процессе интеграции.<br/><br/>
+                    Пожалуйста, используйте раздел "Базы Данных" или вернитесь позже.
+                  </div>
+                </div>
+              )}
+
               {activeAdminSection === 'blocks' && (
                 <div style={{ background: theme === 'white' ? '#fff' : '#111', border: theme === 'white' ? '1px solid rgba(0,0,0,0.05)' : '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', padding: '30px', boxShadow: theme === 'white' ? '0 4px 20px rgba(0,0,0,0.05)' : 'none' }}>
                   <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '30px', color: theme === 'white' ? '#0f172a' : '#fff', borderBottom: theme === 'white' ? '1px solid #e2e8f0' : '1px solid #333', paddingBottom: '15px' }}>Управление Базами Данных</h3>
@@ -2832,23 +2936,8 @@ function App() {
                     {MENU_STRUCTURE['ru'].find(m => m.page === activeAdminSection.replace('cms_', ''))?.items.map((sub, sidx) => (
                       <div key={sidx} style={{ padding: '20px', background: theme === 'white' ? '#f8fafc' : 'rgba(255,255,255,0.02)', border: theme === 'white' ? '1px solid #e2e8f0' : '1px solid rgba(255,255,255,0.05)', borderRadius: '8px', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }} onClick={() => {
                         if (sub.action) {
-                          if (sub.action.type === 'page') {
-                            setActivePage(sub.action.val);
-                            if (sub.action.subpage) {
-                              setActiveSubPage(sub.action.subpage);
-                            }
-                          } else if (sub.action.type === 'service') {
-                            setActivePage('services');
-                            // If you have activeServiceTab or similar, you'd set it here.
-                            // Assuming setActiveServiceTab exists based on our search.
-                            if (typeof setActiveServiceTab === 'function') {
-                              setActiveServiceTab(sub.action.val);
-                            }
-                          } else if (sub.action.type === 'link') {
-                            setActivePage(sub.action.val);
-                          }
+                           setActiveAdminSection('form_' + sub.action.val + '_' + (sub.action.subpage || ''));
                         }
-                        setIsVisualBuilder(true);
                       }}>
                         <div style={{ fontWeight: '500', color: theme === 'white' ? '#334155' : '#cbd5e1' }}>{sub.name}</div>
                         <Edit3 size={16} color="var(--color-cyan)" />
