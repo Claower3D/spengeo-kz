@@ -489,12 +489,16 @@ const DEFAULT_NORMS = [
       
       if (!parsed.calc) {
         parsed.calc = {
-          baseRate: 18500,
           waterCoeff: 1.15,
           seismicCoeff9: 1.1,
           seismicCoeff6: 1.0,
           holeAreaDivisor: 120,
-          drillSpeedPerDay: 22
+          drillSpeedPerDay: 22,
+          soilSandPrice: 18500,
+          soilClayPrice: 22200,
+          soilLoamPrice: 20350,
+          soilRockPrice: 46250,
+          soilPeatPrice: 27750
         };
       }
 
@@ -518,12 +522,16 @@ const DEFAULT_NORMS = [
         ] 
       },
       calc: {
-        baseRate: 18500,
         waterCoeff: 1.15,
         seismicCoeff9: 1.1,
         seismicCoeff6: 1.0,
         holeAreaDivisor: 120,
-        drillSpeedPerDay: 22
+        drillSpeedPerDay: 22,
+        soilSandPrice: 18500,
+        soilClayPrice: 22200,
+        soilLoamPrice: 20350,
+        soilRockPrice: 46250,
+        soilPeatPrice: 27750
       }
     };
   });
@@ -701,15 +709,21 @@ const DEFAULT_NORMS = [
   const [editingServiceIndex, setEditingServiceIndex] = useState(null);
 
   // Calculations
-  const selectedSoilConfig = SOILS[activeSoil];
-  const calcConfig = adminData.calc || { baseRate: 18500, waterCoeff: 1.15, seismicCoeff9: 1.1, seismicCoeff6: 1.0, holeAreaDivisor: 120, drillSpeedPerDay: 22 };
+  const calcConfig = adminData.calc || { waterCoeff: 1.15, seismicCoeff9: 1.1, seismicCoeff6: 1.0, holeAreaDivisor: 120, drillSpeedPerDay: 22, soilSandPrice: 18500, soilClayPrice: 22200, soilLoamPrice: 20350, soilRockPrice: 46250, soilPeatPrice: 27750 };
+  const currentSoils = {
+    sand: { ...SOILS.sand, price: calcConfig.soilSandPrice || 18500 },
+    clay: { ...SOILS.clay, price: calcConfig.soilClayPrice || 22200 },
+    loam: { ...SOILS.loam, price: calcConfig.soilLoamPrice || 20350 },
+    rock: { ...SOILS.rock, price: calcConfig.soilRockPrice || 46250 },
+    peat: { ...SOILS.peat, price: calcConfig.soilPeatPrice || 27750 }
+  };
+  const selectedSoilConfig = currentSoils[activeSoil];
   
   const holeCount = Math.max(3, Math.ceil(buildArea / calcConfig.holeAreaDivisor) + (seismicZone === '9' ? 1 : 0));
   const totalDrillLength = holeCount * drillDepth;
-  const baseRate = calcConfig.baseRate;
   const waterCoeff = waterTable ? calcConfig.waterCoeff : 1.0;
   const seismicCoeff = seismicZone === '9' ? calcConfig.seismicCoeff9 : calcConfig.seismicCoeff6;
-  const estimatedCost = Math.round(totalDrillLength * baseRate * selectedSoilConfig.coeff * waterCoeff * seismicCoeff);
+  const estimatedCost = Math.round(totalDrillLength * selectedSoilConfig.price * waterCoeff * seismicCoeff);
   const estimatedDuration = Math.max(3, Math.ceil(totalDrillLength / calcConfig.drillSpeedPerDay));
   const sampleCount = holeCount * Math.max(2, Math.floor(drillDepth / 5));
 
@@ -2389,10 +2403,10 @@ const DEFAULT_NORMS = [
                 <div className="calc-form-group">
                   <label className="calc-label">
                     <span>Тип грунтов строительного пятна</span>
-                    <span>Коэф: x{selectedSoilConfig.coeff}</span>
+                    <span>{selectedSoilConfig.price} ₸ / пог.м</span>
                   </label>
                   <div className="soil-grid">
-                    {Object.entries(SOILS).map(([key, config]) => (
+                    {Object.entries(currentSoils).map(([key, config]) => (
                       <button
                         key={key}
                         type="button"
@@ -2526,7 +2540,7 @@ const DEFAULT_NORMS = [
                       <tr style={{ borderBottom: '1px solid var(--border-color)' }}>
                         <td style={{ padding: '8px 0' }}>Инженерно-геологическое бурение</td>
                         <td>{totalDrillLength} пог.м</td>
-                        <td>x{(selectedSoilConfig.coeff * waterCoeff * seismicCoeff).toFixed(2)}</td>
+                        <td>x{(waterCoeff * seismicCoeff).toFixed(2)}</td>
                         <td style={{ textAlign: 'right' }}>{estimatedCost.toLocaleString()} ₸</td>
                       </tr>
                       <tr style={{ borderBottom: '1px solid var(--border-color)' }}>
@@ -3017,15 +3031,6 @@ const DEFAULT_NORMS = [
                   
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px' }}>
                     <div style={{ display: 'flex', flexDirection: 'column' }}>
-                      <label style={{ fontSize: '0.85rem', color: theme === 'white' ? '#64748b' : '#888', marginBottom: '8px' }}>Базовая ставка за 1 пог.м (₸)</label>
-                      <input 
-                        type="number" 
-                        value={adminData.calc?.baseRate || 18500} 
-                        onChange={e => setAdminData(prev => ({...prev, calc: {...prev.calc, baseRate: Number(e.target.value)}}))}
-                        style={{ padding: '12px', borderRadius: '8px', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #333', background: theme === 'white' ? '#fff' : '#000', color: theme === 'white' ? '#0f172a' : '#fff' }} 
-                      />
-                    </div>
-                    <div style={{ display: 'flex', flexDirection: 'column' }}>
                       <label style={{ fontSize: '0.85rem', color: theme === 'white' ? '#64748b' : '#888', marginBottom: '8px' }}>Коэф. грунтовых вод (удорожание)</label>
                       <input 
                         type="number" step="0.01"
@@ -3067,6 +3072,54 @@ const DEFAULT_NORMS = [
                         type="number" 
                         value={adminData.calc?.drillSpeedPerDay || 22} 
                         onChange={e => setAdminData(prev => ({...prev, calc: {...prev.calc, drillSpeedPerDay: Number(e.target.value)}}))}
+                        style={{ padding: '12px', borderRadius: '8px', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #333', background: theme === 'white' ? '#fff' : '#000', color: theme === 'white' ? '#0f172a' : '#fff' }} 
+                      />
+                    </div>
+                  </div>
+                  <h4 style={{ fontSize: '1.2rem', fontWeight: 'bold', marginTop: '40px', marginBottom: '20px', color: theme === 'white' ? '#0f172a' : '#fff' }}>Стоимость бурения по типам грунтов (₸/пог.м)</h4>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                      <label style={{ fontSize: '0.85rem', color: theme === 'white' ? '#64748b' : '#888', marginBottom: '8px' }}>Пески</label>
+                      <input 
+                        type="number"
+                        value={adminData.calc?.soilSandPrice || 18500} 
+                        onChange={e => setAdminData(prev => ({...prev, calc: {...prev.calc, soilSandPrice: Number(e.target.value)}}))}
+                        style={{ padding: '12px', borderRadius: '8px', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #333', background: theme === 'white' ? '#fff' : '#000', color: theme === 'white' ? '#0f172a' : '#fff' }} 
+                      />
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                      <label style={{ fontSize: '0.85rem', color: theme === 'white' ? '#64748b' : '#888', marginBottom: '8px' }}>Глины</label>
+                      <input 
+                        type="number"
+                        value={adminData.calc?.soilClayPrice || 22200} 
+                        onChange={e => setAdminData(prev => ({...prev, calc: {...prev.calc, soilClayPrice: Number(e.target.value)}}))}
+                        style={{ padding: '12px', borderRadius: '8px', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #333', background: theme === 'white' ? '#fff' : '#000', color: theme === 'white' ? '#0f172a' : '#fff' }} 
+                      />
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                      <label style={{ fontSize: '0.85rem', color: theme === 'white' ? '#64748b' : '#888', marginBottom: '8px' }}>Суглинки</label>
+                      <input 
+                        type="number"
+                        value={adminData.calc?.soilLoamPrice || 20350} 
+                        onChange={e => setAdminData(prev => ({...prev, calc: {...prev.calc, soilLoamPrice: Number(e.target.value)}}))}
+                        style={{ padding: '12px', borderRadius: '8px', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #333', background: theme === 'white' ? '#fff' : '#000', color: theme === 'white' ? '#0f172a' : '#fff' }} 
+                      />
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                      <label style={{ fontSize: '0.85rem', color: theme === 'white' ? '#64748b' : '#888', marginBottom: '8px' }}>Скала</label>
+                      <input 
+                        type="number"
+                        value={adminData.calc?.soilRockPrice || 46250} 
+                        onChange={e => setAdminData(prev => ({...prev, calc: {...prev.calc, soilRockPrice: Number(e.target.value)}}))}
+                        style={{ padding: '12px', borderRadius: '8px', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #333', background: theme === 'white' ? '#fff' : '#000', color: theme === 'white' ? '#0f172a' : '#fff' }} 
+                      />
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                      <label style={{ fontSize: '0.85rem', color: theme === 'white' ? '#64748b' : '#888', marginBottom: '8px' }}>Торф</label>
+                      <input 
+                        type="number"
+                        value={adminData.calc?.soilPeatPrice || 27750} 
+                        onChange={e => setAdminData(prev => ({...prev, calc: {...prev.calc, soilPeatPrice: Number(e.target.value)}}))}
                         style={{ padding: '12px', borderRadius: '8px', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #333', background: theme === 'white' ? '#fff' : '#000', color: theme === 'white' ? '#0f172a' : '#fff' }} 
                       />
                     </div>
@@ -3630,7 +3683,7 @@ const DEFAULT_NORMS = [
                     <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', color: theme === 'white' ? '#0f172a' : '#fff' }}>
                       Структура сайта ({dynamicMenu[language].reduce((acc, curr) => acc + 1 + (curr.items ? curr.items.length : 0), 0)} страниц)
                     </h3>
-                    <button style={{ background: '#ec4899', color: '#fff', border: 'none', padding: '8px 16px', borderRadius: '6px', cursor: 'pointer' }}>+ Добавить страницу</button>
+                    <button onClick={() => alert('Добавление новых страниц в данный момент требует участия разработчика, так как каждая страница имеет уникальный дизайн и анимации в коде.')} style={{ background: '#ec4899', color: '#fff', border: 'none', padding: '8px 16px', borderRadius: '6px', cursor: 'pointer' }}>+ Добавить страницу</button>
                   </div>
                   
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
@@ -3645,8 +3698,8 @@ const DEFAULT_NORMS = [
                             <div style={{ fontSize: '0.8rem', color: theme === 'white' ? '#64748b' : '#888', marginTop: '4px', marginLeft: '24px' }}>Path: /{page.page}</div>
                           </div>
                           <div style={{ display: 'flex', gap: '10px' }}>
-                            <button style={{ background: 'none', border: 'none', color: '#ec4899', cursor: 'pointer' }}>SEO</button>
-                            <button style={{ background: 'none', border: 'none', color: '#3b82f6', cursor: 'pointer' }}>Настроить</button>
+                            <button onClick={() => alert('SEO настройки для этой страницы скоро будут доступны для редактирования.')} style={{ background: 'none', border: 'none', color: '#ec4899', cursor: 'pointer' }}>SEO</button>
+                            <button onClick={() => alert('Для изменения контента этой страницы, пожалуйста, обратитесь к разработчику. Сайт использует сложную верстку, которая жестко задана в коде для высокой производительности и анимаций.')} style={{ background: 'none', border: 'none', color: '#3b82f6', cursor: 'pointer' }}>Настроить</button>
                           </div>
                         </div>
                         
@@ -3666,8 +3719,8 @@ const DEFAULT_NORMS = [
                                   </div>
                                 </div>
                                 <div style={{ display: 'flex', gap: '10px' }}>
-                                  <button style={{ background: 'none', border: 'none', color: '#ec4899', cursor: 'pointer', fontSize: '0.85rem' }}>SEO</button>
-                                  <button style={{ background: 'none', border: 'none', color: '#3b82f6', cursor: 'pointer', fontSize: '0.85rem' }}>Контент</button>
+                                  <button onClick={() => alert('SEO настройки для этой страницы скоро будут доступны для редактирования.')} style={{ background: 'none', border: 'none', color: '#ec4899', cursor: 'pointer', fontSize: '0.85rem' }}>SEO</button>
+                                  <button onClick={() => alert('Для изменения контента этой страницы, пожалуйста, обратитесь к разработчику. Сайт использует сложную верстку, которая жестко задана в коде для высокой производительности и анимаций.')} style={{ background: 'none', border: 'none', color: '#3b82f6', cursor: 'pointer', fontSize: '0.85rem' }}>Контент</button>
                                 </div>
                               </div>
                             ))}
