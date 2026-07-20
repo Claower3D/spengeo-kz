@@ -32,7 +32,7 @@ const customGlowIcon = new L.divIcon({
 
 // Soil types for calculations
 const SOILS = {
-  sand: { name: 'Песок (Песчаный грунт)', coeff: 1.0, color: 'rgba(234, 179, 8, 0.15)', desc: 'Легко бурится, требует обсадки скважин от осыпания.', minDepth: 5, spec: 'СП РК 1.02-104-2020 Прил. А' },
+  sand: { name: 'Песок (Песчаный грунт)', coeff: 1.0, color: 'rgba(59, 130, 246, 0.15)', desc: 'Легко бурится, требует обсадки скважин от осыпания.', minDepth: 5, spec: 'СП РК 1.02-104-2020 Прил. А' },
   clay: { name: 'Глина (Глинистый грунт)', coeff: 1.2, color: 'rgba(180, 83, 9, 0.15)', desc: 'Высокая липкость, прочные скважины, требуется точное лабораторное определение консистенции.', minDepth: 8, spec: 'СП РК 1.02-104-2020 Прил. Б' },
   loam: { name: 'Суглинок (Смешанный грунт)', coeff: 1.1, color: 'rgba(120, 53, 4, 0.15)', desc: 'Смешанный тип, средняя степень сложности бурения.', minDepth: 6, spec: 'СП РК 1.02-104-2020 Прил. В' },
   rock: { name: 'Скальный грунт (Прочный)', coeff: 2.5, color: 'rgba(100, 116, 139, 0.2)', desc: 'Повышенная прочность, требуется буровые коронки повышенной твердости (Bauer BG20/BG28).', minDepth: 15, spec: 'СП РК 1.02-104-2020 Прил. Г' },
@@ -1017,7 +1017,7 @@ function App() {
             {/* 1.5. Clients / Partners (Moved above stats) */}
             <section style={{ marginBottom: '60px', textAlign: 'center', position: 'relative', overflow: 'visible', padding: '40px 0' }}>
                <div className="bg-glow-orb" style={{ top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '1000px', height: '400px', opacity: 0.08, background: 'radial-gradient(ellipse, var(--color-cyan) 0%, transparent 70%)' }}></div>
-               <EditableText id="clients_subtitle" defaultText="НАМ ДОВЕРЯЮТ" isVisualBuilder={isVisualBuilder} className="hero-subtitle" style={{ color: 'var(--color-accent)', textShadow: '0 0 15px rgba(234, 179, 8, 0.6)' }} />
+               <EditableText id="clients_subtitle" defaultText="НАМ ДОВЕРЯЮТ" isVisualBuilder={isVisualBuilder} className="hero-subtitle" style={{ color: 'var(--color-accent)', textShadow: '0 0 15px rgba(59, 130, 246, 0.6)' }} />
                <EditableText as="h2" id="clients_title" defaultText={t.sections.clientsTitle} isVisualBuilder={isVisualBuilder} style={{ fontSize: '3.2rem', marginBottom: '40px', textShadow: '0 0 40px rgba(255,255,255,0.2)' }} />
                
                <div className="marquee-container" style={{ position: 'relative', zIndex: 2, marginTop: '20px' }}>
@@ -1043,11 +1043,11 @@ function App() {
                 {/* 2x2 Large Card */}
                 <div className="glow-card-premium bento-card bento-large float-slow">
                   <div style={{ position: 'absolute', right: '-40px', bottom: '-40px', opacity: 0.03 }}><Hammer size={300} /></div>
-                  <div style={{ background: 'rgba(234, 179, 8, 0.1)', padding: '15px', borderRadius: '15px', marginBottom: '30px', display: 'inline-block', width: 'max-content' }}>
+                  <div style={{ background: 'rgba(59, 130, 246, 0.1)', padding: '15px', borderRadius: '15px', marginBottom: '30px', display: 'inline-block', width: 'max-content' }}>
                     <Hammer size={32} color="var(--color-accent)" />
                   </div>
                   <EditableText id="stats_wells" defaultText={t.stats.wells} isVisualBuilder={isVisualBuilder} className="spec-label" style={{ marginBottom: '15px', color: 'var(--color-text-primary)' }} />
-                  <EditableText id="stats_wells_val" defaultText="1,420+" isVisualBuilder={isVisualBuilder} as="div" className="spec-val" style={{ fontSize: 'clamp(4rem, 8vw, 6rem)', fontWeight: 900, color: 'var(--color-accent)', fontFamily: 'var(--font-display)', lineHeight: 1, marginBottom: '20px', textShadow: '0 0 30px rgba(234, 179, 8, 0.5)' }} />
+                  <EditableText id="stats_wells_val" defaultText="1,420+" isVisualBuilder={isVisualBuilder} as="div" className="spec-val" style={{ fontSize: 'clamp(4rem, 8vw, 6rem)', fontWeight: 900, color: 'var(--color-accent)', fontFamily: 'var(--font-display)', lineHeight: 1, marginBottom: '20px', textShadow: '0 0 30px rgba(59, 130, 246, 0.5)' }} />
                   <EditableText id="stats_wells_desc" defaultText={t.stats.wellsDesc} isVisualBuilder={isVisualBuilder} as="p" style={{ fontSize: '1.1rem', color: 'var(--color-text-secondary)', margin: 0, lineHeight: 1.8, position: 'relative', zIndex: 2, maxWidth: '80%' }} />
                 </div>
 
@@ -1065,11 +1065,11 @@ function App() {
                 {/* 1x1 Card */}
                 <div className="glow-card-premium bento-card float-slow">
                   <div style={{ position: 'absolute', right: '-20px', top: '-20px', opacity: 0.03 }}><Award size={150} /></div>
-                  <div style={{ background: 'rgba(234, 179, 8, 0.1)', padding: '12px', borderRadius: '12px', marginBottom: '20px', display: 'inline-block', width: 'max-content' }}>
+                  <div style={{ background: 'rgba(59, 130, 246, 0.1)', padding: '12px', borderRadius: '12px', marginBottom: '20px', display: 'inline-block', width: 'max-content' }}>
                     <Award size={24} color="var(--color-accent)" />
                   </div>
                   <EditableText id="stats_standards" defaultText={t.stats.standards} isVisualBuilder={isVisualBuilder} className="spec-label" style={{ marginBottom: '10px' }} />
-                  <EditableText id="stats_standards_val" defaultText="100%" isVisualBuilder={isVisualBuilder} as="div" style={{ fontSize: '3rem', fontWeight: 800, color: 'var(--color-accent)', fontFamily: 'var(--font-mono)', lineHeight: 1, marginBottom: '15px', textShadow: '0 0 20px rgba(234, 179, 8, 0.4)' }} />
+                  <EditableText id="stats_standards_val" defaultText="100%" isVisualBuilder={isVisualBuilder} as="div" style={{ fontSize: '3rem', fontWeight: 800, color: 'var(--color-accent)', fontFamily: 'var(--font-mono)', lineHeight: 1, marginBottom: '15px', textShadow: '0 0 20px rgba(59, 130, 246, 0.4)' }} />
                   <EditableText id="stats_standards_desc" defaultText={t.stats.standardsDesc} isVisualBuilder={isVisualBuilder} as="p" style={{ fontSize: '0.95rem', color: 'var(--color-text-secondary)', margin: 0, lineHeight: 1.6, position: 'relative', zIndex: 2 }} />
                 </div>
 
@@ -1114,7 +1114,7 @@ function App() {
                     </div>
                   </div>
                   <div style={{ display: 'flex', gap: '15px', alignItems: 'flex-start' }}>
-                    <div style={{ background: 'rgba(234, 179, 8, 0.1)', padding: '12px', borderRadius: '50%', color: 'var(--color-accent)' }}><Settings size={24}/></div>
+                    <div style={{ background: 'rgba(59, 130, 246, 0.1)', padding: '12px', borderRadius: '50%', color: 'var(--color-accent)' }}><Settings size={24}/></div>
                     <div>
                       <EditableText as="h4" id="about_f2_title" defaultText={t.sections.aboutF2Title} isVisualBuilder={isVisualBuilder} style={{ color: 'var(--color-text-primary)', fontSize: '1.1rem', marginBottom: '5px' }} />
                       <EditableText as="p" id="about_f2_desc" defaultText={t.sections.aboutF2Desc} isVisualBuilder={isVisualBuilder} style={{ color: 'var(--color-text-secondary)', fontSize: '0.9rem', lineHeight: 1.5 }} />
@@ -1481,7 +1481,7 @@ function App() {
             {/* 4.5. Approach Section (New) */}
             <section style={{ marginBottom: '80px', position: 'relative' }}>
               <div style={{ textAlign: 'center', marginBottom: '40px' }}>
-                <EditableText id="approach_label_v3" defaultText="ИНДИВИДУАЛЬНЫЙ ПОДХОД" isVisualBuilder={isVisualBuilder} className="hero-subtitle" style={{ color: 'var(--color-accent)', textShadow: '0 0 15px rgba(234, 179, 8, 0.6)' }} />
+                <EditableText id="approach_label_v3" defaultText="ИНДИВИДУАЛЬНЫЙ ПОДХОД" isVisualBuilder={isVisualBuilder} className="hero-subtitle" style={{ color: 'var(--color-accent)', textShadow: '0 0 15px rgba(59, 130, 246, 0.6)' }} />
                 <EditableText as="h2" id="approach_title_v3" defaultText={t.sections.approachTitle} isVisualBuilder={isVisualBuilder} style={{ fontSize: '2.5rem', marginBottom: '20px', textShadow: '0 0 40px rgba(255,255,255,0.2)', maxWidth: '900px', margin: '0 auto 20px auto' }} />
                 <EditableText as="p" id="approach_desc" defaultText={t.sections.approachDesc} isVisualBuilder={isVisualBuilder} style={{ color: 'var(--color-text-secondary)', fontSize: '1.05rem', lineHeight: 1.6, maxWidth: '800px', margin: '0 auto' }} />
               </div>
@@ -1500,7 +1500,7 @@ function App() {
                 {/* Card 2 */}
                 <div className="approach-card-premium approach-card-center">
                   <div className="approach-watermark">02</div>
-                  <div className="license-icon-glow" style={{ marginBottom: '30px', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '80px', height: '80px', background: 'rgba(234, 179, 8, 0.1)', borderRadius: '50%', border: '1px solid rgba(234, 179, 8, 0.3)', boxShadow: '0 0 20px rgba(234, 179, 8, 0.2)' }}>
+                  <div className="license-icon-glow" style={{ marginBottom: '30px', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '80px', height: '80px', background: 'rgba(59, 130, 246, 0.1)', borderRadius: '50%', border: '1px solid rgba(59, 130, 246, 0.3)', boxShadow: '0 0 20px rgba(59, 130, 246, 0.2)' }}>
                     <Briefcase size={36} color="var(--color-accent)" />
                   </div>
                   <EditableText as="h3" id="app_c2_t" defaultText={t.sections.approach2Title} isVisualBuilder={isVisualBuilder} style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '20px', color: 'var(--color-text-primary)', lineHeight: 1.4 }} />
@@ -1588,14 +1588,14 @@ function App() {
                     </div>
                     
                     {/* Glowing front icon */}
-                    <div style={{ background: doc.id === 'lic-gsl' ? 'rgba(239, 68, 68, 0.1)' : doc.id === 'accreditation' ? 'rgba(6, 182, 212, 0.1)' : 'rgba(234, 179, 8, 0.1)', padding: '20px', borderRadius: '50%', marginBottom: '25px', display: 'inline-flex', position: 'relative', zIndex: 2 }}>
+                    <div style={{ background: doc.id === 'lic-gsl' ? 'rgba(239, 68, 68, 0.1)' : doc.id === 'accreditation' ? 'rgba(6, 182, 212, 0.1)' : 'rgba(59, 130, 246, 0.1)', padding: '20px', borderRadius: '50%', marginBottom: '25px', display: 'inline-flex', position: 'relative', zIndex: 2 }}>
                       {doc.id === 'lic-gsl' && <ShieldCheck size={40} color="#ef4444" />}
                       {doc.id === 'accreditation' && <Award size={40} color="var(--color-cyan)" />}
                       {doc.id.startsWith('iso') && <FileText size={40} color="var(--color-accent)" />}
                     </div>
                     
                     <h3 style={{ fontSize: '1.3rem', marginBottom: '15px', color: 'var(--color-text-primary)', fontWeight: 800, position: 'relative', zIndex: 2, lineHeight: 1.4 }}>{doc.title}</h3>
-                    <span className="spec-label" style={{ color: doc.id === 'lic-gsl' ? '#ef4444' : doc.id === 'accreditation' ? 'var(--color-cyan)' : 'var(--color-accent)', fontSize: '0.9rem', letterSpacing: '0.15em', textShadow: `0 0 10px ${doc.id === 'lic-gsl' ? 'rgba(239, 68, 68, 0.4)' : doc.id === 'accreditation' ? 'rgba(6, 182, 212, 0.4)' : 'rgba(234, 179, 8, 0.4)'}`, position: 'relative', zIndex: 2 }}>{doc.subtitle}</span>
+                    <span className="spec-label" style={{ color: doc.id === 'lic-gsl' ? '#ef4444' : doc.id === 'accreditation' ? 'var(--color-cyan)' : 'var(--color-accent)', fontSize: '0.9rem', letterSpacing: '0.15em', textShadow: `0 0 10px ${doc.id === 'lic-gsl' ? 'rgba(239, 68, 68, 0.4)' : doc.id === 'accreditation' ? 'rgba(6, 182, 212, 0.4)' : 'rgba(59, 130, 246, 0.4)'}`, position: 'relative', zIndex: 2 }}>{doc.subtitle}</span>
                   </div>
                 ))}
               </div>
@@ -2551,7 +2551,7 @@ function App() {
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px', marginBottom: '40px' }}>
                     {dynamicMenu['ru'].map((menuItem, idx) => {
                       if (!menuItem.items) return null;
-                      const colors = ['rgba(59, 130, 246', 'rgba(16, 185, 129', 'rgba(245, 158, 11', 'rgba(168, 85, 247', 'rgba(236, 72, 153', 'rgba(6, 182, 212'];
+                      const colors = ['rgba(59, 130, 246', 'rgba(16, 185, 129', 'rgba(59, 130, 246', 'rgba(168, 85, 247', 'rgba(236, 72, 153', 'rgba(6, 182, 212'];
                       const col = colors[idx % colors.length];
                       return (
                         <div key={idx} onClick={() => setActiveAdminSection('cms_' + menuItem.page)} style={{ position: 'relative', overflow: 'hidden', borderRadius: '12px', background: theme === 'white' ? '#fff' : '#111', border: theme === 'white' ? `1px solid ${col}, 0.4)` : `1px solid ${col}, 0.3)`, padding: '24px', display: 'flex', flexDirection: 'column', cursor: 'pointer', transition: 'transform 0.2s', boxShadow: theme === 'white' ? '0 4px 20px rgba(0,0,0,0.05)' : 'none' }}>
@@ -2640,10 +2640,10 @@ function App() {
                 </div>
 
                 {/* 4. Content */}
-                <div onClick={() => setActiveAdminSection('content')} style={{ position: 'relative', overflow: 'hidden', borderRadius: '12px', background: theme === 'white' ? '#fff' : '#111', border: theme === 'white' ? '1px solid rgba(234, 179, 8, 0.4)' : '1px solid rgba(234, 179, 8, 0.3)', padding: '24px', display: 'flex', flexDirection: 'column', cursor: 'pointer', transition: 'transform 0.2s', boxShadow: theme === 'white' ? '0 4px 20px rgba(0,0,0,0.05)' : 'none' }}>
-                  <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '100px', background: 'linear-gradient(to bottom, rgba(234, 179, 8, 0.15), transparent)', pointerEvents: 'none' }}></div>
+                <div onClick={() => setActiveAdminSection('content')} style={{ position: 'relative', overflow: 'hidden', borderRadius: '12px', background: theme === 'white' ? '#fff' : '#111', border: theme === 'white' ? '1px solid rgba(59, 130, 246, 0.4)' : '1px solid rgba(59, 130, 246, 0.3)', padding: '24px', display: 'flex', flexDirection: 'column', cursor: 'pointer', transition: 'transform 0.2s', boxShadow: theme === 'white' ? '0 4px 20px rgba(0,0,0,0.05)' : 'none' }}>
+                  <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '100px', background: 'linear-gradient(to bottom, rgba(59, 130, 246, 0.15), transparent)', pointerEvents: 'none' }}></div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '40px', position: 'relative', zIndex: 1 }}>
-                    <div style={{ background: theme === 'white' ? 'rgba(234, 179, 8, 0.1)' : 'rgba(0,0,0,0.4)', border: theme === 'white' ? '1px solid rgba(234, 179, 8, 0.2)' : '1px solid rgba(255,255,255,0.05)', padding: '8px', borderRadius: '8px', color: '#eab308' }}>
+                    <div style={{ background: theme === 'white' ? 'rgba(59, 130, 246, 0.1)' : 'rgba(0,0,0,0.4)', border: theme === 'white' ? '1px solid rgba(59, 130, 246, 0.2)' : '1px solid rgba(255,255,255,0.05)', padding: '8px', borderRadius: '8px', color: '#3b82f6' }}>
                       <BookOpen size={24} />
                     </div>
                     <div style={{ textAlign: 'right' }}>
@@ -2655,7 +2655,7 @@ function App() {
                     <div style={{ fontSize: '0.65rem', fontFamily: 'monospace', textTransform: 'uppercase', letterSpacing: '0.2em', color: theme === 'white' ? '#64748b' : '#888', marginBottom: '8px' }}>Тексты и переводы</div>
                     <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '12px' }}>Контент</h2>
                     <p style={{ fontSize: '0.85rem', color: theme === 'white' ? '#475569' : '#aaa', marginBottom: '24px', lineHeight: 1.5 }}>Редактируйте все тексты сайта на русском, казахском и английском языках.</p>
-                    <div style={{ fontSize: '0.85rem', fontWeight: 500, color: '#eab308' }}>Редактировать →</div>
+                    <div style={{ fontSize: '0.85rem', fontWeight: 500, color: '#3b82f6' }}>Редактировать →</div>
                   </div>
                 </div>
 
@@ -3294,7 +3294,7 @@ function App() {
                       <div key={lang} style={{ padding: '20px', border: theme === 'white' ? '1px solid #e2e8f0' : '1px solid #333', borderRadius: '8px', textAlign: 'center' }}>
                         <div style={{ fontSize: '2rem', marginBottom: '10px' }}>{lang === 'ru' ? '🇷🇺' : lang === 'kk' ? '🇰🇿' : '🇬🇧'}</div>
                         <div style={{ fontWeight: 'bold', textTransform: 'uppercase', color: theme === 'white' ? '#0f172a' : '#fff', marginBottom: '10px' }}>{lang}</div>
-                        <button style={{ background: '#eab308', color: '#000', border: 'none', padding: '8px 16px', borderRadius: '6px', cursor: 'pointer', width: '100%' }}>Редактировать</button>
+                        <button style={{ background: '#3b82f6', color: '#000', border: 'none', padding: '8px 16px', borderRadius: '6px', cursor: 'pointer', width: '100%' }}>Редактировать</button>
                       </div>
                     ))}
                   </div>
