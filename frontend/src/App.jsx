@@ -390,6 +390,9 @@ function App() {
       if (!parsed.bot) {
         parsed.bot = { name: 'SPENGEO_ASSISTANT', welcomeMsg: 'Здравствуйте! Я автоматический ассистент СпецИнжГео. Чем могу помочь?', active: true, scenarios: [{ id: Date.now().toString(), keywords: 'цена, стоимость, прайс', answer: 'Для уточнения стоимости инженерных изысканий оставьте заявку, наш специалист свяжется с вами.' }] };
       }
+      if (!parsed.articles) {
+        parsed.articles = BLOG_POSTS;
+      }
       return parsed;
     }
     return {
@@ -1945,7 +1948,7 @@ function App() {
             {(!activeSubPage || activeSubPage === 'articles') ? (
               <>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '30px', marginBottom: '60px' }}>
-                  {adminData.articles.map(post => (
+                  {(adminData.articles || []).map(post => (
                     <HudCard key={post.id} style={{ padding: '30px' }}>
                       
                       {post.image && (
@@ -2739,7 +2742,7 @@ function App() {
                       <button onClick={() => setAdminData({...adminData, articles: [{id: Date.now().toString(), title: 'Новая статья', category: 'Статья', date: new Date().toISOString().split('T')[0], readTime: '5 мин', excerpt: '', content: '', image: ''}, ...adminData.articles]})} style={{ background: '#06b6d4', color: '#fff', border: 'none', padding: '8px 16px', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold' }}>+ Добавить статью</button>
                     </div>
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '20px' }}>
-                      {adminData.articles.map((article, i) => (
+                      {(adminData.articles || []).map((article, i) => (
                         <div key={i} style={{ background: theme === 'white' ? '#f8fafc' : '#1a1a1a', border: theme === 'white' ? '1px solid #e2e8f0' : '1px solid #333', borderRadius: '12px', padding: '20px', display: 'flex', flexDirection: 'column', gap: '15px' }}>
                           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                             <span style={{ fontSize: '0.85rem', color: theme === 'white' ? '#64748b' : '#888' }}>Статья #{i+1}</span>
