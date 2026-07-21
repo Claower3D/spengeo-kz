@@ -3527,20 +3527,42 @@ const DEFAULT_NORMS = [
                     </div>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
                       {adminData.projects.map((p, i) => (
-                        <div key={i} style={{ padding: '15px', border: theme === 'white' ? '1px solid #e2e8f0' : '1px solid #333', borderRadius: '10px', background: theme === 'white' ? '#f8fafc' : '#1a1a1a', display: 'flex', gap: '15px', alignItems: 'center', transition: 'all 0.2s' }}>
-                          <div style={{ display: 'flex', flexDirection: 'column', flex: 1, gap: '5px' }}>
-                            <label style={{ fontSize: '0.75rem', color: theme === 'white' ? '#64748b' : '#888' }}>Название объекта</label>
-                            <input value={p.name} onChange={e => { const arr = [...adminData.projects]; arr[i].name = e.target.value; setAdminData({...adminData, projects: arr}); }} style={{ padding: '8px 12px', background: theme === 'white' ? '#fff' : '#000', color: theme === 'white' ? '#0f172a' : '#fff', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', borderRadius: '6px' }} />
+                        <div key={i} style={{ padding: '15px', border: theme === 'white' ? '1px solid #e2e8f0' : '1px solid #333', borderRadius: '10px', background: theme === 'white' ? '#f8fafc' : '#1a1a1a', display: 'flex', flexDirection: 'column', gap: '15px', transition: 'all 0.2s', position: 'relative' }}>
+                          <button onClick={() => { const arr = adminData.projects.filter((_, idx) => idx !== i); setAdminData({...adminData, projects: arr}); }} style={{ position: 'absolute', top: '15px', right: '15px', color: '#ef4444', background: 'rgba(239, 68, 68, 0.1)', padding: '8px', borderRadius: '8px', border: 'none', cursor: 'pointer' }}><Trash2 size={18} /></button>
+                          
+                          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '15px', paddingRight: '50px' }}>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                              <label style={{ fontSize: '0.75rem', color: theme === 'white' ? '#64748b' : '#888' }}>Название объекта</label>
+                              <input value={p.name} onChange={e => { const arr = [...adminData.projects]; arr[i].name = e.target.value; setAdminData({...adminData, projects: arr}); }} style={{ padding: '8px 12px', background: theme === 'white' ? '#fff' : '#000', color: theme === 'white' ? '#0f172a' : '#fff', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', borderRadius: '6px' }} />
+                            </div>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                              <label style={{ fontSize: '0.75rem', color: theme === 'white' ? '#64748b' : '#888' }}>Заказчик</label>
+                              <input value={p.client} onChange={e => { const arr = [...adminData.projects]; arr[i].client = e.target.value; setAdminData({...adminData, projects: arr}); }} style={{ padding: '8px 12px', background: theme === 'white' ? '#fff' : '#000', color: theme === 'white' ? '#0f172a' : '#fff', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', borderRadius: '6px' }} />
+                            </div>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                              <label style={{ fontSize: '0.75rem', color: theme === 'white' ? '#64748b' : '#888' }}>Фото объекта</label>
+                              <ImageUploadField value={p.image || ''} onChange={(val) => { const arr = [...adminData.projects]; arr[i].image = val; setAdminData({...adminData, projects: arr}); }} theme={theme} />
+                            </div>
                           </div>
-                          <div style={{ display: 'flex', flexDirection: 'column', flex: 1, gap: '5px' }}>
-                            <label style={{ fontSize: '0.75rem', color: theme === 'white' ? '#64748b' : '#888' }}>Заказчик</label>
-                            <input value={p.client} onChange={e => { const arr = [...adminData.projects]; arr[i].client = e.target.value; setAdminData({...adminData, projects: arr}); }} style={{ padding: '8px 12px', background: theme === 'white' ? '#fff' : '#000', color: theme === 'white' ? '#0f172a' : '#fff', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', borderRadius: '6px' }} />
+
+                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 2fr 100px', gap: '15px' }}>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                              <label style={{ fontSize: '0.75rem', color: theme === 'white' ? '#64748b' : '#888' }}>Локация</label>
+                              <input value={p.loc || ''} onChange={e => { const arr = [...adminData.projects]; arr[i].loc = e.target.value; setAdminData({...adminData, projects: arr}); }} placeholder="г. Алматы" style={{ padding: '8px 12px', background: theme === 'white' ? '#fff' : '#000', color: theme === 'white' ? '#0f172a' : '#fff', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', borderRadius: '6px' }} />
+                            </div>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                              <label style={{ fontSize: '0.75rem', color: theme === 'white' ? '#64748b' : '#888' }}>Вид работ</label>
+                              <input value={p.type || ''} onChange={e => { const arr = [...adminData.projects]; arr[i].type = e.target.value; setAdminData({...adminData, projects: arr}); }} placeholder="Инженерная геология" style={{ padding: '8px 12px', background: theme === 'white' ? '#fff' : '#000', color: theme === 'white' ? '#0f172a' : '#fff', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', borderRadius: '6px' }} />
+                            </div>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                              <label style={{ fontSize: '0.75rem', color: theme === 'white' ? '#64748b' : '#888' }}>Спецификация</label>
+                              <input value={p.specs || ''} onChange={e => { const arr = [...adminData.projects]; arr[i].specs = e.target.value; setAdminData({...adminData, projects: arr}); }} placeholder="12 скважин по 35м" style={{ padding: '8px 12px', background: theme === 'white' ? '#fff' : '#000', color: theme === 'white' ? '#0f172a' : '#fff', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', borderRadius: '6px' }} />
+                            </div>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                              <label style={{ fontSize: '0.75rem', color: theme === 'white' ? '#64748b' : '#888' }}>Год</label>
+                              <input value={p.year || ''} onChange={e => { const arr = [...adminData.projects]; arr[i].year = e.target.value; setAdminData({...adminData, projects: arr}); }} placeholder="2025" style={{ padding: '8px 12px', background: theme === 'white' ? '#fff' : '#000', color: theme === 'white' ? '#0f172a' : '#fff', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', borderRadius: '6px' }} />
+                            </div>
                           </div>
-                          <div style={{ display: 'flex', flexDirection: 'column', flex: 1, gap: '5px' }}>
-                            <label style={{ fontSize: '0.75rem', color: theme === 'white' ? '#64748b' : '#888' }}>Фото объекта</label>
-                            <ImageUploadField value={p.image || ''} onChange={(val) => { const arr = [...adminData.projects]; arr[i].image = val; setAdminData({...adminData, projects: arr}); }} theme={theme} />
-                          </div>
-                          <button onClick={() => { const arr = adminData.projects.filter((_, idx) => idx !== i); setAdminData({...adminData, projects: arr}); }} style={{ color: '#ef4444', background: 'rgba(239, 68, 68, 0.1)', padding: '10px', borderRadius: '8px', border: 'none', cursor: 'pointer', marginTop: '20px' }}><Trash2 size={18} /></button>
                         </div>
                       ))}
                     </div>
