@@ -495,7 +495,8 @@ const DEFAULT_NORMS = [
           companyName: 'ТОО «СпецИнжГео»',
           phone: '+7 775 218 28 06',
           email: 'info@spengeo.kz',
-          address: 'Республика Казахстан, г. Алматы'
+          address: 'Республика Казахстан, г. Алматы',
+          mapCoords: '43.2389, 76.8897'
         };
       }
       if (!parsed.calc) {
@@ -3829,6 +3830,10 @@ const DEFAULT_NORMS = [
                       <input type="text" value={adminData.global?.address || ''} onChange={e => setAdminData(prev => ({...prev, global: {...prev.global, address: e.target.value}}))} style={{ width: '100%', padding: '12px', borderRadius: '6px', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #333', background: theme === 'white' ? '#f8fafc' : '#000', color: theme === 'white' ? '#0f172a' : '#fff' }} />
                     </div>
                     <div>
+                      <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.9rem', color: theme === 'white' ? '#475569' : '#ccc' }}>Координаты карты (Широта, Долгота)</label>
+                      <input type="text" placeholder="Например: 49.8066, 73.0855" value={adminData.global?.mapCoords || ''} onChange={e => setAdminData(prev => ({...prev, global: {...prev.global, mapCoords: e.target.value}}))} style={{ width: '100%', padding: '12px', borderRadius: '6px', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #333', background: theme === 'white' ? '#f8fafc' : '#000', color: theme === 'white' ? '#0f172a' : '#fff' }} />
+                    </div>
+                    <div>
                       <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.9rem', color: theme === 'white' ? '#475569' : '#ccc' }}>ID Яндекс Метрики (Счетчик)</label>
                       <input 
                         type="text" 
@@ -4022,17 +4027,17 @@ const DEFAULT_NORMS = [
 
       {/* Full-width Map Before Footer */}
       <section style={{ width: '100%', height: '400px', position: 'relative', zIndex: 1, borderTop: '1px solid rgba(6, 182, 212, 0.1)' }}>
-        <MapContainer center={[43.2389, 76.8897]} zoom={13} scrollWheelZoom={false} style={{ height: '100%', width: '100%', background: theme === 'white' ? '#f8fafc' : '#030509' }}>
+        <MapContainer center={adminData.global?.mapCoords ? adminData.global.mapCoords.split(',').map(Number) : [43.2389, 76.8897]} zoom={13} scrollWheelZoom={false} style={{ height: '100%', width: '100%', background: theme === 'white' ? '#f8fafc' : '#030509' }}>
           <TileLayer
             key={theme}
             url={theme === 'white' ? "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png" : "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"}
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
           />
-          <Marker position={[43.2389, 76.8897]} icon={customGlowIcon}>
+          <Marker position={adminData.global?.mapCoords ? adminData.global.mapCoords.split(',').map(Number) : [43.2389, 76.8897]} icon={customGlowIcon}>
             <Popup className="premium-popup">
               <div style={{ padding: '5px', textAlign: 'center' }}>
-                <strong style={{ color: 'var(--color-cyan)', fontSize: '1.1rem' }}>ТОО «СпецИнжГео»</strong><br/>
-                <span style={{ color: '#aaa' }}>г. Алматы, пр-т Абая, 150</span>
+                <strong style={{ color: 'var(--color-cyan)', fontSize: '1.1rem' }}>{adminData.global?.companyName || 'ТОО «СпецИнжГео»'}</strong><br/>
+                <span style={{ color: '#aaa' }}>{adminData.global?.address || 'г. Алматы, пр-т Абая, 150'}</span>
               </div>
             </Popup>
           </Marker>
