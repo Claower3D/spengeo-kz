@@ -2003,24 +2003,48 @@ const DEFAULT_NORMS = [
             </section>
             )}
 
-            {activeSubPage && activeSubPage !== 'history' && activeSubPage !== 'team' && activeSubPage !== 'advantages' && adminData.dynamicLists?.['about_' + activeSubPage] && adminData.dynamicLists['about_' + activeSubPage].length > 0 && (
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '30px', marginBottom: '60px' }}>
-                {adminData.dynamicLists['about_' + activeSubPage].map((item, idx) => (
-                  <HudCard key={item.id || idx} style={{ padding: '0', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-                     {item.image && (
-                         <div style={{ width: '100%', height: '220px', overflow: 'hidden', background: 'rgba(0,0,0,0.2)' }}>
-                            <img src={item.image} alt={item.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                         </div>
-                     )}
-                     <div style={{ padding: '25px', display: 'flex', flexDirection: 'column', gap: '15px' }}>
-                         {item.title && <h3 style={{ margin: 0, fontSize: '1.25rem', color: 'var(--color-text-primary)' }}>{item.title}</h3>}
-                         {item.coeff && <span style={{ display: 'inline-block', padding: '4px 8px', background: 'rgba(6, 182, 212, 0.1)', color: 'var(--color-cyan)', borderRadius: '4px', fontSize: '0.85rem', width: 'fit-content' }}>{item.coeff}</span>}
-                         {item.desc && <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--color-text-secondary)', lineHeight: '1.6', whiteSpace: 'pre-wrap' }}>{item.desc}</p>}
-                     </div>
-                  </HudCard>
-                ))}
-              </div>
-            )}
+            {activeSubPage && activeSubPage !== 'history' && activeSubPage !== 'team' && activeSubPage !== 'advantages' && adminData.dynamicLists?.['about_' + activeSubPage] && adminData.dynamicLists['about_' + activeSubPage].length > 0 && (() => {
+              const currentSubMenu = dynamicMenu['ru'].find(m => m.page === 'about')?.items?.find(sub => sub.action.subpage === activeSubPage);
+              const isDoc = currentSubMenu && (currentSubMenu.name.toLowerCase().includes('лиценз') || currentSubMenu.name.toLowerCase().includes('сертификат') || currentSubMenu.name.toLowerCase().includes('документ'));
+              
+              if (isDoc) {
+                return (
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '30px', marginBottom: '60px' }}>
+                    {adminData.dynamicLists['about_' + activeSubPage].map((doc, idx) => (
+                      <HudCard key={doc.id || idx} style={{ padding: '30px', textAlign: 'center' }}>
+                        <div style={{ fontSize: '3rem', marginBottom: '20px' }}>
+                          {doc.title?.toLowerCase().includes('лиценз') ? '🛡️' : doc.title?.toLowerCase().includes('аккред') ? '🔬' : '📜'}
+                        </div>
+                        <h3 style={{ fontSize: '1.25rem', marginBottom: '8px', color: 'var(--color-text-primary)' }}>{doc.title}</h3>
+                        {doc.desc && <p style={{ fontSize: '0.85rem', color: 'var(--color-text-secondary)', marginBottom: '20px' }}>{doc.desc}</p>}
+                        <button className="btn btn-secondary" onClick={() => setCertModal({ title: doc.title, text: doc.desc || '', image: doc.image })} style={{ padding: '8px 16px', fontSize: '0.8rem', width: '100%' }}>
+                          Просмотреть документ
+                        </button>
+                      </HudCard>
+                    ))}
+                  </div>
+                );
+              }
+              
+              return (
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '30px', marginBottom: '60px' }}>
+                  {adminData.dynamicLists['about_' + activeSubPage].map((item, idx) => (
+                    <HudCard key={item.id || idx} style={{ padding: '0', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+                       {item.image && (
+                           <div style={{ width: '100%', height: '220px', overflow: 'hidden', background: 'rgba(0,0,0,0.2)' }}>
+                              <img src={item.image} alt={item.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                           </div>
+                       )}
+                       <div style={{ padding: '25px', display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                           {item.title && <h3 style={{ margin: 0, fontSize: '1.25rem', color: 'var(--color-text-primary)' }}>{item.title}</h3>}
+                           {item.coeff && <span style={{ display: 'inline-block', padding: '4px 8px', background: 'rgba(6, 182, 212, 0.1)', color: 'var(--color-cyan)', borderRadius: '4px', fontSize: '0.85rem', width: 'fit-content' }}>{item.coeff}</span>}
+                           {item.desc && <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--color-text-secondary)', lineHeight: '1.6', whiteSpace: 'pre-wrap' }}>{item.desc}</p>}
+                       </div>
+                    </HudCard>
+                  ))}
+                </div>
+              );
+            })()}
           </div>
         )}
         {/* END SERVICES */}
@@ -3360,10 +3384,20 @@ const DEFAULT_NORMS = [
                   'equipment_lab_2': { title: 'Лаборатория / Геодезия', addText: 'Добавить прибор', fields: [{ key: 'name', label: 'Название', type: 'text', required: true }, { key: 'type', label: 'Тип', type: 'text' }, { key: 'params', label: 'Параметры испытаний', type: 'text' }, { key: 'purpose', label: 'Целевые свойства', type: 'text' }, { key: 'standard', label: 'ГОСТ / Регламент', type: 'text' }, { key: 'description', label: 'Описание', type: 'textarea' }, { key: 'cadSpecs', label: 'CAD-Спецификации (через запятую)', type: 'text' }] }
                 };
 
+                const isDocLike = (() => {
+                   if (!activeAdminSection.startsWith('form_about_')) return false;
+                   const subId = activeAdminSection.replace('form_about_', '');
+                   const menuMatch = dynamicMenu['ru'].find(m => m.page === 'about')?.items?.find(s => s.action.subpage === subId);
+                   return menuMatch && (menuMatch.name.toLowerCase().includes('лиценз') || menuMatch.name.toLowerCase().includes('сертиф') || menuMatch.name.toLowerCase().includes('документ'));
+                })();
+
                 const config = DYNAMIC_FORM_CONFIGS[sectionKey] || {
-                    title: 'Управление записями',
-                    addText: 'Добавить запись',
-                    fields: [
+                    title: isDocLike ? 'Управление документами' : 'Управление записями',
+                    addText: isDocLike ? 'Добавить документ' : 'Добавить запись',
+                    fields: isDocLike ? [
+                        { key: 'title', label: 'Название документа', type: 'text' },
+                        { key: 'image', label: 'Ссылка на документ (URL)', type: 'text' }
+                    ] : [
                         { key: 'title', label: 'Название', type: 'text' },
                         { key: 'desc', label: 'Описание', type: 'textarea' },
                         { key: 'image', label: 'Фото/Ссылка (URL)', type: 'text' }
@@ -4017,12 +4051,20 @@ const DEFAULT_NORMS = [
             <p style={{ color: 'var(--color-text-secondary)', fontSize: '0.95rem', lineHeight: '1.6', marginBottom: '25px' }}>
               {certModal.text}
             </p>
-            <div style={{ border: '1px dashed rgba(251,191,36,0.3)', borderRadius: '8px', padding: '50px 20px', textAlign: 'center', backgroundColor: 'rgba(0,0,0,0.4)' }}>
-              <FileText size={48} color="var(--color-accent)" style={{ marginBottom: '12px' }} />
-              <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.8rem', color: 'var(--color-text-muted)' }}>
-                ТОО «СпецИнжГео» // ЛИЦЕНЗИЯ_ГОС_РЕЕСТР.pdf
+            {certModal.image ? (
+              certModal.image.includes('image/') || certModal.image.match(/\.(jpeg|jpg|gif|png|webp)$/i) || certModal.image.startsWith('data:image/') ? (
+                 <img src={certModal.image} alt={certModal.title} style={{ width: '100%', maxHeight: '60vh', objectFit: 'contain', borderRadius: '8px', border: '1px solid var(--color-border)' }} />
+              ) : (
+                 <iframe src={certModal.image} style={{ width: '100%', height: '60vh', border: 'none', borderRadius: '8px', background: '#fff' }} title={certModal.title} />
+              )
+            ) : (
+              <div style={{ border: '1px dashed rgba(251,191,36,0.3)', borderRadius: '8px', padding: '50px 20px', textAlign: 'center', backgroundColor: 'rgba(0,0,0,0.4)' }}>
+                <FileText size={48} color="var(--color-accent)" style={{ marginBottom: '12px' }} />
+                <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.8rem', color: 'var(--color-text-muted)' }}>
+                  ТОО «СпецИнжГео» // ЛИЦЕНЗИЯ_ГОС_РЕЕСТР.pdf
+                </div>
               </div>
-            </div>
+            )}
             <div style={{ marginTop: '25px', display: 'flex', justifyContent: 'flex-end' }}>
               <button className="btn btn-secondary" onClick={() => setCertModal(null)}>
                 Закрыть
