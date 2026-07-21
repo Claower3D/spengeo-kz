@@ -3832,6 +3832,7 @@ const DEFAULT_NORMS = [
                     <div>
                       <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.9rem', color: theme === 'white' ? '#475569' : '#ccc' }}>Координаты карты (Широта, Долгота)</label>
                       <input type="text" placeholder="Например: 49.8066, 73.0855" value={adminData.global?.mapCoords || ''} onChange={e => setAdminData(prev => ({...prev, global: {...prev.global, mapCoords: e.target.value}}))} style={{ width: '100%', padding: '12px', borderRadius: '6px', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #333', background: theme === 'white' ? '#f8fafc' : '#000', color: theme === 'white' ? '#0f172a' : '#fff' }} />
+                      <p style={{ fontSize: '0.8rem', color: '#ef4444', marginTop: '8px' }}>Внимание: изменение адреса не сдвинет карту автоматически. Обязательно впишите координаты (например, 49.8066, 73.0855 для Караганды), иначе карта останется в Алматы.</p>
                     </div>
                     <div>
                       <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.9rem', color: theme === 'white' ? '#475569' : '#ccc' }}>ID Яндекс Метрики (Счетчик)</label>
@@ -4027,7 +4028,7 @@ const DEFAULT_NORMS = [
 
       {/* Full-width Map Before Footer */}
       <section style={{ width: '100%', height: '400px', position: 'relative', zIndex: 1, borderTop: '1px solid rgba(6, 182, 212, 0.1)' }}>
-        <MapContainer center={adminData.global?.mapCoords ? adminData.global.mapCoords.split(',').map(Number) : [43.2389, 76.8897]} zoom={13} scrollWheelZoom={false} style={{ height: '100%', width: '100%', background: theme === 'white' ? '#f8fafc' : '#030509' }}>
+        <MapContainer key={`footer-map-${adminData.global?.mapCoords || 'default'}`} center={adminData.global?.mapCoords ? adminData.global.mapCoords.split(',').map(Number) : [43.2389, 76.8897]} zoom={13} scrollWheelZoom={false} style={{ height: '100%', width: '100%', background: theme === 'white' ? '#f8fafc' : '#030509' }}>
           <TileLayer
             key={theme}
             url={theme === 'white' ? "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png" : "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"}
