@@ -388,7 +388,7 @@ function ImageUploadField({ value, onChange, theme }) {
       {value && <img src={value} style={{ width: '32px', height: '32px', objectFit: 'cover', borderRadius: '4px', border: isLight ? '1px solid #e2e8f0' : '1px solid #222' }} alt="" onError={(e) => { e.target.style.display = 'none'; }} onLoad={(e) => { e.target.style.display = 'block'; }} />}
       <label style={{ background: isLight ? '#eff6ff' : 'rgba(59, 130, 246, 0.2)', color: '#3b82f6', border: isLight ? '1px solid #bfdbfe' : '1px solid rgba(59, 130, 246, 0.5)', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer', fontSize: '0.8rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap', transition: 'all 0.2s' }}>
         <Folder size={14} /> Выбрать
-        <input type="file" accept="image/*" onChange={handleFileChange} style={{ display: 'none' }} />
+        <input type="file" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.txt,.csv,.zip,.rar" onChange={handleFileChange} style={{ display: 'none' }} />
       </label>
       <input 
         value={value || ''} 
@@ -480,8 +480,14 @@ const DEFAULT_NORMS = [
 
       if (!parsed.dynamicLists['about_history'] || parsed.dynamicLists['about_history'].length === 0) parsed.dynamicLists['about_history'] = DEFAULT_HISTORY;
       if (!parsed.dynamicLists['about_advantages'] || parsed.dynamicLists['about_advantages'].length === 0) parsed.dynamicLists['about_advantages'] = DEFAULT_ADVANTAGES;
-      if (!parsed.dynamicLists['about_team'] || parsed.dynamicLists['about_team'].length === 0) parsed.dynamicLists['about_team'] = DEFAULT_TEAM;
       
+      if (!parsed.projects || parsed.projects.length === 0) {
+        parsed.projects = DETAILED_PROJECTS;
+      }
+      if (!parsed.team || parsed.team.length === 0) {
+        parsed.team = [{ name: 'Шенвизов Рудольф', role: 'Константинович', badge: 'ОСНОВАТЕЛЬ И ГЛАВНЫЙ ГЕОЛОГ', desc: 'Мы строим нашу работу на безупречной точности...', img: '/images/director.png' }];
+      }
+
       if (!parsed.dynamicLists['blog_faq'] || parsed.dynamicLists['blog_faq'].length === 0) parsed.dynamicLists['blog_faq'] = DEFAULT_FAQ;
       if (!parsed.dynamicLists['blog_methods'] || parsed.dynamicLists['blog_methods'].length === 0) parsed.dynamicLists['blog_methods'] = DEFAULT_METHODS;
       if (!parsed.dynamicLists['blog_soils'] || parsed.dynamicLists['blog_soils'].length === 0) parsed.dynamicLists['blog_soils'] = DEFAULT_SOILS;
@@ -1613,7 +1619,7 @@ const DEFAULT_NORMS = [
                       />
                     )}
 
-                    {DETAILED_PROJECTS.map(proj => (
+                    {currentProjects.map(proj => (
                       <Marker 
                         key={proj.id}
                         ref={(ref) => {
@@ -1655,7 +1661,7 @@ const DEFAULT_NORMS = [
 
                 {/* Projects List Area (Right) */}
                 <div style={{ flex: '1 1 35%', display: 'flex', flexDirection: 'column', gap: '15px', height: '600px', overflowY: 'auto', padding: '25px', background: theme === 'dark' ? 'var(--bg-dark)' : 'rgba(255,255,255,0.95)', borderRadius: '24px', border: theme === 'dark' ? '1px solid rgba(255,255,255,0.05)' : '1px solid rgba(0,0,0,0.05)', boxShadow: theme === 'dark' ? '0 20px 50px rgba(0,0,0,0.3)' : '0 10px 30px rgba(0,0,0,0.05)' }} className="projects-list-scroll">
-                  {DETAILED_PROJECTS.map(proj => {
+                  {filteredProjects.map(proj => {
                     const isActive = activeProjectCoords === proj.coords;
                     return (
                       <div 
@@ -1919,7 +1925,7 @@ const DEFAULT_NORMS = [
               <>
               <div className="glow-card-premium" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '0', alignItems: 'stretch', padding: '0', overflow: 'hidden', position: 'relative', zIndex: 2, background: 'var(--bg-card)', border: '1px solid var(--border-color)', boxShadow: '0 0 50px rgba(0,0,0,0.1)', marginBottom: '60px' }}>
                   <div style={{ position: 'relative', minHeight: '500px', overflow: 'hidden' }}>
-                    <img src={adminData.team[0]?.img || '/images/director.png'} alt="Шенвизов Рудольф Константинович" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', filter: 'contrast(1.1)', maskImage: 'linear-gradient(to right, black 60%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to right, black 60%, transparent 100%)' }} />
+                    <img src={adminData.team[0]?.img || adminData.team[0]?.image || '/images/director.png'} alt={adminData.team[0]?.name || "Генеральный директор"} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', filter: 'contrast(1.1)', maskImage: 'linear-gradient(to right, black 60%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to right, black 60%, transparent 100%)' }} />
                     <div style={{ position: 'absolute', bottom: '-50px', left: '-50px', width: '200px', height: '200px', background: 'var(--color-cyan)', filter: 'blur(100px)', opacity: 0.15, zIndex: 0 }}></div>
                   </div>
                   
@@ -1952,11 +1958,11 @@ const DEFAULT_NORMS = [
             {activeSubPage === 'team' && (
               <div style={{ marginBottom: '60px' }}>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '40px' }}>
-                  {(adminData.dynamicLists?.['about_team'] || adminData.team).map((member, i) => (
+                  {(adminData.team || []).map((member, i) => (
                     <div key={i} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                       <div style={{ position: 'relative', height: '400px', borderRadius: '12px', overflow: 'hidden', border: '1px solid var(--color-border)', boxShadow: '0 10px 30px rgba(0,0,0,0.1)' }}>
                         <div className="hud-bracket hud-bracket-tl"></div><div className="hud-bracket hud-bracket-tr"></div><div className="hud-bracket hud-bracket-bl"></div><div className="hud-bracket hud-bracket-br"></div>
-                        <img src={member.img} alt={member.name} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }} />
+                        <img src={member.img || member.image || '/images/director.png'} alt={member.name} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }} />
                         <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '100px', background: 'linear-gradient(to top, var(--color-bg) 0%, transparent 100%)' }}></div>
                       </div>
                       <div>
@@ -1965,7 +1971,7 @@ const DEFAULT_NORMS = [
                         </div>
                         <h3 style={{ fontSize: '2.2rem', marginBottom: '5px', color: 'var(--color-text-primary)', letterSpacing: '-0.02em' }}>{member.name}</h3>
                         <div style={{ fontSize: '1.1rem', color: 'var(--color-accent)', marginBottom: '20px', fontWeight: '500' }}>
-                          {member.role}
+                          {member.role || member.position}
                         </div>
                         <p style={{ color: 'var(--color-text-secondary)', fontSize: '1.05rem', lineHeight: 1.8, borderLeft: '3px solid var(--color-cyan)', paddingLeft: '20px', fontStyle: 'italic' }}>
                           {member.desc}
@@ -2175,7 +2181,7 @@ const DEFAULT_NORMS = [
 
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '25px', marginBottom: '60px' }}>
                   {filteredProjects.map(proj => {
-                    const fallbackImg = DETAILED_PROJECTS.find(d => d.id === proj.id)?.image || '/images/rig.png';
+                    const fallbackImg = currentProjects.find(d => d.id === proj.id)?.image || '/images/rig.png';
                     const finalImg = proj.image || fallbackImg;
                     return (
                     <HudCard key={proj.id} style={{ padding: '25px', display: 'flex', flexDirection: 'column' }}>
@@ -3270,7 +3276,7 @@ const DEFAULT_NORMS = [
                               {article.image && <img src={article.image} alt={article.title} style={{ width: '60px', height: '60px', objectFit: 'cover', borderRadius: '6px' }} />}
                               <label style={{ padding: '8px 12px', background: 'rgba(6, 182, 212, 0.1)', color: '#06b6d4', border: 'none', borderRadius: '6px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 'bold' }}>
                                 <Folder size={14}/> С устройства
-                                <input type="file" accept="image/*" style={{ display: 'none' }} onChange={(e) => {
+                                <input type="file" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.txt,.csv,.zip,.rar" style={{ display: 'none' }} onChange={(e) => {
                                     const file = e.target.files[0];
                                     if (file) {
                                         if (file.size > 2.5 * 1024 * 1024) {
@@ -3407,7 +3413,7 @@ const DEFAULT_NORMS = [
                                         }} style={{ flex: 1, padding: '10px', background: theme === 'white' ? '#fff' : '#000', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', color: theme === 'white' ? '#0f172a' : '#fff', borderRadius: '8px' }} />
                                         <label style={{ background: '#3b82f6', color: '#fff', padding: '0 15px', borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: '0.85rem', flexShrink: 0 }}>
                                            С устройства
-                                           <input type="file" accept="image/*,video/*,application/pdf" style={{ display: 'none' }} onChange={(e) => {
+                                           <input type="file" accept="image/*,video/*,.pdf,.doc,.docx,.xls,.xlsx,.txt,.csv,.zip,.rar" style={{ display: 'none' }} onChange={(e) => {
                                                const file = e.target.files[0];
                                                if (file) {
                                                    if (file.size > 2.5 * 1024 * 1024) {
@@ -3483,34 +3489,34 @@ const DEFAULT_NORMS = [
                         <div style={{ background: 'rgba(6, 182, 212, 0.1)', padding: '8px', borderRadius: '8px', color: '#06b6d4' }}><Users size={20} /></div>
                         <h4 style={{ color: theme === 'white' ? '#0f172a' : '#fff', fontSize: '1.2rem', margin: 0 }}>Команда</h4>
                       </div>
-                      <button onClick={() => setAdminData({...adminData, team: [{name: 'Новый сотрудник', role: 'Должность', badge: 'СПЕЦИАЛИСТ', desc: '', img: ''}, ...adminData.team]})} style={{ background: '#06b6d4', color: '#fff', border: 'none', padding: '8px 16px', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold' }}>+ Добавить сотрудника</button>
+                      <button onClick={() => setAdminData({...adminData, team: [{name: 'Новый сотрудник', role: 'Должность', badge: 'СПЕЦИАЛИСТ', desc: '', img: ''}, ...(adminData.team || [])]})} style={{ background: '#06b6d4', color: '#fff', border: 'none', padding: '8px 16px', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold' }}>+ Добавить сотрудника</button>
                     </div>
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px' }}>
-                      {(adminData.dynamicLists?.['about_team'] || adminData.team).map((member, i) => (
+                      {(adminData.team || []).map((member, i) => (
                         <div key={i} style={{ background: theme === 'white' ? '#f8fafc' : '#1a1a1a', border: theme === 'white' ? '1px solid #e2e8f0' : '1px solid #333', borderRadius: '12px', padding: '20px', display: 'flex', flexDirection: 'column', gap: '15px' }}>
                           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                              <label style={{ fontSize: '0.8rem', color: theme === 'white' ? '#64748b' : '#888', fontWeight: 'bold' }}>Сотрудник #{i + 1}</label>
-                             <button onClick={() => { const arr = adminData.team.filter((_, idx) => idx !== i); setAdminData({...adminData, team: arr}); }} style={{ color: '#ef4444', background: 'rgba(239, 68, 68, 0.1)', padding: '6px', borderRadius: '6px', border: 'none', cursor: 'pointer' }}><Trash2 size={14} /></button>
+                             <button onClick={() => { const arr = (adminData.team || []).filter((_, idx) => idx !== i); setAdminData({...adminData, team: arr}); }} style={{ color: '#ef4444', background: 'rgba(239, 68, 68, 0.1)', padding: '6px', borderRadius: '6px', border: 'none', cursor: 'pointer' }}><Trash2 size={14} /></button>
                           </div>
                           <div>
                             <label style={{ display: 'block', fontSize: '0.8rem', color: theme === 'white' ? '#64748b' : '#888', marginBottom: '5px' }}>Фамилия Имя</label>
-                            <input value={member.name} onChange={e => { const arr = [...adminData.team]; arr[i].name = e.target.value; setAdminData({...adminData, team: arr}); }} style={{ width: '100%', padding: '10px 12px', background: theme === 'white' ? '#fff' : '#000', color: theme === 'white' ? '#0f172a' : '#fff', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', borderRadius: '6px' }} />
+                            <input value={member.name} onChange={e => { const arr = [...(adminData.team || [])]; arr[i].name = e.target.value; setAdminData({...adminData, team: arr}); }} style={{ width: '100%', padding: '10px 12px', background: theme === 'white' ? '#fff' : '#000', color: theme === 'white' ? '#0f172a' : '#fff', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', borderRadius: '6px' }} />
                           </div>
                           <div>
                             <label style={{ display: 'block', fontSize: '0.8rem', color: theme === 'white' ? '#64748b' : '#888', marginBottom: '5px' }}>Должность</label>
-                            <input value={member.role} onChange={e => { const arr = [...adminData.team]; arr[i].role = e.target.value; setAdminData({...adminData, team: arr}); }} style={{ width: '100%', padding: '10px 12px', background: theme === 'white' ? '#fff' : '#000', color: theme === 'white' ? '#0f172a' : '#fff', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', borderRadius: '6px' }} />
+                            <input value={member.role || member.position || ''} onChange={e => { const arr = [...(adminData.team || [])]; arr[i].role = e.target.value; setAdminData({...adminData, team: arr}); }} style={{ width: '100%', padding: '10px 12px', background: theme === 'white' ? '#fff' : '#000', color: theme === 'white' ? '#0f172a' : '#fff', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', borderRadius: '6px' }} />
                           </div>
                           <div>
                             <label style={{ display: 'block', fontSize: '0.8rem', color: theme === 'white' ? '#64748b' : '#888', marginBottom: '5px' }}>Бейдж (например: РУКОВОДСТВО)</label>
-                            <input value={member.badge || ''} onChange={e => { const arr = [...adminData.team]; arr[i].badge = e.target.value; setAdminData({...adminData, team: arr}); }} style={{ width: '100%', padding: '10px 12px', background: theme === 'white' ? '#fff' : '#000', color: theme === 'white' ? '#0f172a' : '#fff', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', borderRadius: '6px' }} />
+                            <input value={member.badge || ''} onChange={e => { const arr = [...(adminData.team || [])]; arr[i].badge = e.target.value; setAdminData({...adminData, team: arr}); }} style={{ width: '100%', padding: '10px 12px', background: theme === 'white' ? '#fff' : '#000', color: theme === 'white' ? '#0f172a' : '#fff', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', borderRadius: '6px' }} />
                           </div>
                           <div>
                             <label style={{ display: 'block', fontSize: '0.8rem', color: theme === 'white' ? '#64748b' : '#888', marginBottom: '5px' }}>Фотография</label>
-                            <ImageUploadField value={member.img} onChange={v => { const arr = [...adminData.team]; arr[i].img = v; setAdminData({...adminData, team: arr}); }} theme={theme} />
+                            <ImageUploadField value={member.img || member.image || ''} onChange={v => { const arr = [...(adminData.team || [])]; arr[i].img = v; setAdminData({...adminData, team: arr}); }} theme={theme} />
                           </div>
                           <div>
                             <label style={{ display: 'block', fontSize: '0.8rem', color: theme === 'white' ? '#64748b' : '#888', marginBottom: '5px' }}>Описание</label>
-                            <textarea value={member.desc} onChange={e => { const arr = [...adminData.team]; arr[i].desc = e.target.value; setAdminData({...adminData, team: arr}); }} rows={3} style={{ width: '100%', padding: '10px 12px', background: theme === 'white' ? '#fff' : '#000', color: theme === 'white' ? '#0f172a' : '#fff', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', borderRadius: '6px', resize: 'vertical' }} />
+                            <textarea value={member.desc} onChange={e => { const arr = [...(adminData.team || [])]; arr[i].desc = e.target.value; setAdminData({...adminData, team: arr}); }} rows={3} style={{ width: '100%', padding: '10px 12px', background: theme === 'white' ? '#fff' : '#000', color: theme === 'white' ? '#0f172a' : '#fff', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', borderRadius: '6px', resize: 'vertical' }} />
                           </div>
                         </div>
                       ))}
@@ -3524,44 +3530,44 @@ const DEFAULT_NORMS = [
                         <div style={{ background: 'rgba(59, 130, 246, 0.1)', padding: '8px', borderRadius: '8px', color: '#3b82f6' }}><MapPin size={20} /></div>
                         <h4 style={{ color: theme === 'white' ? '#0f172a' : '#fff', fontSize: '1.2rem', margin: 0 }}>Проекты (Выполненные объекты)</h4>
                       </div>
-                      <button onClick={() => setAdminData({...adminData, projects: [{id: Date.now().toString(), name: 'Новый проект', client: 'Клиент', type: 'Услуга', loc: 'Локация', specs: 'Описание', coords: [48, 66]}, ...adminData.projects]})} style={{ background: '#3b82f6', color: '#fff', border: 'none', padding: '8px 16px', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold' }}>+ Добавить проект</button>
+                      <button onClick={() => setAdminData({...adminData, projects: [{id: Date.now().toString(), name: 'Новый проект', client: 'Клиент', type: 'Услуга', loc: 'Локация', specs: 'Описание', coords: [48, 66]}, ...(adminData.projects || [])]})} style={{ background: '#3b82f6', color: '#fff', border: 'none', padding: '8px 16px', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold' }}>+ Добавить проект</button>
                     </div>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-                      {adminData.projects.map((p, i) => (
+                      {(adminData.projects || []).map((p, i) => (
                         <div key={i} style={{ padding: '15px', border: theme === 'white' ? '1px solid #e2e8f0' : '1px solid #333', borderRadius: '10px', background: theme === 'white' ? '#f8fafc' : '#1a1a1a', display: 'flex', flexDirection: 'column', gap: '15px', transition: 'all 0.2s', position: 'relative' }}>
-                          <button onClick={() => { const arr = adminData.projects.filter((_, idx) => idx !== i); setAdminData({...adminData, projects: arr}); }} style={{ position: 'absolute', top: '15px', right: '15px', color: '#ef4444', background: 'rgba(239, 68, 68, 0.1)', padding: '8px', borderRadius: '8px', border: 'none', cursor: 'pointer' }}><Trash2 size={18} /></button>
+                          <button onClick={() => { const arr = (adminData.projects || []).filter((_, idx) => idx !== i); setAdminData({...adminData, projects: arr}); }} style={{ position: 'absolute', top: '15px', right: '15px', color: '#ef4444', background: 'rgba(239, 68, 68, 0.1)', padding: '8px', borderRadius: '8px', border: 'none', cursor: 'pointer' }}><Trash2 size={18} /></button>
                           
                           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '15px', paddingRight: '50px' }}>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
                               <label style={{ fontSize: '0.75rem', color: theme === 'white' ? '#64748b' : '#888' }}>Название объекта</label>
-                              <input value={p.name} onChange={e => { const arr = [...adminData.projects]; arr[i].name = e.target.value; setAdminData({...adminData, projects: arr}); }} style={{ padding: '8px 12px', background: theme === 'white' ? '#fff' : '#000', color: theme === 'white' ? '#0f172a' : '#fff', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', borderRadius: '6px' }} />
+                              <input value={p.name} onChange={e => { const arr = [...(adminData.projects || [])]; arr[i].name = e.target.value; setAdminData({...adminData, projects: arr}); }} style={{ padding: '8px 12px', background: theme === 'white' ? '#fff' : '#000', color: theme === 'white' ? '#0f172a' : '#fff', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', borderRadius: '6px' }} />
                             </div>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
                               <label style={{ fontSize: '0.75rem', color: theme === 'white' ? '#64748b' : '#888' }}>Заказчик</label>
-                              <input value={p.client} onChange={e => { const arr = [...adminData.projects]; arr[i].client = e.target.value; setAdminData({...adminData, projects: arr}); }} style={{ padding: '8px 12px', background: theme === 'white' ? '#fff' : '#000', color: theme === 'white' ? '#0f172a' : '#fff', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', borderRadius: '6px' }} />
+                              <input value={p.client} onChange={e => { const arr = [...(adminData.projects || [])]; arr[i].client = e.target.value; setAdminData({...adminData, projects: arr}); }} style={{ padding: '8px 12px', background: theme === 'white' ? '#fff' : '#000', color: theme === 'white' ? '#0f172a' : '#fff', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', borderRadius: '6px' }} />
                             </div>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
                               <label style={{ fontSize: '0.75rem', color: theme === 'white' ? '#64748b' : '#888' }}>Фото объекта</label>
-                              <ImageUploadField value={p.image || ''} onChange={(val) => { const arr = [...adminData.projects]; arr[i].image = val; setAdminData({...adminData, projects: arr}); }} theme={theme} />
+                              <ImageUploadField value={p.image || ''} onChange={v => { const arr = [...(adminData.projects || [])]; arr[i].image = v; setAdminData({...adminData, projects: arr}); }} theme={theme} />
                             </div>
                           </div>
 
                           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 2fr 100px', gap: '15px' }}>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
                               <label style={{ fontSize: '0.75rem', color: theme === 'white' ? '#64748b' : '#888' }}>Локация</label>
-                              <input value={p.loc || ''} onChange={e => { const arr = [...adminData.projects]; arr[i].loc = e.target.value; setAdminData({...adminData, projects: arr}); }} placeholder="г. Алматы" style={{ padding: '8px 12px', background: theme === 'white' ? '#fff' : '#000', color: theme === 'white' ? '#0f172a' : '#fff', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', borderRadius: '6px' }} />
+                              <input value={p.loc || ''} onChange={e => { const arr = [...(adminData.projects || [])]; arr[i].loc = e.target.value; setAdminData({...adminData, projects: arr}); }} placeholder="г. Алматы" style={{ padding: '8px 12px', background: theme === 'white' ? '#fff' : '#000', color: theme === 'white' ? '#0f172a' : '#fff', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', borderRadius: '6px' }} />
                             </div>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
                               <label style={{ fontSize: '0.75rem', color: theme === 'white' ? '#64748b' : '#888' }}>Вид работ</label>
-                              <input value={p.type || ''} onChange={e => { const arr = [...adminData.projects]; arr[i].type = e.target.value; setAdminData({...adminData, projects: arr}); }} placeholder="Инженерная геология" style={{ padding: '8px 12px', background: theme === 'white' ? '#fff' : '#000', color: theme === 'white' ? '#0f172a' : '#fff', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', borderRadius: '6px' }} />
+                              <input value={p.type || ''} onChange={e => { const arr = [...(adminData.projects || [])]; arr[i].type = e.target.value; setAdminData({...adminData, projects: arr}); }} placeholder="Инженерная геология" style={{ padding: '8px 12px', background: theme === 'white' ? '#fff' : '#000', color: theme === 'white' ? '#0f172a' : '#fff', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', borderRadius: '6px' }} />
                             </div>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
                               <label style={{ fontSize: '0.75rem', color: theme === 'white' ? '#64748b' : '#888' }}>Спецификация</label>
-                              <input value={p.specs || ''} onChange={e => { const arr = [...adminData.projects]; arr[i].specs = e.target.value; setAdminData({...adminData, projects: arr}); }} placeholder="12 скважин по 35м" style={{ padding: '8px 12px', background: theme === 'white' ? '#fff' : '#000', color: theme === 'white' ? '#0f172a' : '#fff', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', borderRadius: '6px' }} />
+                              <input value={p.specs || ''} onChange={e => { const arr = [...(adminData.projects || [])]; arr[i].specs = e.target.value; setAdminData({...adminData, projects: arr}); }} placeholder="12 скважин по 35м" style={{ padding: '8px 12px', background: theme === 'white' ? '#fff' : '#000', color: theme === 'white' ? '#0f172a' : '#fff', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', borderRadius: '6px' }} />
                             </div>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
                               <label style={{ fontSize: '0.75rem', color: theme === 'white' ? '#64748b' : '#888' }}>Год</label>
-                              <input value={p.year || ''} onChange={e => { const arr = [...adminData.projects]; arr[i].year = e.target.value; setAdminData({...adminData, projects: arr}); }} placeholder="2025" style={{ padding: '8px 12px', background: theme === 'white' ? '#fff' : '#000', color: theme === 'white' ? '#0f172a' : '#fff', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', borderRadius: '6px' }} />
+                              <input value={p.year || ''} onChange={e => { const arr = [...(adminData.projects || [])]; arr[i].year = e.target.value; setAdminData({...adminData, projects: arr}); }} placeholder="2025" style={{ padding: '8px 12px', background: theme === 'white' ? '#fff' : '#000', color: theme === 'white' ? '#0f172a' : '#fff', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', borderRadius: '6px' }} />
                             </div>
                           </div>
                         </div>
