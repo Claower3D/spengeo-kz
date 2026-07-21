@@ -785,6 +785,7 @@ const DEFAULT_NORMS = [
 
   // Admin States
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
+  const [adminUser, setAdminUser] = useState('');
   const [adminPass, setAdminPass] = useState('');
   const [inquiries, setInquiries] = useState([]);
   const [adminError, setAdminError] = useState('');
@@ -906,15 +907,44 @@ const DEFAULT_NORMS = [
     setInquiryMsg('');
   };
 
-  const handleAdminLogin = (e) => {
+  const handleAdminLogin = async (e) => {
     e.preventDefault();
     logEvent('Checking credentials...', 'info');
-    if (adminPass.toLowerCase() === 'admin') {
+
+    // SECURITY: Safe placeholder for IP restriction (user requested 195.245.96.252)
+    const ALLOWED_IP = "195.245.96.252"; // You can change this or read from env
+    
+    // Check IP
+    try {
+        const ipRes = await fetch('https://api.ipify.org?format=json');
+        const ipData = await ipRes.json();
+        if (ipData.ip !== ALLOWED_IP && ALLOWED_IP !== "") {
+            setAdminError('Доступ запрещен. Неверный IP адрес.');
+            logEvent(`IP rejected: ${ipData.ip}`, 'error');
+            return;
+        }
+    } catch (err) {
+        // If IP check fails (e.g. network error, adblocker), we might want to still allow it or block it. 
+        // Blocking is safer for strict IP restriction.
+        setAdminError('Ошибка проверки IP адреса. Проверьте соединение.');
+        return;
+    }
+
+    // MAIN ACCOUNT check (requested claower / 04071219Mm.)
+    // Note: It's generally unsafe to hardcode passwords in frontend code. 
+    // This is implemented exactly as requested, but in production consider a backend auth system.
+    if (adminUser === 'claower' && adminPass === '04071219Mm.') {
       setIsAdminLoggedIn(true);
       setAdminError('');
-      logEvent('Admin Session ACTIVE.', 'success');
+      logEvent('Admin Session ACTIVE (Main Account).', 'success');
+    } 
+    // Fallback legacy access
+    else if (adminPass.toLowerCase() === 'admin' && !adminUser) {
+      setIsAdminLoggedIn(true);
+      setAdminError('');
+      logEvent('Admin Session ACTIVE (Legacy).', 'success');
     } else {
-      setAdminError('Неверный ключ доступа.');
+      setAdminError('Неверный логин или пароль.');
       logEvent('Failed login attempt.', 'error');
     }
   };
@@ -2797,7 +2827,32 @@ const DEFAULT_NORMS = [
         )}
 
         {/* ==================== PAGE: ADMIN ==================== */}
-        {activePage === 'admin' && (
+        {activePage === 'admin' && !isAdminLoggedIn && (
+            <div className="page-wrapper page-enter" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}>
+              <div style={{ background: theme === 'white' ? '#fff' : '#111', padding: '40px', borderRadius: '12px', width: '100%', maxWidth: '400px', border: theme === 'white' ? '1px solid #e2e8f0' : '1px solid #333', boxShadow: '0 10px 30px rgba(0,0,0,0.1)' }}>
+                <h2 style={{ textAlign: 'center', marginBottom: '30px', color: theme === 'white' ? '#0f172a' : '#fff' }}>Вход в систему</h2>
+                <form onSubmit={handleAdminLogin} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                  <input 
+                    type="text" 
+                    placeholder="Логин" 
+                    value={adminUser} 
+                    onChange={(e) => setAdminUser(e.target.value)} 
+                    style={{ padding: '12px 15px', borderRadius: '8px', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', background: theme === 'white' ? '#f8fafc' : '#222', color: theme === 'white' ? '#000' : '#fff', outline: 'none' }}
+                  />
+                  <input 
+                    type="password" 
+                    placeholder="Пароль" 
+                    value={adminPass} 
+                    onChange={(e) => setAdminPass(e.target.value)} 
+                    style={{ padding: '12px 15px', borderRadius: '8px', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', background: theme === 'white' ? '#f8fafc' : '#222', color: theme === 'white' ? '#000' : '#fff', outline: 'none' }}
+                  />
+                  <button type="submit" className="btn btn-primary" style={{ padding: '12px', fontWeight: 'bold' }}>Войти</button>
+                  {adminError && <div style={{ color: '#ef4444', textAlign: 'center', fontSize: '0.9rem' }}>{adminError}</div>}
+                </form>
+              </div>
+            </div>
+        )}
+        {activePage === 'admin' && isAdminLoggedIn && (
           <div className="page-wrapper page-enter" style={{ background: theme === 'white' ? '#f8fafc' : '#0a0a0a', margin: '-50px', padding: '50px', minHeight: '100vh', borderRadius: '12px' }}>
             <div style={{ maxWidth: '1200px', margin: '0 auto', color: theme === 'white' ? '#0f172a' : '#fff', fontFamily: 'sans-serif' }}>
               <div style={{ marginBottom: '40px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -4417,6 +4472,7 @@ const DEFAULT_NORMS = [
           </div>
         </div>
       )}
+
     </>
   );
 }
