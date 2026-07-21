@@ -4028,14 +4028,33 @@ const DEFAULT_NORMS = [
 
       {/* Full-width Map Before Footer */}
       <section style={{ width: '100%', height: '400px', position: 'relative', zIndex: 1, borderTop: '1px solid rgba(6, 182, 212, 0.1)' }}>
-        <MapContainer key={`footer-map-${adminData.global?.mapCoords || 'default'}`} center={adminData.global?.mapCoords ? adminData.global.mapCoords.split(',').map(Number) : [43.2389, 76.8897]} zoom={13} scrollWheelZoom={false} style={{ height: '100%', width: '100%', background: theme === 'white' ? '#f8fafc' : '#030509' }}>
-          <TileLayer
-            key={theme}
-            url={theme === 'white' ? "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png" : "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"}
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-          />
-          <Marker position={adminData.global?.mapCoords ? adminData.global.mapCoords.split(',').map(Number) : [43.2389, 76.8897]} icon={customGlowIcon}>
-            <Popup className="premium-popup">
+        {(() => {
+          const getMapCenter = () => {
+            if (adminData.global?.mapCoords) {
+              const parts = adminData.global.mapCoords.match(/-?\d+\.\d+/g);
+              if (parts && parts.length >= 2) return [Number(parts[0]), Number(parts[1])];
+            }
+            const addr = (adminData.global?.address || '').toLowerCase();
+            if (addr.includes('караганда')) return [49.8019, 73.1021];
+            if (addr.includes('астана') || addr.includes('нур-султан')) return [51.1694, 71.4491];
+            if (addr.includes('шымкент')) return [42.3417, 69.5901];
+            if (addr.includes('актобе')) return [50.2839, 57.1670];
+            if (addr.includes('атырау')) return [47.1167, 51.8833];
+            if (addr.includes('актау')) return [43.65, 51.15];
+            if (addr.includes('усть-каменогорск')) return [49.9483, 82.6278];
+            if (addr.includes('павлодар')) return [52.3, 76.95];
+            return [43.2389, 76.8897]; // fallback Алматы
+          };
+          const center = getMapCenter();
+          return (
+            <MapContainer key={`footer-map-${center.join(',')}`} center={center} zoom={13} scrollWheelZoom={false} style={{ height: '100%', width: '100%', background: theme === 'white' ? '#f8fafc' : '#030509' }}>
+              <TileLayer
+                key={theme}
+                url={theme === 'white' ? "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png" : "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"}
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+              />
+              <Marker position={center} icon={customGlowIcon}>
+                <Popup className="premium-popup">
               <div style={{ padding: '5px', textAlign: 'center' }}>
                 <strong style={{ color: 'var(--color-cyan)', fontSize: '1.1rem' }}>{adminData.global?.companyName || 'ТОО «СпецИнжГео»'}</strong><br/>
                 <span style={{ color: '#aaa' }}>{adminData.global?.address || 'г. Алматы, пр-т Абая, 150'}</span>
@@ -4043,6 +4062,8 @@ const DEFAULT_NORMS = [
             </Popup>
           </Marker>
         </MapContainer>
+        );
+        })()}
         <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '100px', background: 'linear-gradient(to top, var(--bg-dark), transparent)', pointerEvents: 'none', zIndex: 1000 }}></div>
       </section>
 
