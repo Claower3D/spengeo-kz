@@ -958,7 +958,7 @@ const DEFAULT_NORMS = [
           {/* Modern Grid Navigation Bar */}
           <header className="header">
             <div className="container nav-container">
-              <a href="#" className="logo" onClick={() => setActivePage('home')} style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <a href="/" className="logo" onClick={(e) => { e.preventDefault(); setActivePage('home'); }} style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                 <img src="/images/logo.png" alt="SpenGeo Logo" style={{ height: '45px', width: 'auto' }} />
                 <span>Спец<span>Инж</span>Гео</span>
               </a>
@@ -967,10 +967,11 @@ const DEFAULT_NORMS = [
                 <ul className="nav-links">
                   {(dynamicMenu[language] || dynamicMenu.ru).map((menu, i) => (
                     <li key={i} className={menu.items ? "nav-item-with-dropdown" : ""}>
-                      <button 
-                        type="button" 
+                      <a 
+                        href={menu.action && menu.action.type === 'page' ? (menu.action.val === 'home' ? '/' : `/${menu.action.val}`) : '#'}
                         className={`nav-btn ${activePage === menu.page || (menu.page === 'about' && activePage === 'documents') ? 'active' : ''}`} 
-                        onClick={() => {
+                        onClick={(e) => {
+                          if (menu.action && menu.action.type === 'page') e.preventDefault();
                           if (menu.action) {
                             if (menu.action.type === 'page') {
                               setActivePage(menu.action.val);
@@ -980,20 +981,22 @@ const DEFAULT_NORMS = [
                         }}
                       >
                         {menu.title}
-                      </button>
+                      </a>
                       
                       {menu.items && (
                         <div className={`dropdown-menu ${menu.columns ? 'dropdown-menu-wide' : ''}`}>
                           {menu.items.map((item, j) => (
-                            <button 
+                            <a 
                               key={j} 
-                              type="button" 
+                              href={item.action.type === 'page' ? (item.action.val === 'home' ? '/' : `/${item.action.val}`) : '#'}
                               className="dropdown-item" 
-                              onClick={() => {
+                              onClick={(e) => {
+                                if (item.action.type === 'page' || item.action.type === 'service' || item.action.type === 'equip') e.preventDefault();
                                 if (item.action.type === 'page') {
                                   setActivePage(item.action.val);
                                   setActiveSubPage(item.action.subpage || null);
                                 } else if (item.action.type === 'scroll') {
+                                  e.preventDefault();
                                   setActivePage(item.action.page);
                                   setTimeout(() => {
                                     const el = document.getElementById(item.action.target);
@@ -1014,7 +1017,7 @@ const DEFAULT_NORMS = [
                               }}
                             >
                               {item.name}
-                            </button>
+                            </a>
                           ))}
                         </div>
                       )}
@@ -1043,12 +1046,12 @@ const DEFAULT_NORMS = [
             {isMobileMenuOpen && (
               <div className="mobile-nav-panel">
                 <ul className="mobile-nav-links">
-                  <li><button type="button" onClick={() => { setActivePage('about'); setIsMobileMenuOpen(false); }}>{t.nav.about}</button></li>
-                  <li><button type="button" onClick={() => { setActivePage('services'); setIsMobileMenuOpen(false); }}>{t.nav.services}</button></li>
-                  <li><button type="button" onClick={() => { setActivePage('projects'); setIsMobileMenuOpen(false); }}>{t.nav.projects}</button></li>
-                  <li><button type="button" onClick={() => { setActivePage('equipment'); setIsMobileMenuOpen(false); }}>{t.nav.equipment}</button></li>
-                  <li><button type="button" onClick={() => { setActivePage('calculator'); setIsMobileMenuOpen(false); }}>{t.nav.calculator}</button></li>
-                  <li><button type="button" onClick={() => { setActivePage('contacts'); setIsMobileMenuOpen(false); }}>{t.nav.contacts}</button></li>
+                  <li><a href="/about" onClick={(e) => { e.preventDefault(); setActivePage('about'); setIsMobileMenuOpen(false); }}>{t.nav.about}</a></li>
+                  <li><a href="/services" onClick={(e) => { e.preventDefault(); setActivePage('services'); setIsMobileMenuOpen(false); }}>{t.nav.services}</a></li>
+                  <li><a href="/projects" onClick={(e) => { e.preventDefault(); setActivePage('projects'); setIsMobileMenuOpen(false); }}>{t.nav.projects}</a></li>
+                  <li><a href="/equipment" onClick={(e) => { e.preventDefault(); setActivePage('equipment'); setIsMobileMenuOpen(false); }}>{t.nav.equipment}</a></li>
+                  <li><a href="/calculator" onClick={(e) => { e.preventDefault(); setActivePage('calculator'); setIsMobileMenuOpen(false); }}>{t.nav.calculator}</a></li>
+                  <li><a href="/contacts" onClick={(e) => { e.preventDefault(); setActivePage('contacts'); setIsMobileMenuOpen(false); }}>{t.nav.contacts}</a></li>
                   
                 </ul>
                 <div className="mobile-nav-footer">
@@ -4047,10 +4050,10 @@ const DEFAULT_NORMS = [
             <div>
               <h4 className="footer-title">Разделы сайта</h4>
               <ul className="footer-links">
-                <li><a href="#" onClick={(e) => { e.preventDefault(); setActivePage('home'); logEvent('Footer navigation: Home'); }}>Главная</a></li>
-                <li><a href="#" onClick={(e) => { e.preventDefault(); setActivePage('about'); logEvent('Footer navigation: About'); }}>О компании</a></li>
-                <li><a href="#" onClick={(e) => { e.preventDefault(); setActivePage('services'); logEvent('Footer navigation: Services'); }}>Услуги изысканий</a></li>
-                <li><a href="#" onClick={(e) => { e.preventDefault(); setActivePage('projects'); logEvent('Footer navigation: Projects'); }}>Наши проекты</a></li>
+                <li><a href="/" onClick={(e) => { e.preventDefault(); setActivePage('home'); logEvent('Footer navigation: Home'); }}>Главная</a></li>
+                <li><a href="/about" onClick={(e) => { e.preventDefault(); setActivePage('about'); logEvent('Footer navigation: About'); }}>О компании</a></li>
+                <li><a href="/services" onClick={(e) => { e.preventDefault(); setActivePage('services'); logEvent('Footer navigation: Services'); }}>Услуги изысканий</a></li>
+                <li><a href="/projects" onClick={(e) => { e.preventDefault(); setActivePage('projects'); logEvent('Footer navigation: Projects'); }}>Наши проекты</a></li>
 
               </ul>
             </div>
