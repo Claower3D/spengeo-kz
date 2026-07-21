@@ -2344,13 +2344,13 @@ const DEFAULT_NORMS = [
                     <span className="hero-subtitle" style={{ fontSize: '0.7rem', color: 'var(--color-accent-secondary)' }}>
                       CAD MODEL SPECIFICATION: ACTIVE
                     </span>
-                    <h3 style={{ fontSize: '1.8rem', color: 'var(--color-text-primary)', marginBottom: '15px' }}>{adminData.rigs[selectedRig].name}</h3>
+                    <h3 style={{ fontSize: '1.8rem', color: 'var(--color-text-primary)', marginBottom: '15px' }}>{(adminData.dynamicLists?.['equipment_rigs_0'] || DRILLING_RIGS)[selectedRig]?.name}</h3>
                     <p style={{ color: 'var(--color-text-secondary)', fontSize: '0.95rem', marginBottom: '30px' }}>
-                      {adminData.rigs[selectedRig].description}
+                      {(adminData.dynamicLists?.['equipment_rigs_0'] || DRILLING_RIGS)[selectedRig]?.description}
                     </p>
 
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginBottom: '30px' }}>
-                      {adminData.rigs[selectedRig].cadSpecs.map(spec => (
+                      {((typeof (adminData.dynamicLists?.['equipment_rigs_0'] || DRILLING_RIGS)[selectedRig]?.cadSpecs === 'string' ? (adminData.dynamicLists?.['equipment_rigs_0'] || DRILLING_RIGS)[selectedRig]?.cadSpecs.split(',').map(s=>s.trim()) : (adminData.dynamicLists?.['equipment_rigs_0'] || DRILLING_RIGS)[selectedRig]?.cadSpecs) || []).map(spec => (
                         <span key={spec} style={{ fontFamily: 'var(--font-mono)', fontSize: '0.75rem', backgroundColor: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', padding: '4px 10px', borderRadius: '4px', color: 'var(--color-accent)' }}>
                           {spec}
                         </span>
@@ -2361,19 +2361,19 @@ const DEFAULT_NORMS = [
                   <div className="spec-grid">
                     <div className="spec-card">
                       <div className="spec-label">Глубина бурения</div>
-                      <div className="spec-value">{adminData.rigs[selectedRig].maxDepth}</div>
+                      <div className="spec-value">{(adminData.dynamicLists?.['equipment_rigs_0'] || DRILLING_RIGS)[selectedRig]?.maxDepth}</div>
                     </div>
                     <div className="spec-card">
                       <div className="spec-label">Крутящий момент</div>
-                      <div className="spec-value">{adminData.rigs[selectedRig].torque}</div>
+                      <div className="spec-value">{(adminData.dynamicLists?.['equipment_rigs_0'] || DRILLING_RIGS)[selectedRig]?.torque}</div>
                     </div>
                     <div className="spec-card">
                       <div className="spec-label">Масса установки</div>
-                      <div className="spec-value">{adminData.rigs[selectedRig].weight}</div>
+                      <div className="spec-value">{(adminData.dynamicLists?.['equipment_rigs_0'] || DRILLING_RIGS)[selectedRig]?.weight}</div>
                     </div>
                     <div className="spec-card">
                       <div className="spec-label">Транспортировка</div>
-                      <div className="spec-value">{adminData.rigs[selectedRig].mobility}</div>
+                      <div className="spec-value">{(adminData.dynamicLists?.['equipment_rigs_0'] || DRILLING_RIGS)[selectedRig]?.mobility}</div>
                     </div>
                   </div>
                 </div>
@@ -2401,13 +2401,13 @@ const DEFAULT_NORMS = [
                     <span className="hero-subtitle" style={{ fontSize: '0.7rem', color: 'var(--color-accent-secondary)' }}>
                       LAB MODEL CALIBRATION: OK
                     </span>
-                    <h3 style={{ fontSize: '1.8rem', color: 'var(--color-text-primary)', marginBottom: '15px' }}>{adminData.lab[selectedLab].name}</h3>
+                    <h3 style={{ fontSize: '1.8rem', color: 'var(--color-text-primary)', marginBottom: '15px' }}>{(adminData.dynamicLists?.['equipment_lab_2'] || LAB_EQUIP)[selectedLab]?.name}</h3>
                     <p style={{ color: 'var(--color-text-secondary)', fontSize: '0.95rem', marginBottom: '30px' }}>
-                      {adminData.lab[selectedLab].description}
+                      {(adminData.dynamicLists?.['equipment_lab_2'] || LAB_EQUIP)[selectedLab]?.description}
                     </p>
 
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginBottom: '30px' }}>
-                      {adminData.lab[selectedLab].cadSpecs.map(spec => (
+                      {((typeof (adminData.dynamicLists?.['equipment_lab_2'] || LAB_EQUIP)[selectedLab]?.cadSpecs === 'string' ? (adminData.dynamicLists?.['equipment_lab_2'] || LAB_EQUIP)[selectedLab]?.cadSpecs.split(',').map(s=>s.trim()) : (adminData.dynamicLists?.['equipment_lab_2'] || LAB_EQUIP)[selectedLab]?.cadSpecs) || []).map(spec => (
                         <span key={spec} style={{ fontFamily: 'var(--font-mono)', fontSize: '0.75rem', backgroundColor: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', padding: '4px 10px', borderRadius: '4px', color: 'var(--color-accent)' }}>
                           {spec}
                         </span>
@@ -2418,15 +2418,15 @@ const DEFAULT_NORMS = [
                   <div className="spec-grid">
                     <div className="spec-card" style={{ gridColumn: 'span 2' }}>
                       <div className="spec-label">Параметры испытаний</div>
-                      <div className="spec-value">{adminData.lab[selectedLab].params}</div>
+                      <div className="spec-value">{(adminData.dynamicLists?.['equipment_lab_2'] || LAB_EQUIP)[selectedLab]?.params}</div>
                     </div>
                     <div className="spec-card">
                       <div className="spec-label">Целевые свойства</div>
-                      <div className="spec-value">{adminData.lab[selectedLab].purpose}</div>
+                      <div className="spec-value">{(adminData.dynamicLists?.['equipment_lab_2'] || LAB_EQUIP)[selectedLab]?.purpose}</div>
                     </div>
                     <div className="spec-card">
                       <div className="spec-label">ГОСТ / Регламент</div>
-                      <div className="spec-value" style={{ color: 'var(--color-accent)' }}>{adminData.lab[selectedLab].standard}</div>
+                      <div className="spec-value" style={{ color: 'var(--color-accent)' }}>{(adminData.dynamicLists?.['equipment_lab_2'] || LAB_EQUIP)[selectedLab]?.standard}</div>
                     </div>
                   </div>
                 </div>
@@ -3346,11 +3346,11 @@ const DEFAULT_NORMS = [
                   'blog_video': { title: 'Видео', addText: 'Добавить видео', fields: [{ key: 'title', label: 'Подпись', type: 'text' }, { key: 'image', label: 'Ссылка на видео (URL)', type: 'text' }] },
 
                   // Equipment
-                  'equipment_rigs_0': { title: 'Буровые установки', addText: 'Добавить установку', fields: [{ key: 'name', label: 'Название', type: 'text' }, { key: 'type', label: 'Тип', type: 'text' }, { key: 'description', label: 'Описание', type: 'textarea' }, { key: 'soilType', label: 'Типы грунтов', type: 'text' }] },
+                  'equipment_rigs_0': { title: 'Буровые установки', addText: 'Добавить установку', fields: [{ key: 'name', label: 'Название', type: 'text' }, { key: 'type', label: 'Тип', type: 'text' }, { key: 'maxDepth', label: 'Глубина бурения', type: 'text' }, { key: 'torque', label: 'Крутящий момент', type: 'text' }, { key: 'weight', label: 'Масса установки', type: 'text' }, { key: 'mobility', label: 'Транспортировка', type: 'text' }, { key: 'description', label: 'Описание', type: 'textarea' }, { key: 'soilType', label: 'Типы грунтов', type: 'text' }, { key: 'cadSpecs', label: 'CAD-Спецификации (через запятую)', type: 'text' }] },
                   'equipment_rigs_1': { title: 'Автотранспорт', addText: 'Добавить авто', fields: [{ key: 'name', label: 'Марка/Модель', type: 'text' }, { key: 'type', label: 'Тип', type: 'text' }, { key: 'description', label: 'Описание', type: 'textarea' }] },
                   'equipment_lab_0': { title: 'CPT / Зондирование', addText: 'Добавить прибор', fields: [{ key: 'name', label: 'Название', type: 'text' }, { key: 'type', label: 'Тип', type: 'text' }, { key: 'description', label: 'Описание', type: 'textarea' }] },
                   'equipment_lab_1': { title: 'Испытательное оборудование', addText: 'Добавить прибор', fields: [{ key: 'name', label: 'Название', type: 'text' }, { key: 'type', label: 'Тип', type: 'text' }, { key: 'description', label: 'Описание', type: 'textarea' }] },
-                  'equipment_lab_2': { title: 'Лаборатория / Геодезия', addText: 'Добавить прибор', fields: [{ key: 'name', label: 'Название', type: 'text', required: true }, { key: 'type', label: 'Тип', type: 'text' }, { key: 'description', label: 'Описание', type: 'textarea' }] }
+                  'equipment_lab_2': { title: 'Лаборатория / Геодезия', addText: 'Добавить прибор', fields: [{ key: 'name', label: 'Название', type: 'text', required: true }, { key: 'type', label: 'Тип', type: 'text' }, { key: 'params', label: 'Параметры испытаний', type: 'text' }, { key: 'purpose', label: 'Целевые свойства', type: 'text' }, { key: 'standard', label: 'ГОСТ / Регламент', type: 'text' }, { key: 'description', label: 'Описание', type: 'textarea' }, { key: 'cadSpecs', label: 'CAD-Спецификации (через запятую)', type: 'text' }] }
                 };
 
                 const config = DYNAMIC_FORM_CONFIGS[sectionKey] || {
@@ -3568,34 +3568,7 @@ const DEFAULT_NORMS = [
                     </div>
                   </div>
 
-                  {/* ОБОРУДОВАНИЕ */}
-                  <div style={{ marginBottom: '40px' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                        <div style={{ background: 'rgba(16, 185, 129, 0.1)', padding: '8px', borderRadius: '8px', color: '#10b981' }}><Settings size={20} /></div>
-                        <h4 style={{ color: theme === 'white' ? '#0f172a' : '#fff', fontSize: '1.2rem', margin: 0 }}>Оборудование (Буровые установки)</h4>
-                      </div>
-                      <button onClick={() => setAdminData({...adminData, rigs: [{name: 'Новая установка', type: 'Тип', power: '', weight: '', maxDepth: '', description: '', image: ''}, ...adminData.rigs]})} style={{ background: '#10b981', color: '#fff', border: 'none', padding: '8px 16px', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold' }}>+ Добавить установку</button>
-                    </div>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px' }}>
-                      {adminData.rigs.map((r, i) => (
-                        <div key={i} style={{ padding: '20px', border: theme === 'white' ? '1px solid #e2e8f0' : '1px solid #333', borderRadius: '12px', background: theme === 'white' ? '#f8fafc' : '#1a1a1a', display: 'flex', flexDirection: 'column', gap: '15px' }}>
-                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <input value={r.name} onChange={e => { const arr = [...adminData.rigs]; arr[i].name = e.target.value; setAdminData({...adminData, rigs: arr}); }} style={{ flex: 1, padding: '8px 12px', background: theme === 'white' ? '#fff' : '#000', color: theme === 'white' ? '#0f172a' : '#fff', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', borderRadius: '6px', fontWeight: 'bold', fontSize: '1.1rem' }} placeholder="Название установки" />
-                            <button onClick={() => { const arr = adminData.rigs.filter((_, idx) => idx !== i); setAdminData({...adminData, rigs: arr}); }} style={{ color: '#ef4444', background: 'rgba(239, 68, 68, 0.1)', padding: '8px', borderRadius: '6px', border: 'none', cursor: 'pointer', marginLeft: '10px' }}><Trash2 size={16} /></button>
-                          </div>
-                          <div>
-                            <label style={{ display: 'block', fontSize: '0.8rem', color: theme === 'white' ? '#64748b' : '#888', marginBottom: '5px' }}>Фотография</label>
-                            <ImageUploadField value={r.image} onChange={v => { const arr = [...adminData.rigs]; arr[i].image = v; setAdminData({...adminData, rigs: arr}); }} theme={theme} />
-                          </div>
-                          <div>
-                            <label style={{ display: 'block', fontSize: '0.8rem', color: theme === 'white' ? '#64748b' : '#888', marginBottom: '5px' }}>Описание</label>
-                            <textarea value={r.description} onChange={e => { const arr = [...adminData.rigs]; arr[i].description = e.target.value; setAdminData({...adminData, rigs: arr}); }} style={{ width: '100%', padding: '10px 12px', background: theme === 'white' ? '#fff' : '#000', color: theme === 'white' ? '#0f172a' : '#fff', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', borderRadius: '6px', resize: 'vertical' }} placeholder="Технические характеристики..." rows={3} />
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
+                  {/* ОБОРУДОВАНИЕ REMOVED: Now managed entirely through dynamic lists in DB Section */}
 
                 </div>
               )}
