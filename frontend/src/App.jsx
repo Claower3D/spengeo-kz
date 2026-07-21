@@ -2678,7 +2678,7 @@ const DEFAULT_NORMS = [
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '50px', alignItems: 'flex-start' }}>
               <div>
                 <HudCard style={{ marginBottom: '30px' }}>
-                  <h3 style={{ fontSize: '1.25rem', marginBottom: '20px' }}>Офис в г. Алматы</h3>
+                  <h3 style={{ fontSize: '1.25rem', marginBottom: '20px' }}>Главный офис</h3>
                   <p style={{ color: 'var(--color-text-secondary)', fontSize: '0.95rem', marginBottom: '15px' }}>
                     📍 {adminData.global?.address || '050000, Республика Казахстан, г. Алматы, проспект Аль-Фараби'}
                   </p>
