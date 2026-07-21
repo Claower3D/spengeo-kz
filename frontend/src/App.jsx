@@ -487,6 +487,9 @@ const DEFAULT_NORMS = [
       if (!parsed.dynamicLists['blog_soils'] || parsed.dynamicLists['blog_soils'].length === 0) parsed.dynamicLists['blog_soils'] = DEFAULT_SOILS;
       if (!parsed.dynamicLists['blog_norms'] || parsed.dynamicLists['blog_norms'].length === 0) parsed.dynamicLists['blog_norms'] = DEFAULT_NORMS;
       
+      if (!parsed.seo) {
+        parsed.seo = { yandexMetricaId: '', googleAnalyticsId: '' };
+      }
       if (!parsed.calc) {
         parsed.calc = {
           waterCoeff: 1.15,
@@ -588,6 +591,54 @@ const DEFAULT_NORMS = [
   const [certModal, setCertModal] = useState(null);
 
   // Visual Builder States
+  useEffect(() => {
+    // Yandex Metrica
+    if (adminData?.seo?.yandexMetricaId) {
+      const ymId = adminData.seo.yandexMetricaId;
+      if (!document.getElementById('yandex-metrica-script')) {
+        const script = document.createElement('script');
+        script.id = 'yandex-metrica-script';
+        script.type = 'text/javascript';
+        script.innerHTML = `
+          (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+          m[i].l=1*new Date();
+          for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+          k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+          (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+
+          ym(${ymId}, "init", {
+               clickmap:true,
+               trackLinks:true,
+               accurateTrackBounce:true,
+               webvisor:true
+          });
+        `;
+        document.head.appendChild(script);
+      }
+    }
+
+    // Google Analytics
+    if (adminData?.seo?.googleAnalyticsId) {
+      const gaId = adminData.seo.googleAnalyticsId;
+      if (!document.getElementById('google-analytics-script')) {
+        const script1 = document.createElement('script');
+        script1.async = true;
+        script1.src = `https://www.googletagmanager.com/gtag/js?id=${gaId}`;
+        document.head.appendChild(script1);
+
+        const script2 = document.createElement('script');
+        script2.id = 'google-analytics-script';
+        script2.innerHTML = `
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', '${gaId}');
+        `;
+        document.head.appendChild(script2);
+      }
+    }
+  }, [adminData?.seo?.yandexMetricaId, adminData?.seo?.googleAnalyticsId]);
+
   const [isVisualBuilder, setIsVisualBuilder] = useState(false);
   const [activeEditorElement, setActiveEditorElement] = useState(null);
   const [activeEditorText, setActiveEditorText] = useState("");
@@ -3767,7 +3818,30 @@ const DEFAULT_NORMS = [
                       <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.9rem', color: theme === 'white' ? '#475569' : '#ccc' }}>Email для уведомлений</label>
                       <input type="text" defaultValue="info@spengeo.kz" style={{ width: '100%', padding: '12px', borderRadius: '6px', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #333', background: theme === 'white' ? '#f8fafc' : '#000', color: theme === 'white' ? '#0f172a' : '#fff' }} />
                     </div>
-                    <button style={{ background: '#10b981', color: '#fff', border: 'none', padding: '12px', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold', marginTop: '10px' }}>Сохранить настройки</button>
+                    <div>
+                      <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.9rem', color: theme === 'white' ? '#475569' : '#ccc' }}>ID Яндекс Метрики (Счетчик)</label>
+                      <input 
+                        type="text" 
+                        placeholder="Например: 98765432"
+                        value={adminData.seo?.yandexMetricaId || ''} 
+                        onChange={e => setAdminData(prev => ({...prev, seo: {...prev.seo, yandexMetricaId: e.target.value}}))}
+                        style={{ width: '100%', padding: '12px', borderRadius: '6px', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #333', background: theme === 'white' ? '#f8fafc' : '#000', color: theme === 'white' ? '#0f172a' : '#fff' }} 
+                      />
+                    </div>
+                    <div>
+                      <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.9rem', color: theme === 'white' ? '#475569' : '#ccc' }}>Google Analytics (Measurement ID)</label>
+                      <input 
+                        type="text" 
+                        placeholder="Например: G-XXXXXXXXXX"
+                        value={adminData.seo?.googleAnalyticsId || ''} 
+                        onChange={e => setAdminData(prev => ({...prev, seo: {...prev.seo, googleAnalyticsId: e.target.value}}))}
+                        style={{ width: '100%', padding: '12px', borderRadius: '6px', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #333', background: theme === 'white' ? '#f8fafc' : '#000', color: theme === 'white' ? '#0f172a' : '#fff' }} 
+                      />
+                    </div>
+                    <button onClick={() => {
+                      localStorage.setItem('spengeo_admin_data', JSON.stringify(adminData));
+                      alert('Настройки SEO и аналитики сохранены!');
+                    }} style={{ background: '#10b981', color: '#fff', border: 'none', padding: '12px', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold', marginTop: '10px' }}>Сохранить настройки</button>
                   </div>
                 </div>
               )}
