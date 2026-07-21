@@ -490,6 +490,14 @@ const DEFAULT_NORMS = [
       if (!parsed.seo) {
         parsed.seo = { yandexMetricaId: '', googleAnalyticsId: '' };
       }
+      if (!parsed.global) {
+        parsed.global = {
+          companyName: 'ТОО «СпецИнжГео»',
+          phone: '+7 775 218 28 06',
+          email: 'info@spengeo.kz',
+          address: 'Республика Казахстан, г. Алматы'
+        };
+      }
       if (!parsed.calc) {
         parsed.calc = {
           waterCoeff: 1.15,
@@ -1032,8 +1040,8 @@ const DEFAULT_NORMS = [
                   {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
                 </button>
                 
-                <a href="tel:+77752182806" className="header-phone-btn" style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'var(--color-cyan)', color: '#07090e', padding: '8px 16px', borderRadius: '30px', textDecoration: 'none', fontWeight: 'bold', whiteSpace: 'nowrap', fontSize: '0.95rem' }}>
-                  <Phone size={16} /> +7 775 218 28 06
+                <a href={`tel:${(adminData.global?.phone || '+7 775 218 28 06').replace(/[^\d+]/g, '')}`} className="header-phone-btn" style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'var(--color-cyan)', color: '#07090e', padding: '8px 16px', borderRadius: '30px', textDecoration: 'none', fontWeight: 'bold', whiteSpace: 'nowrap', fontSize: '0.95rem' }}>
+                  <Phone size={16} /> {adminData.global?.phone || '+7 775 218 28 06'}
                 </a>
               </div>
               
@@ -2578,9 +2586,9 @@ const DEFAULT_NORMS = [
                 <div className="offer-box">
                   <div className="offer-header">
                     <div>
-                      <div className="offer-title">⛰️ ТОО «СпецИнжГео»</div>
+                      <div className="offer-title">⛰️ {adminData.global?.companyName || 'ТОО «СпецИнжГео»'}</div>
                       <div style={{ fontSize: '0.65rem', color: '#64748b', fontFamily: 'var(--font-mono)' }}>
-                        РК, г. Алматы, info@spengeo.kz | БИН 190440028192
+                        {adminData.global?.address || 'РК, г. Алматы'}, {adminData.global?.email || 'info@spengeo.kz'} | БИН 190440028192
                       </div>
                     </div>
                     <div className="offer-stamp">
@@ -2671,13 +2679,13 @@ const DEFAULT_NORMS = [
                 <HudCard style={{ marginBottom: '30px' }}>
                   <h3 style={{ fontSize: '1.25rem', marginBottom: '20px' }}>Офис в г. Алматы</h3>
                   <p style={{ color: 'var(--color-text-secondary)', fontSize: '0.95rem', marginBottom: '15px' }}>
-                    📍 050000, Республика Казахстан, г. Алматы, проспект Аль-Фараби
+                    📍 {adminData.global?.address || '050000, Республика Казахстан, г. Алматы, проспект Аль-Фараби'}
                   </p>
                   <p style={{ color: 'var(--color-text-secondary)', fontSize: '0.95rem', marginBottom: '15px' }}>
-                    📞 Телефон: +7 775 218 28 06 (WhatsApp: +7 705 202 76 66)
+                    📞 Телефон: {adminData.global?.phone || '+7 775 218 28 06'}
                   </p>
                   <p style={{ color: 'var(--color-text-secondary)', fontSize: '0.95rem', marginBottom: '15px' }}>
-                    ✉️ Email: info@spengeo.kz
+                    ✉️ Email: {adminData.global?.email || 'info@spengeo.kz'}
                   </p>
                 </HudCard>
 
@@ -3811,15 +3819,19 @@ const DEFAULT_NORMS = [
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                     <div>
                       <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.9rem', color: theme === 'white' ? '#475569' : '#ccc' }}>Название компании</label>
-                      <input type="text" defaultValue="ТОО «СпецИнжГео»" style={{ width: '100%', padding: '12px', borderRadius: '6px', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #333', background: theme === 'white' ? '#f8fafc' : '#000', color: theme === 'white' ? '#0f172a' : '#fff' }} />
+                      <input type="text" value={adminData.global?.companyName || ''} onChange={e => setAdminData(prev => ({...prev, global: {...prev.global, companyName: e.target.value}}))} style={{ width: '100%', padding: '12px', borderRadius: '6px', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #333', background: theme === 'white' ? '#f8fafc' : '#000', color: theme === 'white' ? '#0f172a' : '#fff' }} />
                     </div>
                     <div>
                       <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.9rem', color: theme === 'white' ? '#475569' : '#ccc' }}>Основной телефон</label>
-                      <input type="text" defaultValue="+7 (705) 555-44-33" style={{ width: '100%', padding: '12px', borderRadius: '6px', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #333', background: theme === 'white' ? '#f8fafc' : '#000', color: theme === 'white' ? '#0f172a' : '#fff' }} />
+                      <input type="text" value={adminData.global?.phone || ''} onChange={e => setAdminData(prev => ({...prev, global: {...prev.global, phone: e.target.value}}))} style={{ width: '100%', padding: '12px', borderRadius: '6px', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #333', background: theme === 'white' ? '#f8fafc' : '#000', color: theme === 'white' ? '#0f172a' : '#fff' }} />
                     </div>
                     <div>
                       <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.9rem', color: theme === 'white' ? '#475569' : '#ccc' }}>Email для уведомлений</label>
-                      <input type="text" defaultValue="info@spengeo.kz" style={{ width: '100%', padding: '12px', borderRadius: '6px', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #333', background: theme === 'white' ? '#f8fafc' : '#000', color: theme === 'white' ? '#0f172a' : '#fff' }} />
+                      <input type="text" value={adminData.global?.email || ''} onChange={e => setAdminData(prev => ({...prev, global: {...prev.global, email: e.target.value}}))} style={{ width: '100%', padding: '12px', borderRadius: '6px', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #333', background: theme === 'white' ? '#f8fafc' : '#000', color: theme === 'white' ? '#0f172a' : '#fff' }} />
+                    </div>
+                    <div>
+                      <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.9rem', color: theme === 'white' ? '#475569' : '#ccc' }}>Адрес местоположения</label>
+                      <input type="text" value={adminData.global?.address || ''} onChange={e => setAdminData(prev => ({...prev, global: {...prev.global, address: e.target.value}}))} style={{ width: '100%', padding: '12px', borderRadius: '6px', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #333', background: theme === 'white' ? '#f8fafc' : '#000', color: theme === 'white' ? '#0f172a' : '#fff' }} />
                     </div>
                     <div>
                       <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.9rem', color: theme === 'white' ? '#475569' : '#ccc' }}>ID Яндекс Метрики (Счетчик)</label>
@@ -4061,9 +4073,9 @@ const DEFAULT_NORMS = [
             <div>
               <h4 className="footer-title">Контакты</h4>
               <ul className="footer-links" style={{ fontSize: '0.85rem' }}>
-                <li>📍 Республика Казахстан, г. Алматы</li>
-                <li>📞 +7 775 218 28 06</li>
-                <li>✉️ info@spengeo.kz</li>
+                <li>📍 {adminData.global?.address || 'Республика Казахстан, г. Алматы'}</li>
+                <li>📞 {adminData.global?.phone || '+7 775 218 28 06'}</li>
+                <li>✉️ {adminData.global?.email || 'info@spengeo.kz'}</li>
                 <li style={{ marginTop: '15px' }}>Разработано при помощи <a href="https://codix-style-line-production.up.railway.app/" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--color-cyan)', textDecoration: 'none', textShadow: '0 0 10px rgba(14, 165, 233, 0.5)', borderBottom: '1px dashed var(--color-cyan)', paddingBottom: '2px', fontWeight: 600, letterSpacing: '0.5px', transition: 'all 0.3s' }} onMouseOver={(e) => { e.currentTarget.style.color = '#fff'; e.currentTarget.style.textShadow = '0 0 15px rgba(255, 255, 255, 0.8)'; e.currentTarget.style.borderBottom = '1px solid #fff'; }} onMouseOut={(e) => { e.currentTarget.style.color = 'var(--color-cyan)'; e.currentTarget.style.textShadow = '0 0 10px rgba(14, 165, 233, 0.5)'; e.currentTarget.style.borderBottom = '1px dashed var(--color-cyan)'; }}>Codix Style Line</a></li>
               </ul>
     </div>
