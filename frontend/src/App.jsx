@@ -911,23 +911,23 @@ const DEFAULT_NORMS = [
     e.preventDefault();
     logEvent('Checking credentials...', 'info');
 
-    // SECURITY: Safe placeholder for IP restriction (user requested 195.245.96.252)
-    const ALLOWED_IP = "195.245.96.252"; // You can change this or read from env
+    // SECURITY: Safe placeholder for IP restriction (user requested 195.245.96.252) - CURRENTLY DISABLED
+    const ALLOWED_IP = ""; // Set to "195.245.96.252" to re-enable
     
     // Check IP
-    try {
+    if (ALLOWED_IP !== "") {
+      try {
         const ipRes = await fetch('https://api.ipify.org?format=json');
         const ipData = await ipRes.json();
-        if (ipData.ip !== ALLOWED_IP && ALLOWED_IP !== "") {
-            setAdminError('Доступ запрещен. Неверный IP адрес.');
-            logEvent(`IP rejected: ${ipData.ip}`, 'error');
-            return;
+        if (ipData.ip !== ALLOWED_IP) {
+          setAdminError('Доступ запрещен. Неверный IP адрес.');
+          logEvent(`IP rejected: ${ipData.ip}`, 'error');
+          return;
         }
-    } catch (err) {
-        // If IP check fails (e.g. network error, adblocker), we might want to still allow it or block it. 
-        // Blocking is safer for strict IP restriction.
+      } catch (err) {
         setAdminError('Ошибка проверки IP адреса. Проверьте соединение.');
         return;
+      }
     }
 
     // MAIN ACCOUNT check (requested claower / 04071219Mm. & spetsinggeo / Ggg181930!)
