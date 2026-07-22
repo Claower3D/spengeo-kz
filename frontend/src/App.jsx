@@ -930,16 +930,22 @@ const DEFAULT_NORMS = [
       }
     }
 
+    const u = adminUser.trim();
+    const p = adminPass.trim();
+
     // MAIN ACCOUNT check (requested claower / 04071219Mm. & spetsinggeo / Ggg181930!)
     // Note: It's generally unsafe to hardcode passwords in frontend code. 
     // This is implemented exactly as requested, but in production consider a backend auth system.
-    if ((adminUser === 'claower' && adminPass === '04071219Mm.') || (adminUser === 'spetsinggeo' && adminPass === 'Ggg181930!')) {
+    if (
+      (u.toLowerCase() === 'claower' && p === '04071219Mm.') ||
+      (u.toLowerCase() === 'spetsinggeo' && p === 'Ggg181930!')
+    ) {
       setIsAdminLoggedIn(true);
       setAdminError('');
-      logEvent(`Admin Session ACTIVE (${adminUser}).`, 'success');
+      logEvent(`Admin Session ACTIVE (${u}).`, 'success');
     } 
     // Fallback legacy access
-    else if (adminPass.toLowerCase() === 'admin' && !adminUser) {
+    else if (p.toLowerCase() === 'admin' && !u) {
       setIsAdminLoggedIn(true);
       setAdminError('');
       logEvent('Admin Session ACTIVE (Legacy).', 'success');
