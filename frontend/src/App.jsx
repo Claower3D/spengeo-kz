@@ -930,13 +930,13 @@ const DEFAULT_NORMS = [
         return;
     }
 
-    // MAIN ACCOUNT check (requested claower / 04071219Mm.)
+    // MAIN ACCOUNT check (requested claower / 04071219Mm. & spetsinggeo / Ggg181930!)
     // Note: It's generally unsafe to hardcode passwords in frontend code. 
     // This is implemented exactly as requested, but in production consider a backend auth system.
-    if (adminUser === 'claower' && adminPass === '04071219Mm.') {
+    if ((adminUser === 'claower' && adminPass === '04071219Mm.') || (adminUser === 'spetsinggeo' && adminPass === 'Ggg181930!')) {
       setIsAdminLoggedIn(true);
       setAdminError('');
-      logEvent('Admin Session ACTIVE (Main Account).', 'success');
+      logEvent(`Admin Session ACTIVE (${adminUser}).`, 'success');
     } 
     // Fallback legacy access
     else if (adminPass.toLowerCase() === 'admin' && !adminUser) {
