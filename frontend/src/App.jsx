@@ -3369,8 +3369,8 @@ const DEFAULT_NORMS = [
                   <h3 style={{fontSize: '1.25rem', marginBottom: '20px', color: theme === 'white' ? '#0f172a' : '#fff'}}>Управление структурой сайта</h3>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px', marginBottom: '40px' }}>
                     {dynamicMenu['ru'].map((menuItem, idx) => {
-                      if (!menuItem.items) return null;
-                      const colors = ['rgba(59, 130, 246', 'rgba(16, 185, 129', 'rgba(59, 130, 246', 'rgba(168, 85, 247', 'rgba(236, 72, 153', 'rgba(6, 182, 212'];
+                      const itemsCount = menuItem.items ? menuItem.items.length : 0;
+                      const colors = ['rgba(59, 130, 246', 'rgba(16, 185, 129', 'rgba(59, 130, 246', 'rgba(168, 85, 247', 'rgba(236, 72, 153', 'rgba(6, 182, 212', 'rgba(245, 158, 11'];
                       const col = colors[idx % colors.length];
                       return (
                         <div key={idx} onClick={() => setActiveAdminSection('cms_' + menuItem.page)} style={{ position: 'relative', overflow: 'hidden', borderRadius: '12px', background: theme === 'white' ? '#fff' : '#111', border: theme === 'white' ? `1px solid ${col}, 0.4)` : `1px solid ${col}, 0.3)`, padding: '24px', display: 'flex', flexDirection: 'column', cursor: 'pointer', transition: 'transform 0.2s', boxShadow: theme === 'white' ? '0 4px 20px rgba(0,0,0,0.05)' : 'none' }}>
@@ -3380,7 +3380,7 @@ const DEFAULT_NORMS = [
                               <Folder size={24} />
                             </div>
                             <div style={{ textAlign: 'right' }}>
-                              <div style={{ fontSize: '1.5rem', fontWeight: 'bold', lineHeight: 1 }}>{menuItem.items.length}</div>
+                              <div style={{ fontSize: '1.5rem', fontWeight: 'bold', lineHeight: 1 }}>{itemsCount}</div>
                               <div style={{ fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: theme === 'white' ? '#64748b' : '#888', marginTop: '4px' }}>подразделов</div>
                             </div>
                           </div>
