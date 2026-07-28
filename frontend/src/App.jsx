@@ -4619,8 +4619,16 @@ const DEFAULT_NORMS = [
               <button className="btn btn-secondary" onClick={() => setIsVisualBuilder(false)} style={{ padding: '8px 16px', fontSize: '0.85rem', border: '1px solid #444', color: '#ccc' }}>
                 Выйти
               </button>
-              <button className="btn btn-primary" onClick={() => setIsVisualBuilder(false)} style={{ padding: '8px 20px', fontSize: '0.85rem', display: 'flex', gap: '8px', alignItems: 'center', background: 'var(--color-cyan)', color: '#000', fontWeight: 'bold' }}>
-                <Check size={16} /> Опубликовать
+              <button 
+                className="btn btn-primary" 
+                onClick={async () => {
+                  await saveAdminData();
+                  setIsVisualBuilder(false);
+                }} 
+                disabled={isSavingAdmin}
+                style={{ padding: '8px 20px', fontSize: '0.85rem', display: 'flex', gap: '8px', alignItems: 'center', background: 'var(--color-cyan)', color: '#000', fontWeight: 'bold', cursor: isSavingAdmin ? 'wait' : 'pointer' }}
+              >
+                <Check size={16} /> {isSavingAdmin ? 'Публикация на сервер...' : 'Опубликовать'}
               </button>
             </div>
           </div>
