@@ -1556,7 +1556,12 @@ const DEFAULT_NORMS = [
               <div className="accordion-container">
                 
                 {/* Block 1: Heavy Equipment */}
-                <div className="accordion-item">
+                <div className="accordion-item" style={{ cursor: 'pointer' }} onClick={(e) => {
+                  if (e.target.isContentEditable || e.target.closest('[contenteditable="true"]')) return;
+                  setEquipCategory('rigs');
+                  setActivePage('equipment');
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}>
                   <div className="accordion-inner">
                     <div className="accordion-bg" style={{ backgroundImage: "url('/images/rig.png')" }}></div>
                     <div className="accordion-overlay"></div>
@@ -1576,7 +1581,12 @@ const DEFAULT_NORMS = [
                 </div>
 
                 {/* Block 2: Laboratory */}
-                <div className="accordion-item">
+                <div className="accordion-item" style={{ cursor: 'pointer' }} onClick={(e) => {
+                  if (e.target.isContentEditable || e.target.closest('[contenteditable="true"]')) return;
+                  setEquipCategory('lab');
+                  setActivePage('equipment');
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}>
                   <div className="accordion-inner">
                     <div className="accordion-bg" style={{ backgroundImage: "url('/images/lab.png')" }}></div>
                     <div className="accordion-overlay"></div>
@@ -1596,7 +1606,11 @@ const DEFAULT_NORMS = [
                 </div>
 
                 {/* Block 3: Geodesy */}
-                <div className="accordion-item">
+                <div className="accordion-item" style={{ cursor: 'pointer' }} onClick={(e) => {
+                  if (e.target.isContentEditable || e.target.closest('[contenteditable="true"]')) return;
+                  setActivePage('services');
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}>
                   <div className="accordion-inner">
                     <div className="accordion-bg" style={{ backgroundImage: "url('/images/geodesy.png')" }}></div>
                     <div className="accordion-overlay"></div>
