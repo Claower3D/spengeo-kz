@@ -2275,7 +2275,7 @@ const DEFAULT_NORMS = [
               <>
               <div className="glow-card-premium" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '0', alignItems: 'stretch', padding: '0', overflow: 'hidden', position: 'relative', zIndex: 2, background: 'var(--bg-card)', border: '1px solid var(--border-color)', boxShadow: '0 0 50px rgba(0,0,0,0.1)', marginBottom: '60px' }}>
                   <div style={{ position: 'relative', minHeight: '500px', overflow: 'hidden' }}>
-                    <img src={adminData.media?.directorImage || ((adminData.team || []).find(m => (m.name && m.name.toLowerCase().includes('шенвизов')) || (m.badge && m.badge.toLowerCase().includes('основатель'))) || adminData.team?.[0])?.img || '/images/director.png'} alt="Генеральный директор" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', filter: 'contrast(1.1)' }} />
+                    <img src={adminData.media?.historyDirectorImage || '/images/director.png'} alt="Руководитель" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', filter: 'contrast(1.1)' }} />
                     {isVisualBuilder && (
                       <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 10 }}>
                         <label style={{ background: 'var(--color-cyan)', color: '#000', padding: '12px 24px', borderRadius: '30px', fontWeight: 'bold', cursor: 'pointer', display: 'flex', gap: '8px', alignItems: 'center', boxShadow: '0 4px 20px rgba(6, 182, 212, 0.6)' }}>
@@ -2309,15 +2309,10 @@ const DEFAULT_NORMS = [
                                     const ctx = canvas.getContext('2d');
                                     ctx.drawImage(img, 0, 0, width, height);
                                     const compressed = canvas.toDataURL('image/jpeg', 0.82);
-                                    setAdminData(prev => {
-                                      const newTeam = [...(prev.team || [])];
-                                      if (newTeam[0]) newTeam[0] = { ...newTeam[0], img: compressed };
-                                      return {
-                                        ...prev,
-                                        media: { ...(prev.media || {}), directorImage: compressed },
-                                        team: newTeam
-                                      };
-                                    });
+                                    setAdminData(prev => ({
+                                      ...prev,
+                                      media: { ...(prev.media || {}), historyDirectorImage: compressed }
+                                    }));
                                   };
                                   img.src = ev.target.result;
                                 };
@@ -2335,12 +2330,12 @@ const DEFAULT_NORMS = [
                     <div style={{ position: 'absolute', top: '-10px', left: '20px', fontSize: '15rem', color: 'var(--color-cyan)', opacity: 0.05, fontFamily: 'Georgia, serif', lineHeight: 1, pointerEvents: 'none' }}>“</div>
                     
                     <div style={{ position: 'relative', zIndex: 2 }}>
-                      <EditableText as="h3" id="f_name" defaultText="Шенвизов Рудольф" isVisualBuilder={isVisualBuilder} style={{ fontSize: '2.8rem', marginBottom: '5px', color: 'var(--color-text-primary)', letterSpacing: '-0.02em' }} />
-                      <EditableText as="h3" id="f_patr" defaultText="Константинович" isVisualBuilder={isVisualBuilder} style={{ fontSize: '2.2rem', marginBottom: '25px', color: 'var(--color-text-secondary)', fontWeight: 400 }} />
+                      <EditableText as="h3" id="history_f_name" defaultText="Есентаев Аскар" isVisualBuilder={isVisualBuilder} style={{ fontSize: '2.8rem', marginBottom: '5px', color: 'var(--color-text-primary)', letterSpacing: '-0.02em' }} />
+                      <EditableText as="h3" id="history_f_patr" defaultText="Уалиевич" isVisualBuilder={isVisualBuilder} style={{ fontSize: '2.2rem', marginBottom: '25px', color: 'var(--color-text-secondary)', fontWeight: 400 }} />
                       
-                      <EditableText as="div" id="f_role" defaultText="Основатель и Главный Геолог" isVisualBuilder={isVisualBuilder} style={{ display: 'inline-block', padding: '8px 16px', background: 'rgba(6, 182, 212, 0.1)', border: '1px solid rgba(6, 182, 212, 0.3)', borderRadius: '20px', color: 'var(--color-cyan)', fontSize: '0.85rem', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: '35px', fontWeight: 600 }} />
+                      <EditableText as="div" id="history_f_role" defaultText="Доктор PhD в области &quot;Строительство&quot;" isVisualBuilder={isVisualBuilder} style={{ display: 'inline-block', padding: '8px 16px', background: 'rgba(6, 182, 212, 0.1)', border: '1px solid rgba(6, 182, 212, 0.3)', borderRadius: '20px', color: 'var(--color-cyan)', fontSize: '0.85rem', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: '35px', fontWeight: 600 }} />
                       
-                      <EditableText as="p" id="f_quote" dangerously={true} defaultText="Рудольф Константинович основал компанию в 2019 году в городе Алматы. Получив геологическое образование в Сибирском государственном университете (г. Томск, РФ), он собрал команду опытных буровых инженеров, геодезистов и лаборантов.<br /><br />Основным принципом работы компании является жесткое следование строительным регламентам СП РК и ГОСТ. Благодаря этому отчеты ТОО «СпецИнжГео» успешно и быстро проходят государственную вневедомственную экспертизу." isVisualBuilder={isVisualBuilder} style={{ color: 'var(--color-text-secondary)', fontSize: '1.1rem', lineHeight: 1.8, position: 'relative', zIndex: 2, fontStyle: 'italic', borderLeft: '3px solid var(--color-cyan)', paddingLeft: '25px' }} />
+                      <EditableText as="p" id="history_f_quote" dangerously={true} defaultText="Мы строим нашу работу на безупречной точности и строгом соответствии регламентам СП РК и ГОСТ. С 2019 года наша команда опытных буровых инженеров, геодезистов и лаборантов успешно реализует сложнейшие проекты по всему Казахстану, обеспечивая прочный фундамент для каждого объекта." isVisualBuilder={isVisualBuilder} style={{ color: 'var(--color-text-secondary)', fontSize: '1.1rem', lineHeight: 1.8, position: 'relative', zIndex: 2, fontStyle: 'italic', borderLeft: '3px solid var(--color-cyan)', paddingLeft: '25px' }} />
                     </div>
                   </div>
                 </div>
@@ -3933,17 +3928,12 @@ const DEFAULT_NORMS = [
                         <div>
                           <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 'bold', color: theme === 'white' ? '#0f172a' : '#fff', marginBottom: '8px' }}>Фотография</label>
                           <ImageUploadField 
-                            value={adminData.media?.directorImage || adminData.team?.[0]?.img || '/images/director.png'} 
+                            value={adminData.media?.historyDirectorImage || '/images/director.png'} 
                             onChange={v => {
-                              setAdminData(prev => {
-                                const newTeam = [...(prev.team || [])];
-                                if (newTeam[0]) newTeam[0] = { ...newTeam[0], img: v };
-                                return {
-                                  ...prev,
-                                  media: { ...(prev.media || {}), directorImage: v },
-                                  team: newTeam
-                                };
-                              });
+                              setAdminData(prev => ({
+                                ...prev,
+                                media: { ...(prev.media || {}), historyDirectorImage: v }
+                              }));
                             }} 
                             theme={theme} 
                           />
@@ -3953,15 +3943,15 @@ const DEFAULT_NORMS = [
                             <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 'bold', color: theme === 'white' ? '#0f172a' : '#fff', marginBottom: '8px' }}>Имя</label>
                             <input 
                               type="text" 
-                              value={adminData.visualTexts?.['f_name'] || ''} 
+                              value={adminData.visualTexts?.['history_f_name'] || ''} 
                               onChange={(e) => {
                                 const val = e.target.value;
                                 setAdminData(prev => ({
                                   ...prev,
-                                  visualTexts: { ...(prev.visualTexts || {}), f_name: val }
+                                  visualTexts: { ...(prev.visualTexts || {}), history_f_name: val }
                                 }));
-                                if (typeof localStorage !== 'undefined') localStorage.setItem('vb_f_name', val);
-                                window.dispatchEvent(new CustomEvent('vb_update', { detail: { id: 'f_name', text: val } }));
+                                if (typeof localStorage !== 'undefined') localStorage.setItem('vb_history_f_name', val);
+                                window.dispatchEvent(new CustomEvent('vb_update', { detail: { id: 'history_f_name', text: val } }));
                               }} 
                               style={{ width: '100%', padding: '12px', background: theme === 'white' ? '#f8fafc' : '#000', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', color: theme === 'white' ? '#0f172a' : '#fff', borderRadius: '8px' }} 
                             />
@@ -3970,15 +3960,15 @@ const DEFAULT_NORMS = [
                             <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 'bold', color: theme === 'white' ? '#0f172a' : '#fff', marginBottom: '8px' }}>Отчество / Фамилия</label>
                             <input 
                               type="text" 
-                              value={adminData.visualTexts?.['f_patr'] || ''} 
+                              value={adminData.visualTexts?.['history_f_patr'] || ''} 
                               onChange={(e) => {
                                 const val = e.target.value;
                                 setAdminData(prev => ({
                                   ...prev,
-                                  visualTexts: { ...(prev.visualTexts || {}), f_patr: val }
+                                  visualTexts: { ...(prev.visualTexts || {}), history_f_patr: val }
                                 }));
-                                if (typeof localStorage !== 'undefined') localStorage.setItem('vb_f_patr', val);
-                                window.dispatchEvent(new CustomEvent('vb_update', { detail: { id: 'f_patr', text: val } }));
+                                if (typeof localStorage !== 'undefined') localStorage.setItem('vb_history_f_patr', val);
+                                window.dispatchEvent(new CustomEvent('vb_update', { detail: { id: 'history_f_patr', text: val } }));
                               }} 
                               style={{ width: '100%', padding: '12px', background: theme === 'white' ? '#f8fafc' : '#000', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', color: theme === 'white' ? '#0f172a' : '#fff', borderRadius: '8px' }} 
                             />
@@ -3988,15 +3978,15 @@ const DEFAULT_NORMS = [
                           <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 'bold', color: theme === 'white' ? '#0f172a' : '#fff', marginBottom: '8px' }}>Должность</label>
                           <input 
                             type="text" 
-                            value={adminData.visualTexts?.['f_role'] || ''} 
+                            value={adminData.visualTexts?.['history_f_role'] || ''} 
                             onChange={(e) => {
                               const val = e.target.value;
                               setAdminData(prev => ({
                                 ...prev,
-                                visualTexts: { ...(prev.visualTexts || {}), f_role: val }
+                                visualTexts: { ...(prev.visualTexts || {}), history_f_role: val }
                               }));
-                              if (typeof localStorage !== 'undefined') localStorage.setItem('vb_f_role', val);
-                              window.dispatchEvent(new CustomEvent('vb_update', { detail: { id: 'f_role', text: val } }));
+                              if (typeof localStorage !== 'undefined') localStorage.setItem('vb_history_f_role', val);
+                              window.dispatchEvent(new CustomEvent('vb_update', { detail: { id: 'history_f_role', text: val } }));
                             }} 
                             style={{ width: '100%', padding: '12px', background: theme === 'white' ? '#f8fafc' : '#000', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', color: theme === 'white' ? '#0f172a' : '#fff', borderRadius: '8px' }} 
                           />
@@ -4004,15 +3994,15 @@ const DEFAULT_NORMS = [
                         <div>
                           <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 'bold', color: theme === 'white' ? '#0f172a' : '#fff', marginBottom: '8px' }}>Текст (Цитата/История)</label>
                           <textarea 
-                            value={adminData.visualTexts?.['f_quote'] || ''} 
+                            value={adminData.visualTexts?.['history_f_quote'] || ''} 
                             onChange={(e) => {
                               const val = e.target.value;
                               setAdminData(prev => ({
                                 ...prev,
-                                visualTexts: { ...(prev.visualTexts || {}), f_quote: val }
+                                visualTexts: { ...(prev.visualTexts || {}), history_f_quote: val }
                               }));
-                              if (typeof localStorage !== 'undefined') localStorage.setItem('vb_f_quote', val);
-                              window.dispatchEvent(new CustomEvent('vb_update', { detail: { id: 'f_quote', text: val } }));
+                              if (typeof localStorage !== 'undefined') localStorage.setItem('vb_history_f_quote', val);
+                              window.dispatchEvent(new CustomEvent('vb_update', { detail: { id: 'history_f_quote', text: val } }));
                             }} 
                             rows={4}
                             style={{ width: '100%', padding: '12px', background: theme === 'white' ? '#f8fafc' : '#000', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', color: theme === 'white' ? '#0f172a' : '#fff', borderRadius: '8px', fontFamily: 'inherit' }} 
