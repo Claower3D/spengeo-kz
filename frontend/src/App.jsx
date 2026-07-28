@@ -244,8 +244,10 @@ function EditableText({ id, defaultText, isVisualBuilder, dangerously = false, a
   useEffect(() => {
     if (adminVal && adminVal !== text) {
       setText(adminVal);
+    } else if (defaultText && !adminVal && !localStorage.getItem(`vb_${id}`)) {
+      setText(defaultText);
     }
-  }, [adminVal]);
+  }, [adminVal, defaultText]);
 
   useEffect(() => {
     const handleUpdate = (e) => {
@@ -664,6 +666,51 @@ const DEFAULT_NORMS = [
       }
     }
     const dataToSave = customData || { ...adminData, visualTexts };
+
+    // Synchronize Global Settings (address, phone, email) to Visual Texts
+    if (dataToSave.global) {
+      if (dataToSave.global.address) {
+        dataToSave.visualTexts['contacts_address_val'] = dataToSave.global.address;
+        dataToSave.visualTexts['footer_address'] = dataToSave.global.address;
+        if (typeof localStorage !== 'undefined') {
+          localStorage.setItem('vb_contacts_address_val', dataToSave.global.address);
+          localStorage.setItem('vb_footer_address', dataToSave.global.address);
+        }
+        window.dispatchEvent(new CustomEvent('vb_update', { detail: { id: 'contacts_address_val', text: dataToSave.global.address } }));
+        window.dispatchEvent(new CustomEvent('vb_update', { detail: { id: 'footer_address', text: dataToSave.global.address } }));
+      }
+      if (dataToSave.global.phone) {
+        dataToSave.visualTexts['contacts_phone_val'] = dataToSave.global.phone;
+        dataToSave.visualTexts['footer_phone'] = dataToSave.global.phone;
+        dataToSave.visualTexts['header_phone'] = dataToSave.global.phone;
+        if (typeof localStorage !== 'undefined') {
+          localStorage.setItem('vb_contacts_phone_val', dataToSave.global.phone);
+          localStorage.setItem('vb_footer_phone', dataToSave.global.phone);
+          localStorage.setItem('vb_header_phone', dataToSave.global.phone);
+        }
+        window.dispatchEvent(new CustomEvent('vb_update', { detail: { id: 'contacts_phone_val', text: dataToSave.global.phone } }));
+        window.dispatchEvent(new CustomEvent('vb_update', { detail: { id: 'footer_phone', text: dataToSave.global.phone } }));
+        window.dispatchEvent(new CustomEvent('vb_update', { detail: { id: 'header_phone', text: dataToSave.global.phone } }));
+      }
+      if (dataToSave.global.email) {
+        dataToSave.visualTexts['contacts_email_val'] = dataToSave.global.email;
+        dataToSave.visualTexts['footer_email'] = dataToSave.global.email;
+        if (typeof localStorage !== 'undefined') {
+          localStorage.setItem('vb_contacts_email_val', dataToSave.global.email);
+          localStorage.setItem('vb_footer_email', dataToSave.global.email);
+        }
+        window.dispatchEvent(new CustomEvent('vb_update', { detail: { id: 'contacts_email_val', text: dataToSave.global.email } }));
+        window.dispatchEvent(new CustomEvent('vb_update', { detail: { id: 'footer_email', text: dataToSave.global.email } }));
+      }
+      if (dataToSave.global.companyName) {
+        dataToSave.visualTexts['footer_company_title'] = dataToSave.global.companyName;
+        if (typeof localStorage !== 'undefined') {
+          localStorage.setItem('vb_footer_company_title', dataToSave.global.companyName);
+        }
+        window.dispatchEvent(new CustomEvent('vb_update', { detail: { id: 'footer_company_title', text: dataToSave.global.companyName } }));
+      }
+    }
+
     setIsSavingAdmin(true);
     setAdminSaveStatus(null);
     
