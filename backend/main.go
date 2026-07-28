@@ -25,6 +25,7 @@ var (
 	inquiries []Inquiry
 	mutex     sync.Mutex
 	dbFile    = "inquiries.json"
+	adminDataFile = "admin_data.json"
 )
 
 func main() {
@@ -40,6 +41,10 @@ func main() {
 	mux.HandleFunc("GET /api/inquiries", handleGetInquiries)
 	mux.HandleFunc("POST /api/inquiries", handlePostInquiry)
 	mux.HandleFunc("DELETE /api/inquiries/{id}", handleDeleteInquiry)
+
+	// Admin data endpoints
+	mux.HandleFunc("GET /api/admin/data", handleGetAdminData)
+	mux.HandleFunc("POST /api/admin/data", handlePostAdminData)
 
 	// Health check
 	mux.HandleFunc("GET /api/health", func(w http.ResponseWriter, r *http.Request) {
@@ -188,4 +193,49 @@ func saveDatabase() error {
 	encoder := json.NewEncoder(file)
 	encoder.SetIndent("", "  ")
 	return encoder.Encode(inquiries)
+}
+
+// GET /api/admin/data Handler
+func handleGetAdminData(w http.ResponseWriter, r *http.Request) {
+	mutex.Lock()
+	defer mutex.Unlock()
+
+	data, err := os.ReadFile(adminDataFile)
+	if err != nil {
+		if os.IsNotExist(err) {
+			http.Error(w, "Not Found: admin data not initialized", http.StatusNotFound)
+			return
+		}
+		http.Error(w, "Internal Server Error: failed to read admin data", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(data)
+}
+
+// POST /api/admin/data Handler
+func handlePostAdminData(w http.ResponseWriter, r *http.Request) {
+	var raw json.RawMessage
+	if err := json.NewDecoder(r.Body).Decode(&raw); err != nil {
+		http.Error(w, "Bad Request: invalid JSON body", http.StatusBadRequest)
+		return
+	}
+
+	mutex.Lock()
+	defer mutex.Unlock()
+
+	formatted, err := json.MarshalIndent(raw, "", "  ")
+	if err != nil {
+		formatted = raw
+	}
+
+	if err := os.WriteFile(adminDataFile, formatted, 0644); err != nil {
+		http.Error(w, "Internal Server Error: failed to save admin data", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte(`{"success":true,"message":"Admin data successfully saved"}`))
 }

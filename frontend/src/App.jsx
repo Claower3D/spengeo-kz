@@ -554,6 +554,65 @@ const DEFAULT_NORMS = [
     };
   });
   
+  const getApiUrl = (path) => {
+    if (typeof window !== 'undefined' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+      return path;
+    }
+    return `http://localhost:8083${path}`;
+  };
+
+  const [isSavingAdmin, setIsSavingAdmin] = useState(false);
+  const [adminSaveStatus, setAdminSaveStatus] = useState(null);
+
+  // Sync admin data from backend server on application mount
+  useEffect(() => {
+    const syncAdminDataFromServer = async () => {
+      try {
+        const res = await fetch(getApiUrl('/api/admin/data'));
+        if (res.ok) {
+          const serverData = await res.json();
+          if (serverData && typeof serverData === 'object' && Object.keys(serverData).length > 0) {
+            setAdminData(prev => ({ ...prev, ...serverData }));
+            localStorage.setItem('spengeo_admin_data', JSON.stringify(serverData));
+          }
+        }
+      } catch (err) {
+        // Fallback to localStorage cache
+      }
+    };
+    syncAdminDataFromServer();
+  }, []);
+
+  const saveAdminData = async (customData) => {
+    const dataToSave = customData || adminData;
+    setIsSavingAdmin(true);
+    setAdminSaveStatus(null);
+    
+    // Save locally
+    localStorage.setItem('spengeo_admin_data', JSON.stringify(dataToSave));
+
+    try {
+      const res = await fetch(getApiUrl('/api/admin/data'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(dataToSave)
+      });
+      if (res.ok) {
+        setAdminSaveStatus({ type: 'success', text: '✅ Все изменения успешно сохранены на сервере и синхронизированы с сайтом!' });
+        logEvent('Admin data saved to backend server & synced.', 'success');
+      } else {
+        setAdminSaveStatus({ type: 'warning', text: '💾 Сохранено локально в браузере (сервер ответил со статусом ' + res.status + ').' });
+      }
+    } catch (err) {
+      setAdminSaveStatus({ type: 'warning', text: '💾 Сохранено в локальную память браузера.' });
+    } finally {
+      setIsSavingAdmin(false);
+      setTimeout(() => {
+        setAdminSaveStatus(null);
+      }, 6000);
+    }
+  };
+
   useEffect(() => {
     localStorage.setItem('spengeo_admin_data', JSON.stringify(adminData));
   }, [adminData]);
@@ -827,7 +886,7 @@ const DEFAULT_NORMS = [
   const fetchInquiries = async () => {
     logEvent('Connecting to inquiries JSON endpoint...', 'info');
     try {
-      const res = await fetch('http://localhost:8083/api/inquiries');
+      const res = await fetch(getApiUrl('/api/inquiries'));
       if (res.ok) {
         const data = await res.json();
         setInquiries(data || []);
@@ -868,7 +927,7 @@ const DEFAULT_NORMS = [
     };
 
     try {
-      const res = await fetch('http://localhost:8083/api/inquiries', {
+      const res = await fetch(getApiUrl('/api/inquiries'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
@@ -958,7 +1017,7 @@ const DEFAULT_NORMS = [
   const handleClearInquiry = async (id) => {
     logEvent(`Deleting record: ${id}...`, 'info');
     try {
-      const res = await fetch(`http://localhost:8083/api/inquiries/${id}`, { method: 'DELETE' });
+      const res = await fetch(getApiUrl(`/api/inquiries/${id}`), { method: 'DELETE' });
       if (res.ok) {
         setInquiries(prev => prev.filter(item => item.id !== id));
         logEvent('Go database entry successfully removed.', 'success');
@@ -2877,7 +2936,29 @@ const DEFAULT_NORMS = [
                     {activeAdminSection === 'dashboard' ? 'Нажмите на плитку чтобы открыть нужный раздел администрирования.' : 'Вносите изменения и сохраняйте настройки.'}
                   </p>
                 </div>
-                <div style={{ display: 'flex', gap: '15px' }}>
+                <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+                  <button 
+                    onClick={() => saveAdminData()} 
+                    disabled={isSavingAdmin}
+                    style={{ 
+                      background: 'linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%)', 
+                      color: '#fff', 
+                      border: 'none', 
+                      padding: '10px 22px', 
+                      borderRadius: '8px', 
+                      cursor: isSavingAdmin ? 'wait' : 'pointer', 
+                      fontWeight: 'bold', 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      gap: '8px',
+                      boxShadow: '0 4px 15px rgba(6, 182, 212, 0.4)',
+                      opacity: isSavingAdmin ? 0.7 : 1,
+                      transition: 'all 0.2s'
+                    }}
+                  >
+                    {isSavingAdmin ? '⏳ Сохранение...' : '💾 Сохранить изменения'}
+                  </button>
+
                   {activeAdminSection === 'dashboard' && (
                     <>
                       <button onClick={() => {
@@ -2892,9 +2973,8 @@ const DEFAULT_NORMS = [
                             try {
                               const parsed = JSON.parse(ev.target.result);
                               setAdminData(parsed);
-                              localStorage.setItem('spengeo_admin_data', JSON.stringify(parsed));
-                              alert('Данные успешно импортированы! Страница будет перезагружена.');
-                              window.location.reload();
+                              saveAdminData(parsed);
+                              alert('Данные успешно импортированы и сохранены на сервере!');
                             } catch(err) {
                               alert('Ошибка при чтении файла JSON: ' + err.message);
                             }
@@ -2927,6 +3007,26 @@ const DEFAULT_NORMS = [
                   )}
                 </div>
               </div>
+
+              {adminSaveStatus && (
+                <div style={{
+                  padding: '14px 20px',
+                  borderRadius: '8px',
+                  marginBottom: '25px',
+                  fontWeight: '600',
+                  fontSize: '0.95rem',
+                  background: adminSaveStatus.type === 'success' ? 'rgba(16, 185, 129, 0.15)' : 'rgba(245, 158, 11, 0.15)',
+                  border: adminSaveStatus.type === 'success' ? '1px solid #10b981' : '1px solid #f59e0b',
+                  color: adminSaveStatus.type === 'success' ? '#10b981' : '#f59e0b',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+                }}>
+                  <span>{adminSaveStatus.text}</span>
+                  <button onClick={() => setAdminSaveStatus(null)} style={{ background: 'none', border: 'none', color: 'inherit', cursor: 'pointer', fontWeight: 'bold', fontSize: '1.1rem' }}>✕</button>
+                </div>
+              )}
 
               {activeAdminSection === 'dashboard' && (
                 <>
@@ -3955,10 +4055,9 @@ const DEFAULT_NORMS = [
                         style={{ width: '100%', padding: '12px', borderRadius: '6px', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #333', background: theme === 'white' ? '#f8fafc' : '#000', color: theme === 'white' ? '#0f172a' : '#fff' }} 
                       />
                     </div>
-                    <button onClick={() => {
-                      localStorage.setItem('spengeo_admin_data', JSON.stringify(adminData));
-                      alert('Настройки SEO и аналитики сохранены!');
-                    }} style={{ background: '#10b981', color: '#fff', border: 'none', padding: '12px', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold', marginTop: '10px' }}>Сохранить настройки</button>
+                    <button onClick={() => saveAdminData()} disabled={isSavingAdmin} style={{ background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)', color: '#fff', border: 'none', padding: '12px 24px', borderRadius: '8px', cursor: isSavingAdmin ? 'wait' : 'pointer', fontWeight: 'bold', marginTop: '10px', boxShadow: '0 4px 15px rgba(16, 185, 129, 0.3)' }}>
+                      {isSavingAdmin ? '⏳ Сохранение...' : '💾 Сохранить и синхронизировать настройки'}
+                    </button>
                   </div>
                 </div>
               )}
@@ -4033,6 +4132,26 @@ const DEFAULT_NORMS = [
                     </div>
                   </div>
 
+                  <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'flex-end' }}>
+                    <button 
+                      onClick={() => saveAdminData()} 
+                      disabled={isSavingAdmin}
+                      style={{ 
+                        background: 'linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%)', 
+                        color: '#fff', 
+                        border: 'none', 
+                        padding: '12px 28px', 
+                        borderRadius: '8px', 
+                        cursor: isSavingAdmin ? 'wait' : 'pointer', 
+                        fontWeight: 'bold', 
+                        fontSize: '1rem',
+                        boxShadow: '0 4px 15px rgba(6, 182, 212, 0.4)'
+                      }}
+                    >
+                      {isSavingAdmin ? '⏳ Сохранение...' : '💾 Сохранить фотографии и синхронизировать'}
+                    </button>
+                  </div>
+
                 </div>
               </div>
             )}
@@ -4089,6 +4208,27 @@ const DEFAULT_NORMS = [
                         <div style={{ textAlign: 'center', padding: '30px', color: theme === 'white' ? '#64748b' : '#888', border: theme === 'white' ? '1px dashed #cbd5e1' : '1px dashed #444', borderRadius: '10px' }}>Нет сценариев. Добавьте сценарий, чтобы бот мог отвечать на вопросы.</div>
                       )}
                     </div>
+
+                    <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'flex-end' }}>
+                      <button 
+                        onClick={() => saveAdminData()} 
+                        disabled={isSavingAdmin}
+                        style={{ 
+                          background: 'linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%)', 
+                          color: '#fff', 
+                          border: 'none', 
+                          padding: '12px 28px', 
+                          borderRadius: '8px', 
+                          cursor: isSavingAdmin ? 'wait' : 'pointer', 
+                          fontWeight: 'bold', 
+                          fontSize: '1rem',
+                          boxShadow: '0 4px 15px rgba(6, 182, 212, 0.4)'
+                        }}
+                      >
+                        {isSavingAdmin ? '⏳ Сохранение...' : '💾 Сохранить настройки бота'}
+                      </button>
+                    </div>
+
                   </div>
                 </div>
               )}
