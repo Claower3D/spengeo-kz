@@ -679,35 +679,44 @@ const DEFAULT_NORMS = [
       if (dataToSave.global.address) {
         dataToSave.visualTexts['contacts_address_val'] = dataToSave.global.address;
         dataToSave.visualTexts['footer_address'] = dataToSave.global.address;
+        dataToSave.visualTexts['cta_address_val'] = dataToSave.global.address;
         if (typeof localStorage !== 'undefined') {
           localStorage.setItem('vb_contacts_address_val', dataToSave.global.address);
           localStorage.setItem('vb_footer_address', dataToSave.global.address);
+          localStorage.setItem('vb_cta_address_val', dataToSave.global.address);
         }
         window.dispatchEvent(new CustomEvent('vb_update', { detail: { id: 'contacts_address_val', text: dataToSave.global.address } }));
         window.dispatchEvent(new CustomEvent('vb_update', { detail: { id: 'footer_address', text: dataToSave.global.address } }));
+        window.dispatchEvent(new CustomEvent('vb_update', { detail: { id: 'cta_address_val', text: dataToSave.global.address } }));
       }
       if (dataToSave.global.phone) {
         dataToSave.visualTexts['contacts_phone_val'] = dataToSave.global.phone;
         dataToSave.visualTexts['footer_phone'] = dataToSave.global.phone;
         dataToSave.visualTexts['header_phone'] = dataToSave.global.phone;
+        dataToSave.visualTexts['cta_phone_val'] = dataToSave.global.phone;
         if (typeof localStorage !== 'undefined') {
           localStorage.setItem('vb_contacts_phone_val', dataToSave.global.phone);
           localStorage.setItem('vb_footer_phone', dataToSave.global.phone);
           localStorage.setItem('vb_header_phone', dataToSave.global.phone);
+          localStorage.setItem('vb_cta_phone_val', dataToSave.global.phone);
         }
         window.dispatchEvent(new CustomEvent('vb_update', { detail: { id: 'contacts_phone_val', text: dataToSave.global.phone } }));
         window.dispatchEvent(new CustomEvent('vb_update', { detail: { id: 'footer_phone', text: dataToSave.global.phone } }));
         window.dispatchEvent(new CustomEvent('vb_update', { detail: { id: 'header_phone', text: dataToSave.global.phone } }));
+        window.dispatchEvent(new CustomEvent('vb_update', { detail: { id: 'cta_phone_val', text: dataToSave.global.phone } }));
       }
       if (dataToSave.global.email) {
         dataToSave.visualTexts['contacts_email_val'] = dataToSave.global.email;
         dataToSave.visualTexts['footer_email'] = dataToSave.global.email;
+        dataToSave.visualTexts['cta_email_val'] = dataToSave.global.email;
         if (typeof localStorage !== 'undefined') {
           localStorage.setItem('vb_contacts_email_val', dataToSave.global.email);
           localStorage.setItem('vb_footer_email', dataToSave.global.email);
+          localStorage.setItem('vb_cta_email_val', dataToSave.global.email);
         }
         window.dispatchEvent(new CustomEvent('vb_update', { detail: { id: 'contacts_email_val', text: dataToSave.global.email } }));
         window.dispatchEvent(new CustomEvent('vb_update', { detail: { id: 'footer_email', text: dataToSave.global.email } }));
+        window.dispatchEvent(new CustomEvent('vb_update', { detail: { id: 'cta_email_val', text: dataToSave.global.email } }));
       }
       if (dataToSave.global.companyName) {
         dataToSave.visualTexts['footer_company_title'] = dataToSave.global.companyName;
@@ -2104,20 +2113,26 @@ const DEFAULT_NORMS = [
                   <EditableText as="h2" id="form_title" dangerously={true} defaultText="Оставьте заявку на<br/><span style='color: var(--color-accent)'>расчет стоимости</span>" isVisualBuilder={isVisualBuilder} style={{ fontSize: '2.5rem', marginBottom: '20px', lineHeight: 1.2 }} />
                   <EditableText as="p" id="form_desc" defaultText="Наши инженеры свяжутся с вами в течение 15 минут, изучат исходные данные и предоставят прозрачную смету строго по сборнику цен." isVisualBuilder={isVisualBuilder} style={{ color: 'var(--color-text-secondary)', fontSize: '1.1rem', lineHeight: 1.6, marginBottom: '30px' }} />
                   
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-                      <div style={{ background: 'rgba(255,255,255,0.05)', padding: '10px', borderRadius: '50%' }}><Phone size={20} color="var(--color-cyan)"/></div>
-                      <span style={{ fontSize: '1.1rem', fontWeight: 600 }}>+7 (775) 218 28-06</span>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                        <div style={{ background: 'rgba(255,255,255,0.05)', padding: '10px', borderRadius: '50%' }}><Phone size={20} color="var(--color-cyan)"/></div>
+                        <span style={{ fontSize: '1.1rem', fontWeight: 600 }}>
+                          <EditableText id="cta_phone_val" defaultText={adminData.global?.phone || '+7 775 218 28 06'} isVisualBuilder={isVisualBuilder} />
+                        </span>
+                      </div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                        <div style={{ background: 'rgba(255,255,255,0.05)', padding: '10px', borderRadius: '50%' }}><MapPin size={20} color="var(--color-cyan)"/></div>
+                        <span style={{ fontSize: '1.1rem', fontWeight: 600 }}>
+                          <EditableText id="cta_address_val" defaultText={adminData.global?.address || 'г. Алматы, пр-т Абая, 150'} isVisualBuilder={isVisualBuilder} />
+                        </span>
+                      </div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                        <div style={{ background: 'rgba(255,255,255,0.05)', padding: '10px', borderRadius: '50%' }}><Mail size={20} color="var(--color-cyan)"/></div>
+                        <span style={{ fontSize: '1.1rem', fontWeight: 600 }}>
+                          <EditableText id="cta_email_val" defaultText={adminData.global?.email || 'info@spengeo.kz'} isVisualBuilder={isVisualBuilder} />
+                        </span>
+                      </div>
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-                      <div style={{ background: 'rgba(255,255,255,0.05)', padding: '10px', borderRadius: '50%' }}><MapPin size={20} color="var(--color-cyan)"/></div>
-                      <span style={{ fontSize: '1.1rem', fontWeight: 600 }}>г. Алматы, пр-т Абая, 150</span>
-                    </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-                      <div style={{ background: 'rgba(255,255,255,0.05)', padding: '10px', borderRadius: '50%' }}><Mail size={20} color="var(--color-cyan)"/></div>
-                      <span style={{ fontSize: '1.1rem', fontWeight: 600 }}>info@spengeo.kz</span>
-                    </div>
-                  </div>
                 </div>
 
                 <div style={{ background: 'var(--bg-dark-secondary)', padding: '40px', borderRadius: 'var(--border-radius-md)', border: '1px solid var(--border-color)', backdropFilter: 'blur(10px)' }}>
