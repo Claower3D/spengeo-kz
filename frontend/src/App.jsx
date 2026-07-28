@@ -727,6 +727,28 @@ const DEFAULT_NORMS = [
       }
     }
 
+    // Synchronize Founder / CEO fields across team[0], media.directorImage, and visualTexts
+    if (dataToSave.visualTexts) {
+      const fName = dataToSave.visualTexts['f_name'];
+      const fPatr = dataToSave.visualTexts['f_patr'];
+      const fRole = dataToSave.visualTexts['f_role'];
+      const fQuote = dataToSave.visualTexts['f_quote'];
+      const fullName = fName ? (fPatr ? `${fName} ${fPatr}` : fName) : undefined;
+
+      if (fullName || fRole || fQuote || dataToSave.media?.directorImage) {
+        dataToSave.team = dataToSave.team || [];
+        if (dataToSave.team[0]) {
+          dataToSave.team[0] = {
+            ...dataToSave.team[0],
+            ...(fullName ? { name: fullName } : {}),
+            ...(fRole ? { badge: fRole, role: fRole } : {}),
+            ...(fQuote ? { desc: fQuote } : {}),
+            ...(dataToSave.media?.directorImage ? { img: dataToSave.media.directorImage } : {})
+          };
+        }
+      }
+    }
+
     setIsSavingAdmin(true);
     setAdminSaveStatus(null);
     
@@ -2045,7 +2067,59 @@ const DEFAULT_NORMS = [
               <div className="bg-glow-orb-2" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '600px', height: '600px', background: 'radial-gradient(circle, var(--color-cyan) 0%, transparent 70%)', opacity: 0.05 }}></div>
               <div className="glow-card-premium" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '0', alignItems: 'stretch', padding: '0', overflow: 'hidden', position: 'relative', zIndex: 2, background: 'var(--bg-card)', border: '1px solid var(--border-color)', boxShadow: '0 0 50px rgba(0,0,0,0.1)' }}>
                 <div style={{ position: 'relative', minHeight: '500px', overflow: 'hidden' }}>
-                  <img src={((adminData.team || []).find(m => (m.name && m.name.toLowerCase().includes('шенвизов')) || (m.badge && m.badge.toLowerCase().includes('основатель'))) || adminData.team?.[0])?.img || '/images/director.png'} alt="Шенвизов Рудольф Константинович" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', filter: 'contrast(1.1)', maskImage: 'linear-gradient(to right, black 60%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to right, black 60%, transparent 100%)' }} />
+                  <img src={adminData.media?.directorImage || ((adminData.team || []).find(m => (m.name && m.name.toLowerCase().includes('шенвизов')) || (m.badge && m.badge.toLowerCase().includes('основатель'))) || adminData.team?.[0])?.img || '/images/director.png'} alt="Генеральный директор" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', filter: 'contrast(1.1)' }} />
+                  {isVisualBuilder && (
+                    <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 10 }}>
+                      <label style={{ background: 'var(--color-cyan)', color: '#000', padding: '12px 24px', borderRadius: '30px', fontWeight: 'bold', cursor: 'pointer', display: 'flex', gap: '8px', alignItems: 'center', boxShadow: '0 4px 20px rgba(6, 182, 212, 0.6)' }}>
+                        <Camera size={20} /> Изменить фото
+                        <input 
+                          type="file" 
+                          accept="image/*" 
+                          style={{ display: 'none' }} 
+                          onChange={(e) => {
+                            const file = e.target.files[0];
+                            if (file) {
+                              const reader = new FileReader();
+                              reader.onload = (ev) => {
+                                const img = new window.Image();
+                                img.onload = () => {
+                                  const canvas = document.createElement('canvas');
+                                  let width = img.width;
+                                  let height = img.height;
+                                  const maxDim = 1200;
+                                  if (width > maxDim || height > maxDim) {
+                                    if (width > height) {
+                                      height = Math.round((height * maxDim) / width);
+                                      width = maxDim;
+                                    } else {
+                                      width = Math.round((width * maxDim) / height);
+                                      height = maxDim;
+                                    }
+                                  }
+                                  canvas.width = width;
+                                  canvas.height = height;
+                                  const ctx = canvas.getContext('2d');
+                                  ctx.drawImage(img, 0, 0, width, height);
+                                  const compressed = canvas.toDataURL('image/jpeg', 0.82);
+                                  setAdminData(prev => {
+                                    const newTeam = [...(prev.team || [])];
+                                    if (newTeam[0]) newTeam[0] = { ...newTeam[0], img: compressed };
+                                    return {
+                                      ...prev,
+                                      media: { ...(prev.media || {}), directorImage: compressed },
+                                      team: newTeam
+                                    };
+                                  });
+                                };
+                                img.src = ev.target.result;
+                              };
+                              reader.readAsDataURL(file);
+                            }
+                          }}
+                        />
+                      </label>
+                    </div>
+                  )}
                   <div style={{ position: 'absolute', bottom: '-50px', left: '-50px', width: '200px', height: '200px', background: 'var(--color-cyan)', filter: 'blur(100px)', opacity: 0.15, zIndex: 0 }}></div>
                 </div>
                 
@@ -2201,7 +2275,59 @@ const DEFAULT_NORMS = [
               <>
               <div className="glow-card-premium" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '0', alignItems: 'stretch', padding: '0', overflow: 'hidden', position: 'relative', zIndex: 2, background: 'var(--bg-card)', border: '1px solid var(--border-color)', boxShadow: '0 0 50px rgba(0,0,0,0.1)', marginBottom: '60px' }}>
                   <div style={{ position: 'relative', minHeight: '500px', overflow: 'hidden' }}>
-                    <img src={((adminData.team || []).find(m => (m.name && m.name.toLowerCase().includes('шенвизов')) || (m.badge && m.badge.toLowerCase().includes('основатель'))) || adminData.team?.[0])?.img || ((adminData.team || []).find(m => (m.name && m.name.toLowerCase().includes('шенвизов')) || (m.badge && m.badge.toLowerCase().includes('основатель'))) || adminData.team?.[0])?.image || '/images/director.png'} alt={((adminData.team || []).find(m => (m.name && m.name.toLowerCase().includes('шенвизов')) || (m.badge && m.badge.toLowerCase().includes('основатель'))) || adminData.team?.[0])?.name || "Генеральный директор"} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', filter: 'contrast(1.1)', maskImage: 'linear-gradient(to right, black 60%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to right, black 60%, transparent 100%)' }} />
+                    <img src={adminData.media?.directorImage || ((adminData.team || []).find(m => (m.name && m.name.toLowerCase().includes('шенвизов')) || (m.badge && m.badge.toLowerCase().includes('основатель'))) || adminData.team?.[0])?.img || '/images/director.png'} alt="Генеральный директор" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', filter: 'contrast(1.1)' }} />
+                    {isVisualBuilder && (
+                      <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 10 }}>
+                        <label style={{ background: 'var(--color-cyan)', color: '#000', padding: '12px 24px', borderRadius: '30px', fontWeight: 'bold', cursor: 'pointer', display: 'flex', gap: '8px', alignItems: 'center', boxShadow: '0 4px 20px rgba(6, 182, 212, 0.6)' }}>
+                          <Camera size={20} /> Изменить фото
+                          <input 
+                            type="file" 
+                            accept="image/*" 
+                            style={{ display: 'none' }} 
+                            onChange={(e) => {
+                              const file = e.target.files[0];
+                              if (file) {
+                                const reader = new FileReader();
+                                reader.onload = (ev) => {
+                                  const img = new window.Image();
+                                  img.onload = () => {
+                                    const canvas = document.createElement('canvas');
+                                    let width = img.width;
+                                    let height = img.height;
+                                    const maxDim = 1200;
+                                    if (width > maxDim || height > maxDim) {
+                                      if (width > height) {
+                                        height = Math.round((height * maxDim) / width);
+                                        width = maxDim;
+                                      } else {
+                                        width = Math.round((width * maxDim) / height);
+                                        height = maxDim;
+                                      }
+                                    }
+                                    canvas.width = width;
+                                    canvas.height = height;
+                                    const ctx = canvas.getContext('2d');
+                                    ctx.drawImage(img, 0, 0, width, height);
+                                    const compressed = canvas.toDataURL('image/jpeg', 0.82);
+                                    setAdminData(prev => {
+                                      const newTeam = [...(prev.team || [])];
+                                      if (newTeam[0]) newTeam[0] = { ...newTeam[0], img: compressed };
+                                      return {
+                                        ...prev,
+                                        media: { ...(prev.media || {}), directorImage: compressed },
+                                        team: newTeam
+                                      };
+                                    });
+                                  };
+                                  img.src = ev.target.result;
+                                };
+                                reader.readAsDataURL(file);
+                              }
+                            }}
+                          />
+                        </label>
+                      </div>
+                    )}
                     <div style={{ position: 'absolute', bottom: '-50px', left: '-50px', width: '200px', height: '200px', background: 'var(--color-cyan)', filter: 'blur(100px)', opacity: 0.15, zIndex: 0 }}></div>
                   </div>
                   
@@ -2209,12 +2335,12 @@ const DEFAULT_NORMS = [
                     <div style={{ position: 'absolute', top: '-10px', left: '20px', fontSize: '15rem', color: 'var(--color-cyan)', opacity: 0.05, fontFamily: 'Georgia, serif', lineHeight: 1, pointerEvents: 'none' }}>“</div>
                     
                     <div style={{ position: 'relative', zIndex: 2 }}>
-                      <EditableText as="h3" id="ceo_name_first" defaultText="Шенвизов Рудольф" isVisualBuilder={isVisualBuilder} style={{ fontSize: '2.8rem', marginBottom: '5px', color: 'var(--color-text-primary)', letterSpacing: '-0.02em' }} />
-                      <EditableText as="h3" id="ceo_name_last" defaultText="Константинович" isVisualBuilder={isVisualBuilder} style={{ fontSize: '2.2rem', marginBottom: '25px', color: 'var(--color-text-secondary)', fontWeight: 400 }} />
+                      <EditableText as="h3" id="f_name" defaultText="Шенвизов Рудольф" isVisualBuilder={isVisualBuilder} style={{ fontSize: '2.8rem', marginBottom: '5px', color: 'var(--color-text-primary)', letterSpacing: '-0.02em' }} />
+                      <EditableText as="h3" id="f_patr" defaultText="Константинович" isVisualBuilder={isVisualBuilder} style={{ fontSize: '2.2rem', marginBottom: '25px', color: 'var(--color-text-secondary)', fontWeight: 400 }} />
                       
-                      <EditableText as="div" id="ceo_badge" defaultText="Основатель и Главный Геолог" isVisualBuilder={isVisualBuilder} style={{ display: 'inline-block', padding: '8px 16px', background: 'rgba(6, 182, 212, 0.1)', border: '1px solid rgba(6, 182, 212, 0.3)', borderRadius: '20px', color: 'var(--color-cyan)', fontSize: '0.85rem', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: '35px', fontWeight: 600 }} />
+                      <EditableText as="div" id="f_role" defaultText="Основатель и Главный Геолог" isVisualBuilder={isVisualBuilder} style={{ display: 'inline-block', padding: '8px 16px', background: 'rgba(6, 182, 212, 0.1)', border: '1px solid rgba(6, 182, 212, 0.3)', borderRadius: '20px', color: 'var(--color-cyan)', fontSize: '0.85rem', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: '35px', fontWeight: 600 }} />
                       
-                      <EditableText as="p" id="ceo_desc" dangerously={true} defaultText="Рудольф Константинович основал компанию в 2019 году в городе Алматы. Получив геологическое образование в Сибирском государственном университете (г. Томск, РФ), он собрал команду опытных буровых инженеров, геодезистов и лаборантов.<br /><br />Основным принципом работы компании является жесткое следование строительным регламентам СП РК и ГОСТ. Благодаря этому отчеты ТОО «СпецИнжГео» успешно и быстро проходят государственную вневедомственную экспертизу." isVisualBuilder={isVisualBuilder} style={{ color: 'var(--color-text-secondary)', fontSize: '1.1rem', lineHeight: 1.8, position: 'relative', zIndex: 2, fontStyle: 'italic', borderLeft: '3px solid var(--color-cyan)', paddingLeft: '25px' }} />
+                      <EditableText as="p" id="f_quote" dangerously={true} defaultText="Рудольф Константинович основал компанию в 2019 году в городе Алматы. Получив геологическое образование в Сибирском государственном университете (г. Томск, РФ), он собрал команду опытных буровых инженеров, геодезистов и лаборантов.<br /><br />Основным принципом работы компании является жесткое следование строительным регламентам СП РК и ГОСТ. Благодаря этому отчеты ТОО «СпецИнжГео» успешно и быстро проходят государственную вневедомственную экспертизу." isVisualBuilder={isVisualBuilder} style={{ color: 'var(--color-text-secondary)', fontSize: '1.1rem', lineHeight: 1.8, position: 'relative', zIndex: 2, fontStyle: 'italic', borderLeft: '3px solid var(--color-cyan)', paddingLeft: '25px' }} />
                     </div>
                   </div>
                 </div>
