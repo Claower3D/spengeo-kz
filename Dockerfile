@@ -1,24 +1,30 @@
 # Этап 1: Сборка React/Vite приложения
-FROM node:20-alpine AS builder
-WORKDIR /app
+FROM node:20-alpine AS frontend-builder
+WORKDIR /app/frontend
 
-# Копируем файлы package.json из папки frontend
 COPY frontend/package*.json ./
 RUN npm install
 
-# Копируем весь исходный код фронтенда и собираем его
 COPY frontend/ ./
 RUN npm run build
 
-# Этап 2: Раздача статики через легковесный сервер Nginx
-FROM nginx:alpine
-# Копируем собранные файлы из первого этапа
-COPY --from=builder /app/dist /usr/share/nginx/html
+# Этап 2: Сборка Go Backend
+FROM golang:1.22-alpine AS backend-builder
+WORKDIR /app/backend
 
-# Настраиваем Nginx для работы с React Router (SPA)
-RUN echo "server { listen 8080; location / { root /usr/share/nginx/html; index index.html; try_files \$uri \$uri/ /index.html; } }" > /etc/nginx/conf.d/default.conf
+COPY backend/go.mod ./
+COPY backend/main.go ./
+RUN CGO_ENABLED=0 GOOS=linux go build -o server main.go
 
-# Открываем порт, который ожидает Koyeb
+# Этап 3: Итоговый боевой контейнер с бэкендом и статикой
+FROM alpine:latest
+WORKDIR /app
+RUN apk add --no-cache ca-certificates tzdata
+
+COPY --from=backend-builder /app/backend/server ./server
+COPY --from=frontend-builder /app/frontend/dist ./dist
+
 EXPOSE 8080
+ENV PORT=8080
 
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["./server"]

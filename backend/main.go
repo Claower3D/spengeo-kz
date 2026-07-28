@@ -46,16 +46,34 @@ func main() {
 	mux.HandleFunc("GET /api/admin/data", handleGetAdminData)
 	mux.HandleFunc("POST /api/admin/data", handlePostAdminData)
 
-	// Health check
-	mux.HandleFunc("GET /api/health", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
-		w.Write([]byte(`{"status":"healthy","service":"spengeo-backend"}`))
-	})
+	// Serve static SPA frontend from dist directory if present
+	if _, err := os.Stat("./dist"); err == nil {
+		fs := http.FileServer(http.Dir("./dist"))
+		mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+			if len(r.URL.Path) >= 4 && r.URL.Path[:4] == "/api" {
+				http.NotFound(w, r)
+				return
+			}
+			filePath := "./dist" + r.URL.Path
+			if r.URL.Path != "/" {
+				if stat, err := os.Stat(filePath); os.IsNotExist(err) || stat.IsDir() {
+					http.ServeFile(w, r, "./dist/index.html")
+					return
+				}
+			}
+			fs.ServeHTTP(w, r)
+		})
+	}
 
 	// Wrap mux with CORS middleware
 	handler := enableCORS(mux)
 
 	port := 8083
+	if envPort := os.Getenv("PORT"); envPort != "" {
+		if p, err := strconv.Atoi(envPort); err == nil {
+			port = p
+		}
+	}
 	fmt.Printf("ТОО «СпецИнжГео» Go Backend listening on port %d...\n", port)
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", port), handler))
 }
