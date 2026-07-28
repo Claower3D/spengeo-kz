@@ -238,13 +238,23 @@ function HudCard({ children, className = '', style = {}, onClick }) {
 }
 
 function EditableText({ id, defaultText, isVisualBuilder, dangerously = false, as: Component = 'span', className, style, ...props }) {
-  const [text, setText] = useState(() => localStorage.getItem(`vb_${id}`) || defaultText);
+  const adminVal = typeof window !== 'undefined' && window.__adminVisualTexts?.[id];
+  const [text, setText] = useState(() => adminVal || localStorage.getItem(`vb_${id}`) || defaultText);
+
+  useEffect(() => {
+    if (adminVal && adminVal !== text) {
+      setText(adminVal);
+    }
+  }, [adminVal]);
 
   useEffect(() => {
     const handleUpdate = (e) => {
       if (e.detail.id === id) {
         setText(e.detail.text);
         localStorage.setItem(`vb_${id}`, e.detail.text);
+        if (window.__setAdminVisualText) {
+          window.__setAdminVisualText(id, e.detail.text);
+        }
       }
     };
     window.addEventListener('vb_update', handleUpdate);
@@ -254,6 +264,9 @@ function EditableText({ id, defaultText, isVisualBuilder, dangerously = false, a
   useEffect(() => {
     if (text !== defaultText && text !== localStorage.getItem(`vb_${id}`)) {
       localStorage.setItem(`vb_${id}`, text);
+      if (window.__setAdminVisualText) {
+        window.__setAdminVisualText(id, text);
+      }
     }
   }, [text, id, defaultText]);
 
@@ -284,6 +297,10 @@ function EditableText({ id, defaultText, isVisualBuilder, dangerously = false, a
       onBlur={(e) => {
         const val = dangerously ? e.currentTarget.innerHTML : e.currentTarget.textContent;
         setText(val);
+        localStorage.setItem(`vb_${id}`, val);
+        if (window.__setAdminVisualText) {
+          window.__setAdminVisualText(id, val);
+        }
         if (isVisualBuilder) {
           window.dispatchEvent(new CustomEvent('vb_select', { detail: { id, text: val } }));
         }
@@ -554,6 +571,16 @@ const DEFAULT_NORMS = [
     };
   });
   
+  if (typeof window !== 'undefined') {
+    window.__adminVisualTexts = adminData.visualTexts || {};
+    window.__setAdminVisualText = (id, val) => {
+      setAdminData(prev => ({
+        ...prev,
+        visualTexts: { ...(prev.visualTexts || {}), [id]: val }
+      }));
+    };
+  }
+
   const getApiUrl = (path) => {
     if (typeof window !== 'undefined' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
       return path;
@@ -564,27 +591,49 @@ const DEFAULT_NORMS = [
   const [isSavingAdmin, setIsSavingAdmin] = useState(false);
   const [adminSaveStatus, setAdminSaveStatus] = useState(null);
 
+  const syncAdminDataFromServer = async (showNotification = false) => {
+    try {
+      const res = await fetch(getApiUrl('/api/admin/data'));
+      if (res.ok) {
+        const serverData = await res.json();
+        if (serverData && typeof serverData === 'object' && Object.keys(serverData).length > 0) {
+          setAdminData(serverData);
+          localStorage.setItem('spengeo_admin_data', JSON.stringify(serverData));
+          
+          if (serverData.visualTexts) {
+            Object.entries(serverData.visualTexts).forEach(([k, v]) => {
+              if (v) localStorage.setItem(`vb_${k}`, v);
+            });
+          }
+          if (showNotification) {
+            alert('✅ Данные успешно загружены и синхронизированы с сервером!');
+          }
+          return true;
+        }
+      }
+    } catch (err) {
+      console.warn('Sync failed:', err);
+    }
+    return false;
+  };
+
   // Sync admin data from backend server on application mount
   useEffect(() => {
-    const syncAdminDataFromServer = async () => {
-      try {
-        const res = await fetch(getApiUrl('/api/admin/data'));
-        if (res.ok) {
-          const serverData = await res.json();
-          if (serverData && typeof serverData === 'object' && Object.keys(serverData).length > 0) {
-            setAdminData(prev => ({ ...prev, ...serverData }));
-            localStorage.setItem('spengeo_admin_data', JSON.stringify(serverData));
-          }
-        }
-      } catch (err) {
-        // Fallback to localStorage cache
-      }
-    };
     syncAdminDataFromServer();
   }, []);
 
   const saveAdminData = async (customData) => {
-    const dataToSave = customData || adminData;
+    const visualTexts = { ...(adminData.visualTexts || {}) };
+    if (typeof localStorage !== 'undefined') {
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith('vb_')) {
+          const vk = key.replace('vb_', '');
+          visualTexts[vk] = localStorage.getItem(key);
+        }
+      }
+    }
+    const dataToSave = customData || { ...adminData, visualTexts };
     setIsSavingAdmin(true);
     setAdminSaveStatus(null);
     
@@ -2978,6 +3027,24 @@ const DEFAULT_NORMS = [
                     }}
                   >
                     {isSavingAdmin ? '⏳ Сохранение...' : '💾 Сохранить изменения'}
+                  </button>
+
+                  <button 
+                    onClick={() => syncAdminDataFromServer(true)} 
+                    style={{ 
+                      background: theme === 'white' ? '#f1f5f9' : 'rgba(6, 182, 212, 0.1)', 
+                      color: theme === 'white' ? '#0f172a' : '#06b6d4', 
+                      border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid rgba(6, 182, 212, 0.3)', 
+                      padding: '10px 18px', 
+                      borderRadius: '8px', 
+                      cursor: 'pointer', 
+                      fontWeight: 'bold', 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      gap: '6px' 
+                    }}
+                  >
+                    🔄 Загрузить с сервера
                   </button>
 
                   {activeAdminSection === 'dashboard' && (
