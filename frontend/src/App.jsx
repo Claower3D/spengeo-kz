@@ -3241,6 +3241,7 @@ const DEFAULT_NORMS = [
                      activeAdminSection === 'bot' ? 'Настройки ассистента' :
                      activeAdminSection === 'calculator' ? 'Настройки калькулятора' :
                      activeAdminSection === 'blocks' ? 'Управление Базами Данных' :
+                     activeAdminSection === 'director' ? 'Руководство компании (Основатель)' :
                      activeAdminSection === 'photos' ? 'Управление фотографиями' : 'Панель управления'}
                   </h1>
                   <p style={{ fontSize: '0.9rem', color: theme === 'white' ? '#64748b' : '#888' }}>
@@ -3541,6 +3542,22 @@ const DEFAULT_NORMS = [
                     <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '12px' }}>Блоки и Фото</h2>
                     <p style={{ fontSize: '0.85rem', color: theme === 'white' ? '#475569' : '#aaa', marginBottom: '24px', lineHeight: 1.5 }}>Редактирование, добавление проектов, услуг, оборудования и команды с фото.</p>
                     <div style={{ fontSize: '0.85rem', fontWeight: 500, color: '#10b981' }}>Управление →</div>
+                  </div>
+                </div>
+
+                {/* 9. Director / Founder Section */}
+                <div onClick={() => setActiveAdminSection('director')} style={{ position: 'relative', overflow: 'hidden', borderRadius: '12px', background: theme === 'white' ? '#fff' : '#111', border: theme === 'white' ? '1px solid rgba(6, 182, 212, 0.4)' : '1px solid rgba(6, 182, 212, 0.3)', padding: '24px', display: 'flex', flexDirection: 'column', cursor: 'pointer', transition: 'transform 0.2s', boxShadow: theme === 'white' ? '0 4px 20px rgba(0,0,0,0.05)' : 'none' }}>
+                  <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '100px', background: 'linear-gradient(to bottom, rgba(6, 182, 212, 0.15), transparent)', pointerEvents: 'none' }}></div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '40px', position: 'relative', zIndex: 1 }}>
+                    <div style={{ background: theme === 'white' ? 'rgba(6, 182, 212, 0.1)' : 'rgba(0,0,0,0.4)', border: theme === 'white' ? '1px solid rgba(6, 182, 212, 0.2)' : '1px solid rgba(255,255,255,0.05)', padding: '8px', borderRadius: '8px', color: '#06b6d4' }}>
+                      <User size={24} />
+                    </div>
+                  </div>
+                  <div style={{ marginTop: 'auto', position: 'relative', zIndex: 1 }}>
+                    <div style={{ fontSize: '0.65rem', fontFamily: 'monospace', textTransform: 'uppercase', letterSpacing: '0.2em', color: theme === 'white' ? '#64748b' : '#888', marginBottom: '8px' }}>Персональные данные</div>
+                    <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '12px' }}>Руководство компании</h2>
+                    <p style={{ fontSize: '0.85rem', color: theme === 'white' ? '#475569' : '#aaa', marginBottom: '24px', lineHeight: 1.5 }}>Редактирование фото Основателя, ФИО, должности и истории компании.</p>
+                    <div style={{ fontSize: '0.85rem', fontWeight: 500, color: '#06b6d4' }}>Управление →</div>
                   </div>
                 </div>
 
@@ -4110,8 +4127,131 @@ const DEFAULT_NORMS = [
                     </div>
                   </div>
 
-                  {/* ОБОРУДОВАНИЕ REMOVED: Now managed entirely through dynamic lists in DB Section */}
+                  <div style={{ marginTop: '30px', paddingTop: '20px', borderTop: theme === 'white' ? '1px solid #e2e8f0' : '1px solid #333', display: 'flex', justifyContent: 'flex-end' }}>
+                    <button 
+                      onClick={async () => {
+                        await saveAdminData();
+                        alert('✅ База данных успешно сохранена и синхронизирована!');
+                      }} 
+                      style={{ background: '#10b981', color: '#fff', border: 'none', padding: '12px 30px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '8px' }}
+                    >
+                      <Save size={18} /> Сохранить базы данных
+                    </button>
+                  </div>
 
+                </div>
+              )}
+
+              {activeAdminSection === 'director' && (
+                <div style={{ background: theme === 'white' ? '#fff' : '#111', border: theme === 'white' ? '1px solid rgba(0,0,0,0.05)' : '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', padding: '30px', boxShadow: theme === 'white' ? '0 4px 20px rgba(0,0,0,0.05)' : 'none' }}>
+                  <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '10px', color: theme === 'white' ? '#0f172a' : '#fff' }}>Управление данными Руководства (Основатель)</h3>
+                  <p style={{ fontSize: '0.9rem', color: theme === 'white' ? '#64748b' : '#888', marginBottom: '30px' }}>Данные отсюда автоматически отображаются на Главной странице, на странице «О компании» и в базе команды.</p>
+
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', maxWidth: '800px' }}>
+                    <div>
+                      <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 'bold', color: theme === 'white' ? '#0f172a' : '#fff', marginBottom: '8px' }}>Фотография Основателя / Директора</label>
+                      <ImageUploadField 
+                        value={adminData.media?.directorImage || adminData.team?.[0]?.img || '/images/director.png'} 
+                        onChange={v => {
+                          setAdminData(prev => {
+                            const newTeam = [...(prev.team || [])];
+                            if (newTeam[0]) newTeam[0] = { ...newTeam[0], img: v };
+                            return {
+                              ...prev,
+                              media: { ...(prev.media || {}), directorImage: v },
+                              team: newTeam
+                            };
+                          });
+                        }} 
+                        theme={theme} 
+                      />
+                    </div>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+                      <div>
+                        <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 'bold', color: theme === 'white' ? '#0f172a' : '#fff', marginBottom: '8px' }}>Имя (например: Шенвизов Рудольф)</label>
+                        <input 
+                          type="text" 
+                          value={adminData.visualTexts?.['f_name'] || (adminData.team?.[0]?.name ? adminData.team[0].name.split(' ').slice(0,2).join(' ') : 'Шенвизов Рудольф')} 
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            setAdminData(prev => ({
+                              ...prev,
+                              visualTexts: { ...(prev.visualTexts || {}), f_name: val }
+                            }));
+                            if (typeof localStorage !== 'undefined') localStorage.setItem('vb_f_name', val);
+                            window.dispatchEvent(new CustomEvent('vb_update', { detail: { id: 'f_name', text: val } }));
+                          }} 
+                          style={{ width: '100%', padding: '12px', background: theme === 'white' ? '#f8fafc' : '#000', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', color: theme === 'white' ? '#0f172a' : '#fff', borderRadius: '8px' }} 
+                        />
+                      </div>
+                      <div>
+                        <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 'bold', color: theme === 'white' ? '#0f172a' : '#fff', marginBottom: '8px' }}>Отчество / Фамилия (например: Константинович)</label>
+                        <input 
+                          type="text" 
+                          value={adminData.visualTexts?.['f_patr'] || (adminData.team?.[0]?.name ? adminData.team[0].name.split(' ').slice(2).join(' ') : 'Константинович')} 
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            setAdminData(prev => ({
+                              ...prev,
+                              visualTexts: { ...(prev.visualTexts || {}), f_patr: val }
+                            }));
+                            if (typeof localStorage !== 'undefined') localStorage.setItem('vb_f_patr', val);
+                            window.dispatchEvent(new CustomEvent('vb_update', { detail: { id: 'f_patr', text: val } }));
+                          }} 
+                          style={{ width: '100%', padding: '12px', background: theme === 'white' ? '#f8fafc' : '#000', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', color: theme === 'white' ? '#0f172a' : '#fff', borderRadius: '8px' }} 
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 'bold', color: theme === 'white' ? '#0f172a' : '#fff', marginBottom: '8px' }}>Должность / Бейдж (например: ОСНОВАТЕЛЬ И ГЛАВНЫЙ ГЕОЛОГ)</label>
+                      <input 
+                        type="text" 
+                        value={adminData.visualTexts?.['f_role'] || adminData.team?.[0]?.badge || adminData.team?.[0]?.role || 'Основатель и Главный Геолог'} 
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          setAdminData(prev => ({
+                            ...prev,
+                            visualTexts: { ...(prev.visualTexts || {}), f_role: val }
+                          }));
+                          if (typeof localStorage !== 'undefined') localStorage.setItem('vb_f_role', val);
+                          window.dispatchEvent(new CustomEvent('vb_update', { detail: { id: 'f_role', text: val } }));
+                        }} 
+                        style={{ width: '100%', padding: '12px', background: theme === 'white' ? '#f8fafc' : '#000', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', color: theme === 'white' ? '#0f172a' : '#fff', borderRadius: '8px' }} 
+                      />
+                    </div>
+
+                    <div>
+                      <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 'bold', color: theme === 'white' ? '#0f172a' : '#fff', marginBottom: '8px' }}>Описание / Слово Основателя / История</label>
+                      <textarea 
+                        rows={5} 
+                        value={adminData.visualTexts?.['f_quote'] || adminData.team?.[0]?.desc || 'Рудольф Константинович основал компанию в 2019 году...'} 
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          setAdminData(prev => ({
+                            ...prev,
+                            visualTexts: { ...(prev.visualTexts || {}), f_quote: val }
+                          }));
+                          if (typeof localStorage !== 'undefined') localStorage.setItem('vb_f_quote', val);
+                          window.dispatchEvent(new CustomEvent('vb_update', { detail: { id: 'f_quote', text: val } }));
+                        }} 
+                        style={{ width: '100%', padding: '12px', background: theme === 'white' ? '#f8fafc' : '#000', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', color: theme === 'white' ? '#0f172a' : '#fff', borderRadius: '8px', fontFamily: 'inherit' }} 
+                      />
+                    </div>
+
+                    <div style={{ marginTop: '20px' }}>
+                      <button 
+                        onClick={async () => {
+                          await saveAdminData();
+                          alert('✅ Данные руководства успешно сохранены и синхронизированы с сервером!');
+                        }} 
+                        style={{ background: '#10b981', color: '#fff', border: 'none', padding: '14px 30px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', fontSize: '1rem', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
+                      >
+                        <Save size={18} /> Сохранить изменения руководства и синхронизировать с сервером
+                      </button>
+                    </div>
+                  </div>
                 </div>
               )}
 
