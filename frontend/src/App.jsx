@@ -634,7 +634,10 @@ const DEFAULT_NORMS = [
           
           if (serverData.visualTexts) {
             Object.entries(serverData.visualTexts).forEach(([k, v]) => {
-              if (v) localStorage.setItem(`vb_${k}`, v);
+              if (v !== undefined && v !== null) {
+                localStorage.setItem(`vb_${k}`, v);
+                window.dispatchEvent(new CustomEvent('vb_update', { detail: { id: k, text: v } }));
+              }
             });
           }
           if (showNotification) {
@@ -649,9 +652,13 @@ const DEFAULT_NORMS = [
     return false;
   };
 
-  // Sync admin data from backend server on application mount
+  // Sync admin data from backend server on application mount and poll every 10s for real-time sync
   useEffect(() => {
     syncAdminDataFromServer();
+    const interval = setInterval(() => {
+      syncAdminDataFromServer(false);
+    }, 10000);
+    return () => clearInterval(interval);
   }, []);
 
   const saveAdminData = async (customData) => {
