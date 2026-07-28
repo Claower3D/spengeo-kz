@@ -3924,6 +3924,104 @@ const DEFAULT_NORMS = [
 
                 return (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '30px' }}>
+                  {sectionKey === 'about_history' && (
+                    <div style={{ background: theme === 'white' ? '#fff' : '#111', border: theme === 'white' ? '1px solid rgba(0,0,0,0.05)' : '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', padding: '30px', boxShadow: theme === 'white' ? '0 4px 20px rgba(0,0,0,0.05)' : 'none' }}>
+                      <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '10px', color: theme === 'white' ? '#0f172a' : '#fff' }}>Карточка Основателя</h3>
+                      <p style={{ fontSize: '0.9rem', color: theme === 'white' ? '#64748b' : '#888', marginBottom: '30px' }}>Данные основателя, отображаемые на странице истории и на главной.</p>
+
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', maxWidth: '800px' }}>
+                        <div>
+                          <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 'bold', color: theme === 'white' ? '#0f172a' : '#fff', marginBottom: '8px' }}>Фотография</label>
+                          <ImageUploadField 
+                            value={adminData.media?.directorImage || adminData.team?.[0]?.img || '/images/director.png'} 
+                            onChange={v => {
+                              setAdminData(prev => {
+                                const newTeam = [...(prev.team || [])];
+                                if (newTeam[0]) newTeam[0] = { ...newTeam[0], img: v };
+                                return {
+                                  ...prev,
+                                  media: { ...(prev.media || {}), directorImage: v },
+                                  team: newTeam
+                                };
+                              });
+                            }} 
+                            theme={theme} 
+                          />
+                        </div>
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+                          <div>
+                            <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 'bold', color: theme === 'white' ? '#0f172a' : '#fff', marginBottom: '8px' }}>Имя</label>
+                            <input 
+                              type="text" 
+                              value={adminData.visualTexts?.['f_name'] || ''} 
+                              onChange={(e) => {
+                                const val = e.target.value;
+                                setAdminData(prev => ({
+                                  ...prev,
+                                  visualTexts: { ...(prev.visualTexts || {}), f_name: val }
+                                }));
+                                if (typeof localStorage !== 'undefined') localStorage.setItem('vb_f_name', val);
+                                window.dispatchEvent(new CustomEvent('vb_update', { detail: { id: 'f_name', text: val } }));
+                              }} 
+                              style={{ width: '100%', padding: '12px', background: theme === 'white' ? '#f8fafc' : '#000', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', color: theme === 'white' ? '#0f172a' : '#fff', borderRadius: '8px' }} 
+                            />
+                          </div>
+                          <div>
+                            <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 'bold', color: theme === 'white' ? '#0f172a' : '#fff', marginBottom: '8px' }}>Отчество / Фамилия</label>
+                            <input 
+                              type="text" 
+                              value={adminData.visualTexts?.['f_patr'] || ''} 
+                              onChange={(e) => {
+                                const val = e.target.value;
+                                setAdminData(prev => ({
+                                  ...prev,
+                                  visualTexts: { ...(prev.visualTexts || {}), f_patr: val }
+                                }));
+                                if (typeof localStorage !== 'undefined') localStorage.setItem('vb_f_patr', val);
+                                window.dispatchEvent(new CustomEvent('vb_update', { detail: { id: 'f_patr', text: val } }));
+                              }} 
+                              style={{ width: '100%', padding: '12px', background: theme === 'white' ? '#f8fafc' : '#000', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', color: theme === 'white' ? '#0f172a' : '#fff', borderRadius: '8px' }} 
+                            />
+                          </div>
+                        </div>
+                        <div>
+                          <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 'bold', color: theme === 'white' ? '#0f172a' : '#fff', marginBottom: '8px' }}>Должность</label>
+                          <input 
+                            type="text" 
+                            value={adminData.visualTexts?.['f_role'] || ''} 
+                            onChange={(e) => {
+                              const val = e.target.value;
+                              setAdminData(prev => ({
+                                ...prev,
+                                visualTexts: { ...(prev.visualTexts || {}), f_role: val }
+                              }));
+                              if (typeof localStorage !== 'undefined') localStorage.setItem('vb_f_role', val);
+                              window.dispatchEvent(new CustomEvent('vb_update', { detail: { id: 'f_role', text: val } }));
+                            }} 
+                            style={{ width: '100%', padding: '12px', background: theme === 'white' ? '#f8fafc' : '#000', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', color: theme === 'white' ? '#0f172a' : '#fff', borderRadius: '8px' }} 
+                          />
+                        </div>
+                        <div>
+                          <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 'bold', color: theme === 'white' ? '#0f172a' : '#fff', marginBottom: '8px' }}>Текст (Цитата/История)</label>
+                          <textarea 
+                            value={adminData.visualTexts?.['f_quote'] || ''} 
+                            onChange={(e) => {
+                              const val = e.target.value;
+                              setAdminData(prev => ({
+                                ...prev,
+                                visualTexts: { ...(prev.visualTexts || {}), f_quote: val }
+                              }));
+                              if (typeof localStorage !== 'undefined') localStorage.setItem('vb_f_quote', val);
+                              window.dispatchEvent(new CustomEvent('vb_update', { detail: { id: 'f_quote', text: val } }));
+                            }} 
+                            rows={4}
+                            style={{ width: '100%', padding: '12px', background: theme === 'white' ? '#f8fafc' : '#000', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', color: theme === 'white' ? '#0f172a' : '#fff', borderRadius: '8px', fontFamily: 'inherit' }} 
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
                   {/* --- SPECIFIC LIST EDITOR --- */}
                   <div style={{ background: theme === 'white' ? '#fff' : '#111', border: theme === 'white' ? '1px solid rgba(0,0,0,0.05)' : '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', padding: '30px', boxShadow: theme === 'white' ? '0 4px 20px rgba(0,0,0,0.05)' : 'none' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px', borderBottom: theme === 'white' ? '1px solid #e2e8f0' : '1px solid #333', paddingBottom: '15px' }}>
