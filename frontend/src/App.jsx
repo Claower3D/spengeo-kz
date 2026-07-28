@@ -2275,7 +2275,7 @@ const DEFAULT_NORMS = [
               <>
               <div className="glow-card-premium" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '0', alignItems: 'stretch', padding: '0', overflow: 'hidden', position: 'relative', zIndex: 2, background: 'var(--bg-card)', border: '1px solid var(--border-color)', boxShadow: '0 0 50px rgba(0,0,0,0.1)', marginBottom: '60px' }}>
                   <div style={{ position: 'relative', minHeight: '500px', overflow: 'hidden' }}>
-                    <img src={adminData.media?.historyDirectorImage || '/images/director.png'} alt="Руководитель" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', filter: 'contrast(1.1)' }} />
+                    <img src={adminData.media?.historyDirectorImage || adminData.media?.directorImage || adminData.team?.[0]?.img || '/images/director.png'} alt="Руководитель" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', filter: 'contrast(1.1)' }} />
                     {isVisualBuilder && (
                       <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 10 }}>
                         <label style={{ background: 'var(--color-cyan)', color: '#000', padding: '12px 24px', borderRadius: '30px', fontWeight: 'bold', cursor: 'pointer', display: 'flex', gap: '8px', alignItems: 'center', boxShadow: '0 4px 20px rgba(6, 182, 212, 0.6)' }}>
@@ -3928,12 +3928,17 @@ const DEFAULT_NORMS = [
                         <div>
                           <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 'bold', color: theme === 'white' ? '#0f172a' : '#fff', marginBottom: '8px' }}>Фотография</label>
                           <ImageUploadField 
-                            value={adminData.media?.historyDirectorImage || '/images/director.png'} 
+                            value={adminData.media?.historyDirectorImage || adminData.media?.directorImage || adminData.team?.[0]?.img || '/images/director.png'} 
                             onChange={v => {
-                              setAdminData(prev => ({
-                                ...prev,
-                                media: { ...(prev.media || {}), historyDirectorImage: v }
-                              }));
+                              setAdminData(prev => {
+                                const newTeam = [...(prev.team || [])];
+                                if (newTeam[0]) newTeam[0] = { ...newTeam[0], img: v };
+                                return {
+                                  ...prev,
+                                  media: { ...(prev.media || {}), historyDirectorImage: v, directorImage: v },
+                                  team: newTeam
+                                };
+                              });
                             }} 
                             theme={theme} 
                           />
@@ -3943,15 +3948,19 @@ const DEFAULT_NORMS = [
                             <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 'bold', color: theme === 'white' ? '#0f172a' : '#fff', marginBottom: '8px' }}>Имя</label>
                             <input 
                               type="text" 
-                              value={adminData.visualTexts?.['history_f_name'] || ''} 
+                              value={adminData.visualTexts?.['history_f_name'] || adminData.visualTexts?.['f_name'] || ''} 
                               onChange={(e) => {
                                 const val = e.target.value;
                                 setAdminData(prev => ({
                                   ...prev,
-                                  visualTexts: { ...(prev.visualTexts || {}), history_f_name: val }
+                                  visualTexts: { ...(prev.visualTexts || {}), history_f_name: val, f_name: val }
                                 }));
-                                if (typeof localStorage !== 'undefined') localStorage.setItem('vb_history_f_name', val);
+                                if (typeof localStorage !== 'undefined') {
+                                  localStorage.setItem('vb_history_f_name', val);
+                                  localStorage.setItem('vb_f_name', val);
+                                }
                                 window.dispatchEvent(new CustomEvent('vb_update', { detail: { id: 'history_f_name', text: val } }));
+                                window.dispatchEvent(new CustomEvent('vb_update', { detail: { id: 'f_name', text: val } }));
                               }} 
                               style={{ width: '100%', padding: '12px', background: theme === 'white' ? '#f8fafc' : '#000', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', color: theme === 'white' ? '#0f172a' : '#fff', borderRadius: '8px' }} 
                             />
@@ -3960,15 +3969,19 @@ const DEFAULT_NORMS = [
                             <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 'bold', color: theme === 'white' ? '#0f172a' : '#fff', marginBottom: '8px' }}>Отчество / Фамилия</label>
                             <input 
                               type="text" 
-                              value={adminData.visualTexts?.['history_f_patr'] || ''} 
+                              value={adminData.visualTexts?.['history_f_patr'] || adminData.visualTexts?.['f_patr'] || ''} 
                               onChange={(e) => {
                                 const val = e.target.value;
                                 setAdminData(prev => ({
                                   ...prev,
-                                  visualTexts: { ...(prev.visualTexts || {}), history_f_patr: val }
+                                  visualTexts: { ...(prev.visualTexts || {}), history_f_patr: val, f_patr: val }
                                 }));
-                                if (typeof localStorage !== 'undefined') localStorage.setItem('vb_history_f_patr', val);
+                                if (typeof localStorage !== 'undefined') {
+                                  localStorage.setItem('vb_history_f_patr', val);
+                                  localStorage.setItem('vb_f_patr', val);
+                                }
                                 window.dispatchEvent(new CustomEvent('vb_update', { detail: { id: 'history_f_patr', text: val } }));
+                                window.dispatchEvent(new CustomEvent('vb_update', { detail: { id: 'f_patr', text: val } }));
                               }} 
                               style={{ width: '100%', padding: '12px', background: theme === 'white' ? '#f8fafc' : '#000', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', color: theme === 'white' ? '#0f172a' : '#fff', borderRadius: '8px' }} 
                             />
@@ -3978,15 +3991,19 @@ const DEFAULT_NORMS = [
                           <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 'bold', color: theme === 'white' ? '#0f172a' : '#fff', marginBottom: '8px' }}>Должность</label>
                           <input 
                             type="text" 
-                            value={adminData.visualTexts?.['history_f_role'] || ''} 
+                            value={adminData.visualTexts?.['history_f_role'] || adminData.visualTexts?.['f_role'] || ''} 
                             onChange={(e) => {
                               const val = e.target.value;
                               setAdminData(prev => ({
                                 ...prev,
-                                visualTexts: { ...(prev.visualTexts || {}), history_f_role: val }
+                                visualTexts: { ...(prev.visualTexts || {}), history_f_role: val, f_role: val }
                               }));
-                              if (typeof localStorage !== 'undefined') localStorage.setItem('vb_history_f_role', val);
+                              if (typeof localStorage !== 'undefined') {
+                                localStorage.setItem('vb_history_f_role', val);
+                                localStorage.setItem('vb_f_role', val);
+                              }
                               window.dispatchEvent(new CustomEvent('vb_update', { detail: { id: 'history_f_role', text: val } }));
+                              window.dispatchEvent(new CustomEvent('vb_update', { detail: { id: 'f_role', text: val } }));
                             }} 
                             style={{ width: '100%', padding: '12px', background: theme === 'white' ? '#f8fafc' : '#000', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', color: theme === 'white' ? '#0f172a' : '#fff', borderRadius: '8px' }} 
                           />
@@ -3994,15 +4011,19 @@ const DEFAULT_NORMS = [
                         <div>
                           <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 'bold', color: theme === 'white' ? '#0f172a' : '#fff', marginBottom: '8px' }}>Текст (Цитата/История)</label>
                           <textarea 
-                            value={adminData.visualTexts?.['history_f_quote'] || ''} 
+                            value={adminData.visualTexts?.['history_f_quote'] || adminData.visualTexts?.['f_quote'] || ''} 
                             onChange={(e) => {
                               const val = e.target.value;
                               setAdminData(prev => ({
                                 ...prev,
-                                visualTexts: { ...(prev.visualTexts || {}), history_f_quote: val }
+                                visualTexts: { ...(prev.visualTexts || {}), history_f_quote: val, f_quote: val }
                               }));
-                              if (typeof localStorage !== 'undefined') localStorage.setItem('vb_history_f_quote', val);
+                              if (typeof localStorage !== 'undefined') {
+                                localStorage.setItem('vb_history_f_quote', val);
+                                localStorage.setItem('vb_f_quote', val);
+                              }
                               window.dispatchEvent(new CustomEvent('vb_update', { detail: { id: 'history_f_quote', text: val } }));
+                              window.dispatchEvent(new CustomEvent('vb_update', { detail: { id: 'f_quote', text: val } }));
                             }} 
                             rows={4}
                             style={{ width: '100%', padding: '12px', background: theme === 'white' ? '#f8fafc' : '#000', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', color: theme === 'white' ? '#0f172a' : '#fff', borderRadius: '8px', fontFamily: 'inherit' }} 
@@ -4360,14 +4381,14 @@ const DEFAULT_NORMS = [
                         <div>
                           <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 'bold', color: theme === 'white' ? '#0f172a' : '#fff', marginBottom: '8px' }}>Фотография Основателя</label>
                           <ImageUploadField 
-                            value={adminData.media?.directorImage || adminData.team?.[0]?.img || '/images/director.png'} 
+                            value={adminData.media?.directorImage || adminData.media?.historyDirectorImage || adminData.team?.[0]?.img || '/images/director.png'} 
                             onChange={v => {
                               setAdminData(prev => {
                                 const newTeam = [...(prev.team || [])];
                                 if (newTeam[0]) newTeam[0] = { ...newTeam[0], img: v };
                                 return {
                                   ...prev,
-                                  media: { ...(prev.media || {}), directorImage: v },
+                                  media: { ...(prev.media || {}), directorImage: v, historyDirectorImage: v },
                                   team: newTeam
                                 };
                               });
@@ -4381,15 +4402,19 @@ const DEFAULT_NORMS = [
                             <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 'bold', color: theme === 'white' ? '#0f172a' : '#fff', marginBottom: '8px' }}>Имя</label>
                             <input 
                               type="text" 
-                              value={adminData.visualTexts?.['f_name'] || (adminData.team?.[0]?.name ? adminData.team[0].name.split(' ').slice(0,2).join(' ') : 'Шенвизов Рудольф')} 
+                              value={adminData.visualTexts?.['f_name'] || adminData.visualTexts?.['history_f_name'] || (adminData.team?.[0]?.name ? adminData.team[0].name.split(' ').slice(0,2).join(' ') : 'Шенвизов Рудольф')} 
                               onChange={(e) => {
                                 const val = e.target.value;
                                 setAdminData(prev => ({
                                   ...prev,
-                                  visualTexts: { ...(prev.visualTexts || {}), f_name: val }
+                                  visualTexts: { ...(prev.visualTexts || {}), f_name: val, history_f_name: val }
                                 }));
-                                if (typeof localStorage !== 'undefined') localStorage.setItem('vb_f_name', val);
+                                if (typeof localStorage !== 'undefined') {
+                                  localStorage.setItem('vb_f_name', val);
+                                  localStorage.setItem('vb_history_f_name', val);
+                                }
                                 window.dispatchEvent(new CustomEvent('vb_update', { detail: { id: 'f_name', text: val } }));
+                                window.dispatchEvent(new CustomEvent('vb_update', { detail: { id: 'history_f_name', text: val } }));
                               }} 
                               style={{ width: '100%', padding: '12px', background: theme === 'white' ? '#fff' : '#000', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', color: theme === 'white' ? '#0f172a' : '#fff', borderRadius: '8px' }} 
                             />
@@ -4398,15 +4423,19 @@ const DEFAULT_NORMS = [
                             <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 'bold', color: theme === 'white' ? '#0f172a' : '#fff', marginBottom: '8px' }}>Отчество / Фамилия</label>
                             <input 
                               type="text" 
-                              value={adminData.visualTexts?.['f_patr'] || (adminData.team?.[0]?.name ? adminData.team[0].name.split(' ').slice(2).join(' ') : 'Константинович')} 
+                              value={adminData.visualTexts?.['f_patr'] || adminData.visualTexts?.['history_f_patr'] || (adminData.team?.[0]?.name ? adminData.team[0].name.split(' ').slice(2).join(' ') : 'Константинович')} 
                               onChange={(e) => {
                                 const val = e.target.value;
                                 setAdminData(prev => ({
                                   ...prev,
-                                  visualTexts: { ...(prev.visualTexts || {}), f_patr: val }
+                                  visualTexts: { ...(prev.visualTexts || {}), f_patr: val, history_f_patr: val }
                                 }));
-                                if (typeof localStorage !== 'undefined') localStorage.setItem('vb_f_patr', val);
+                                if (typeof localStorage !== 'undefined') {
+                                  localStorage.setItem('vb_f_patr', val);
+                                  localStorage.setItem('vb_history_f_patr', val);
+                                }
                                 window.dispatchEvent(new CustomEvent('vb_update', { detail: { id: 'f_patr', text: val } }));
+                                window.dispatchEvent(new CustomEvent('vb_update', { detail: { id: 'history_f_patr', text: val } }));
                               }} 
                               style={{ width: '100%', padding: '12px', background: theme === 'white' ? '#fff' : '#000', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', color: theme === 'white' ? '#0f172a' : '#fff', borderRadius: '8px' }} 
                             />
@@ -4415,15 +4444,19 @@ const DEFAULT_NORMS = [
                             <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 'bold', color: theme === 'white' ? '#0f172a' : '#fff', marginBottom: '8px' }}>Должность / Бейдж</label>
                             <input 
                               type="text" 
-                              value={adminData.visualTexts?.['f_role'] || adminData.team?.[0]?.badge || adminData.team?.[0]?.role || 'Основатель и Главный Геолог'} 
+                              value={adminData.visualTexts?.['f_role'] || adminData.visualTexts?.['history_f_role'] || adminData.team?.[0]?.badge || adminData.team?.[0]?.role || 'Основатель и Главный Геолог'} 
                               onChange={(e) => {
                                 const val = e.target.value;
                                 setAdminData(prev => ({
                                   ...prev,
-                                  visualTexts: { ...(prev.visualTexts || {}), f_role: val }
+                                  visualTexts: { ...(prev.visualTexts || {}), f_role: val, history_f_role: val }
                                 }));
-                                if (typeof localStorage !== 'undefined') localStorage.setItem('vb_f_role', val);
+                                if (typeof localStorage !== 'undefined') {
+                                  localStorage.setItem('vb_f_role', val);
+                                  localStorage.setItem('vb_history_f_role', val);
+                                }
                                 window.dispatchEvent(new CustomEvent('vb_update', { detail: { id: 'f_role', text: val } }));
+                                window.dispatchEvent(new CustomEvent('vb_update', { detail: { id: 'history_f_role', text: val } }));
                               }} 
                               style={{ width: '100%', padding: '12px', background: theme === 'white' ? '#fff' : '#000', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', color: theme === 'white' ? '#0f172a' : '#fff', borderRadius: '8px' }} 
                             />
@@ -4434,15 +4467,19 @@ const DEFAULT_NORMS = [
                           <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 'bold', color: theme === 'white' ? '#0f172a' : '#fff', marginBottom: '8px' }}>История / Текст Основателя</label>
                           <textarea 
                             rows={5} 
-                            value={adminData.visualTexts?.['f_quote'] || adminData.team?.[0]?.desc || 'Рудольф Константинович основал компанию в 2019 году...'} 
+                            value={adminData.visualTexts?.['f_quote'] || adminData.visualTexts?.['history_f_quote'] || adminData.team?.[0]?.desc || 'Рудольф Константинович основал компанию в 2019 году...'} 
                             onChange={(e) => {
                               const val = e.target.value;
                               setAdminData(prev => ({
                                 ...prev,
-                                visualTexts: { ...(prev.visualTexts || {}), f_quote: val }
+                                visualTexts: { ...(prev.visualTexts || {}), f_quote: val, history_f_quote: val }
                               }));
-                              if (typeof localStorage !== 'undefined') localStorage.setItem('vb_f_quote', val);
+                              if (typeof localStorage !== 'undefined') {
+                                localStorage.setItem('vb_f_quote', val);
+                                localStorage.setItem('vb_history_f_quote', val);
+                              }
                               window.dispatchEvent(new CustomEvent('vb_update', { detail: { id: 'f_quote', text: val } }));
+                              window.dispatchEvent(new CustomEvent('vb_update', { detail: { id: 'history_f_quote', text: val } }));
                             }} 
                             style={{ width: '100%', padding: '12px', background: theme === 'white' ? '#fff' : '#000', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', color: theme === 'white' ? '#0f172a' : '#fff', borderRadius: '8px', fontFamily: 'inherit' }} 
                           />
