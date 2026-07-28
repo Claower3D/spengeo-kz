@@ -4258,6 +4258,123 @@ const DEFAULT_NORMS = [
               
               {activeAdminSection.startsWith('cms_') && (
                 <div style={{ background: theme === 'white' ? '#fff' : '#111', border: theme === 'white' ? '1px solid rgba(0,0,0,0.05)' : '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', padding: '30px', boxShadow: theme === 'white' ? '0 4px 20px rgba(0,0,0,0.05)' : 'none' }}>
+                  
+                  {activeAdminSection === 'cms_about' && (
+                    <div style={{ marginBottom: '40px', paddingBottom: '30px', borderBottom: theme === 'white' ? '1px solid #e2e8f0' : '1px solid #333' }}>
+                      <h3 style={{ fontSize: '1.4rem', fontWeight: 'bold', marginBottom: '10px', color: theme === 'white' ? '#0f172a' : '#fff', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        👑 Редактирование карточки Основателя (История компании)
+                      </h3>
+                      <p style={{ fontSize: '0.85rem', color: theme === 'white' ? '#64748b' : '#888', marginBottom: '20px' }}>
+                        Редактируйте фото, имя, должность и историю Рудольфа Константиновича. Все изменения мгновенно синхронизируются с сервером.
+                      </p>
+
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', background: theme === 'white' ? '#f8fafc' : '#181818', padding: '25px', borderRadius: '12px', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #333' }}>
+                        <div>
+                          <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 'bold', color: theme === 'white' ? '#0f172a' : '#fff', marginBottom: '8px' }}>Фотография Основателя</label>
+                          <ImageUploadField 
+                            value={adminData.media?.directorImage || adminData.team?.[0]?.img || '/images/director.png'} 
+                            onChange={v => {
+                              setAdminData(prev => {
+                                const newTeam = [...(prev.team || [])];
+                                if (newTeam[0]) newTeam[0] = { ...newTeam[0], img: v };
+                                return {
+                                  ...prev,
+                                  media: { ...(prev.media || {}), directorImage: v },
+                                  team: newTeam
+                                };
+                              });
+                            }} 
+                            theme={theme} 
+                          />
+                        </div>
+
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '20px' }}>
+                          <div>
+                            <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 'bold', color: theme === 'white' ? '#0f172a' : '#fff', marginBottom: '8px' }}>Имя</label>
+                            <input 
+                              type="text" 
+                              value={adminData.visualTexts?.['f_name'] || (adminData.team?.[0]?.name ? adminData.team[0].name.split(' ').slice(0,2).join(' ') : 'Шенвизов Рудольф')} 
+                              onChange={(e) => {
+                                const val = e.target.value;
+                                setAdminData(prev => ({
+                                  ...prev,
+                                  visualTexts: { ...(prev.visualTexts || {}), f_name: val }
+                                }));
+                                if (typeof localStorage !== 'undefined') localStorage.setItem('vb_f_name', val);
+                                window.dispatchEvent(new CustomEvent('vb_update', { detail: { id: 'f_name', text: val } }));
+                              }} 
+                              style={{ width: '100%', padding: '12px', background: theme === 'white' ? '#fff' : '#000', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', color: theme === 'white' ? '#0f172a' : '#fff', borderRadius: '8px' }} 
+                            />
+                          </div>
+                          <div>
+                            <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 'bold', color: theme === 'white' ? '#0f172a' : '#fff', marginBottom: '8px' }}>Отчество / Фамилия</label>
+                            <input 
+                              type="text" 
+                              value={adminData.visualTexts?.['f_patr'] || (adminData.team?.[0]?.name ? adminData.team[0].name.split(' ').slice(2).join(' ') : 'Константинович')} 
+                              onChange={(e) => {
+                                const val = e.target.value;
+                                setAdminData(prev => ({
+                                  ...prev,
+                                  visualTexts: { ...(prev.visualTexts || {}), f_patr: val }
+                                }));
+                                if (typeof localStorage !== 'undefined') localStorage.setItem('vb_f_patr', val);
+                                window.dispatchEvent(new CustomEvent('vb_update', { detail: { id: 'f_patr', text: val } }));
+                              }} 
+                              style={{ width: '100%', padding: '12px', background: theme === 'white' ? '#fff' : '#000', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', color: theme === 'white' ? '#0f172a' : '#fff', borderRadius: '8px' }} 
+                            />
+                          </div>
+                          <div>
+                            <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 'bold', color: theme === 'white' ? '#0f172a' : '#fff', marginBottom: '8px' }}>Должность / Бейдж</label>
+                            <input 
+                              type="text" 
+                              value={adminData.visualTexts?.['f_role'] || adminData.team?.[0]?.badge || adminData.team?.[0]?.role || 'Основатель и Главный Геолог'} 
+                              onChange={(e) => {
+                                const val = e.target.value;
+                                setAdminData(prev => ({
+                                  ...prev,
+                                  visualTexts: { ...(prev.visualTexts || {}), f_role: val }
+                                }));
+                                if (typeof localStorage !== 'undefined') localStorage.setItem('vb_f_role', val);
+                                window.dispatchEvent(new CustomEvent('vb_update', { detail: { id: 'f_role', text: val } }));
+                              }} 
+                              style={{ width: '100%', padding: '12px', background: theme === 'white' ? '#fff' : '#000', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', color: theme === 'white' ? '#0f172a' : '#fff', borderRadius: '8px' }} 
+                            />
+                          </div>
+                        </div>
+
+                        <div>
+                          <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 'bold', color: theme === 'white' ? '#0f172a' : '#fff', marginBottom: '8px' }}>История / Текст Основателя</label>
+                          <textarea 
+                            rows={5} 
+                            value={adminData.visualTexts?.['f_quote'] || adminData.team?.[0]?.desc || 'Рудольф Константинович основал компанию в 2019 году...'} 
+                            onChange={(e) => {
+                              const val = e.target.value;
+                              setAdminData(prev => ({
+                                ...prev,
+                                visualTexts: { ...(prev.visualTexts || {}), f_quote: val }
+                              }));
+                              if (typeof localStorage !== 'undefined') localStorage.setItem('vb_f_quote', val);
+                              window.dispatchEvent(new CustomEvent('vb_update', { detail: { id: 'f_quote', text: val } }));
+                            }} 
+                            style={{ width: '100%', padding: '12px', background: theme === 'white' ? '#fff' : '#000', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', color: theme === 'white' ? '#0f172a' : '#fff', borderRadius: '8px', fontFamily: 'inherit' }} 
+                          />
+                        </div>
+
+                        <div>
+                          <button 
+                            onClick={async () => {
+                              await saveAdminData();
+                              alert('✅ Данные истории и Основателя успешно сохранены и синхронизированы!');
+                            }} 
+                            style={{ background: '#10b981', color: '#fff', border: 'none', padding: '12px 24px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: '8px' }}
+                          >
+                            <Save size={16} /> Сохранить изменения истории компании на сервере
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
                     <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: theme === 'white' ? '#0f172a' : '#fff', margin: 0 }}>
                       Подразделы: {dynamicMenu['ru'].find(m => m.page === activeAdminSection.replace('cms_', ''))?.title}
