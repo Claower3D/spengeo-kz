@@ -850,7 +850,22 @@ const DEFAULT_NORMS = [
   const [adminPass, setAdminPass] = useState('');
   const [inquiries, setInquiries] = useState([]);
   const [adminError, setAdminError] = useState('');
-  const [activeAdminSection, setActiveAdminSection] = useState('dashboard');
+  const [activeAdminSection, setActiveAdminSection] = useState(() => {
+    if (typeof window !== 'undefined' && window.location.hash) {
+      const hash = window.location.hash.replace(/^#/, '');
+      if (hash) return hash;
+    }
+    return localStorage.getItem('spengeo_active_admin_section') || 'dashboard';
+  });
+
+  useEffect(() => {
+    if (activeAdminSection) {
+      localStorage.setItem('spengeo_active_admin_section', activeAdminSection);
+      if (activePage === 'admin') {
+        window.history.replaceState({}, '', `/admin#${activeAdminSection}`);
+      }
+    }
+  }, [activeAdminSection, activePage]);
   const [activeArticle, setActiveArticle] = useState(null);
   const dynamicMenu = adminData.menu || MENU_STRUCTURE;
   const [editingServiceIndex, setEditingServiceIndex] = useState(null);
@@ -2934,7 +2949,9 @@ const DEFAULT_NORMS = [
                      activeAdminSection === 'pages' ? 'Структура страниц' :
                      activeAdminSection === 'settings' ? 'Глобальные настройки' :
                      activeAdminSection === 'bot' ? 'Настройки ассистента' :
-                     activeAdminSection === 'calculator' ? 'Настройки калькулятора' : 'Панель управления'}
+                     activeAdminSection === 'calculator' ? 'Настройки калькулятора' :
+                     activeAdminSection === 'blocks' ? 'Управление Базами Данных' :
+                     activeAdminSection === 'photos' ? 'Управление фотографиями' : 'Панель управления'}
                   </h1>
                   <p style={{ fontSize: '0.9rem', color: theme === 'white' ? '#64748b' : '#888' }}>
                     {activeAdminSection === 'dashboard' ? 'Нажмите на плитку чтобы открыть нужный раздел администрирования.' : 'Вносите изменения и сохраняйте настройки.'}
@@ -3012,6 +3029,11 @@ const DEFAULT_NORMS = [
                   <button onClick={() => {
                     setIsAdminLoggedIn(false);
                     localStorage.removeItem('spengeo_admin_auth');
+                    localStorage.removeItem('spengeo_active_admin_section');
+                    setActiveAdminSection('dashboard');
+                    if (typeof window !== 'undefined') {
+                      window.history.replaceState({}, '', '/admin');
+                    }
                   }} style={{ background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', border: '1px solid rgba(239, 68, 68, 0.3)', padding: '10px 18px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '6px' }}>
                     🚪 Выйти
                   </button>
