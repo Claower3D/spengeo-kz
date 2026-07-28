@@ -6,7 +6,7 @@ import {
   Eye, Trash2, Calendar, FileText, Check, Database, 
   RefreshCw, BarChart2, UserCheck, Menu, X, ArrowUpRight,
   Printer, HardDrive, AlertTriangle, Layers, Clock, Settings,
-  BookOpen, FileSpreadsheet, Search, MessageCircle, Bot, ArrowUp, Sun, Moon, Briefcase, Edit3, Folder, Users, Image, Calculator
+  BookOpen, FileSpreadsheet, Search, MessageCircle, Bot, ArrowUp, Sun, Moon, Briefcase, Edit3, Folder, Users, Image, Calculator, User, Save
 } from 'lucide-react';
 import { MapContainer, TileLayer, Marker, Popup, Tooltip, useMap, GeoJSON, ZoomControl } from 'react-leaflet';
 import L from 'leaflet';
