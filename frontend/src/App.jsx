@@ -843,7 +843,9 @@ const DEFAULT_NORMS = [
   const [inquiryStatus, setInquiryStatus] = useState(null);
 
   // Admin States
-  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
+  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(() => {
+    return localStorage.getItem('spengeo_admin_auth') === 'true';
+  });
   const [adminUser, setAdminUser] = useState('');
   const [adminPass, setAdminPass] = useState('');
   const [inquiries, setInquiries] = useState([]);
@@ -1000,12 +1002,14 @@ const DEFAULT_NORMS = [
       (u.toLowerCase() === 'spetsinggeo' && p === 'Ggg181930!')
     ) {
       setIsAdminLoggedIn(true);
+      localStorage.setItem('spengeo_admin_auth', 'true');
       setAdminError('');
       logEvent(`Admin Session ACTIVE (${u}).`, 'success');
     } 
     // Fallback legacy access
     else if (p.toLowerCase() === 'admin' && !u) {
       setIsAdminLoggedIn(true);
+      localStorage.setItem('spengeo_admin_auth', 'true');
       setAdminError('');
       logEvent('Admin Session ACTIVE (Legacy).', 'success');
     } else {
@@ -1870,7 +1874,7 @@ const DEFAULT_NORMS = [
               <div className="bg-glow-orb-2" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '600px', height: '600px', background: 'radial-gradient(circle, var(--color-cyan) 0%, transparent 70%)', opacity: 0.05 }}></div>
               <div className="glow-card-premium" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '0', alignItems: 'stretch', padding: '0', overflow: 'hidden', position: 'relative', zIndex: 2, background: 'var(--bg-card)', border: '1px solid var(--border-color)', boxShadow: '0 0 50px rgba(0,0,0,0.1)' }}>
                 <div style={{ position: 'relative', minHeight: '500px', overflow: 'hidden' }}>
-                  <img src={adminData.team[0]?.img || '/images/director.png'} alt="Шенвизов Рудольф Константинович" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', filter: 'contrast(1.1)', maskImage: 'linear-gradient(to right, black 60%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to right, black 60%, transparent 100%)' }} />
+                  <img src={((adminData.team || []).find(m => (m.name && m.name.toLowerCase().includes('шенвизов')) || (m.badge && m.badge.toLowerCase().includes('основатель'))) || adminData.team?.[0])?.img || '/images/director.png'} alt="Шенвизов Рудольф Константинович" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', filter: 'contrast(1.1)', maskImage: 'linear-gradient(to right, black 60%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to right, black 60%, transparent 100%)' }} />
                   <div style={{ position: 'absolute', bottom: '-50px', left: '-50px', width: '200px', height: '200px', background: 'var(--color-cyan)', filter: 'blur(100px)', opacity: 0.15, zIndex: 0 }}></div>
                 </div>
                 
@@ -2020,7 +2024,7 @@ const DEFAULT_NORMS = [
               <>
               <div className="glow-card-premium" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '0', alignItems: 'stretch', padding: '0', overflow: 'hidden', position: 'relative', zIndex: 2, background: 'var(--bg-card)', border: '1px solid var(--border-color)', boxShadow: '0 0 50px rgba(0,0,0,0.1)', marginBottom: '60px' }}>
                   <div style={{ position: 'relative', minHeight: '500px', overflow: 'hidden' }}>
-                    <img src={adminData.team[0]?.img || adminData.team[0]?.image || '/images/director.png'} alt={adminData.team[0]?.name || "Генеральный директор"} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', filter: 'contrast(1.1)', maskImage: 'linear-gradient(to right, black 60%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to right, black 60%, transparent 100%)' }} />
+                    <img src={((adminData.team || []).find(m => (m.name && m.name.toLowerCase().includes('шенвизов')) || (m.badge && m.badge.toLowerCase().includes('основатель'))) || adminData.team?.[0])?.img || ((adminData.team || []).find(m => (m.name && m.name.toLowerCase().includes('шенвизов')) || (m.badge && m.badge.toLowerCase().includes('основатель'))) || adminData.team?.[0])?.image || '/images/director.png'} alt={((adminData.team || []).find(m => (m.name && m.name.toLowerCase().includes('шенвизов')) || (m.badge && m.badge.toLowerCase().includes('основатель'))) || adminData.team?.[0])?.name || "Генеральный директор"} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', filter: 'contrast(1.1)', maskImage: 'linear-gradient(to right, black 60%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to right, black 60%, transparent 100%)' }} />
                     <div style={{ position: 'absolute', bottom: '-50px', left: '-50px', width: '200px', height: '200px', background: 'var(--color-cyan)', filter: 'blur(100px)', opacity: 0.15, zIndex: 0 }}></div>
                   </div>
                   
@@ -3005,6 +3009,12 @@ const DEFAULT_NORMS = [
                       ← Назад в панель
                     </button>
                   )}
+                  <button onClick={() => {
+                    setIsAdminLoggedIn(false);
+                    localStorage.removeItem('spengeo_admin_auth');
+                  }} style={{ background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', border: '1px solid rgba(239, 68, 68, 0.3)', padding: '10px 18px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    🚪 Выйти
+                  </button>
                 </div>
               </div>
 
@@ -3684,7 +3694,7 @@ const DEFAULT_NORMS = [
                         <div style={{ background: 'rgba(6, 182, 212, 0.1)', padding: '8px', borderRadius: '8px', color: '#06b6d4' }}><Users size={20} /></div>
                         <h4 style={{ color: theme === 'white' ? '#0f172a' : '#fff', fontSize: '1.2rem', margin: 0 }}>Команда</h4>
                       </div>
-                      <button onClick={() => setAdminData({...adminData, team: [{name: 'Новый сотрудник', role: 'Должность', badge: 'СПЕЦИАЛИСТ', desc: '', img: ''}, ...(adminData.team || [])]})} style={{ background: '#06b6d4', color: '#fff', border: 'none', padding: '8px 16px', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold' }}>+ Добавить сотрудника</button>
+                      <button onClick={() => setAdminData(prev => ({...prev, team: [...(prev.team || []), {name: 'Новый сотрудник', role: 'Должность', badge: 'СПЕЦИАЛИСТ', desc: '', img: ''}]}))} style={{ background: '#06b6d4', color: '#fff', border: 'none', padding: '8px 16px', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold' }}>+ Добавить сотрудника</button>
                     </div>
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px' }}>
                       {(adminData.team || []).map((member, i) => (
@@ -4119,11 +4129,13 @@ const DEFAULT_NORMS = [
                     <div style={{ padding: '15px', background: theme === 'white' ? '#f8fafc' : '#0a0a0a', borderRadius: '8px', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #333', maxWidth: '400px' }}>
                       <div style={{ marginBottom: '8px', fontSize: '0.9rem', color: theme === 'white' ? '#334155' : '#ccc' }}>Шенвизов Рудольф Константинович</div>
                       <ImageUploadField 
-                        value={adminData.team[0]?.img || ''} 
+                        value={((adminData.team || []).find(m => (m.name && m.name.toLowerCase().includes('шенвизов')) || (m.badge && m.badge.toLowerCase().includes('основатель'))) || adminData.team?.[0])?.img || ''} 
                         onChange={(val) => {
-                          const arr = [...adminData.team];
+                          const arr = [...(adminData.team || [])];
+                          const targetIdx = arr.findIndex(m => (m.name && m.name.toLowerCase().includes('шенвизов')) || (m.badge && m.badge.toLowerCase().includes('основатель')));
+                          const idxToUse = targetIdx !== -1 ? targetIdx : 0;
                           if (arr.length > 0) {
-                              arr[0].img = val;
+                              arr[idxToUse].img = val;
                               setAdminData({...adminData, team: arr});
                           }
                         }} 
@@ -4162,17 +4174,14 @@ const DEFAULT_NORMS = [
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                     <div>
                       <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.9rem', color: theme === 'white' ? '#475569' : '#ccc', fontWeight: 'bold' }}>Имя ассистента</label>
-                      <input type="text" value={adminData.bot.name} onChange={e => setAdminData({...adminData, media: { rigBg: "/images/rig.jpg", labBg: "/images/lab.jpg", geoBg: "/images/geo.jpg" },
-      bot: {...adminData.bot, name: e.target.value}})} style={{ width: '100%', padding: '12px', borderRadius: '8px', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', background: theme === 'white' ? '#f8fafc' : '#000', color: theme === 'white' ? '#0f172a' : '#fff', outline: 'none' }} />
+                      <input type="text" value={adminData.bot.name} onChange={e => setAdminData(prev => ({...prev, bot: {...prev.bot, name: e.target.value}}))} style={{ width: '100%', padding: '12px', borderRadius: '8px', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', background: theme === 'white' ? '#f8fafc' : '#000', color: theme === 'white' ? '#0f172a' : '#fff', outline: 'none' }} />
                     </div>
                     <div>
                       <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.9rem', color: theme === 'white' ? '#475569' : '#ccc', fontWeight: 'bold' }}>Приветственное сообщение</label>
-                      <textarea rows="3" value={adminData.bot.welcomeMsg} onChange={e => setAdminData({...adminData, media: { rigBg: "/images/rig.jpg", labBg: "/images/lab.jpg", geoBg: "/images/geo.jpg" },
-      bot: {...adminData.bot, welcomeMsg: e.target.value}})} style={{ width: '100%', padding: '12px', borderRadius: '8px', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', background: theme === 'white' ? '#f8fafc' : '#000', color: theme === 'white' ? '#0f172a' : '#fff', resize: 'vertical', outline: 'none' }}></textarea>
+                      <textarea rows="3" value={adminData.bot.welcomeMsg} onChange={e => setAdminData(prev => ({...prev, bot: {...prev.bot, welcomeMsg: e.target.value}}))} style={{ width: '100%', padding: '12px', borderRadius: '8px', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', background: theme === 'white' ? '#f8fafc' : '#000', color: theme === 'white' ? '#0f172a' : '#fff', resize: 'vertical', outline: 'none' }}></textarea>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                      <input type="checkbox" id="bot_active" checked={adminData.bot.active} onChange={e => setAdminData({...adminData, media: { rigBg: "/images/rig.jpg", labBg: "/images/lab.jpg", geoBg: "/images/geo.jpg" },
-      bot: {...adminData.bot, active: e.target.checked}})} style={{ width: '18px', height: '18px', cursor: 'pointer' }} />
+                      <input type="checkbox" id="bot_active" checked={adminData.bot.active} onChange={e => setAdminData(prev => ({...prev, bot: {...prev.bot, active: e.target.checked}}))} style={{ width: '18px', height: '18px', cursor: 'pointer' }} />
                       <label htmlFor="bot_active" style={{ color: theme === 'white' ? '#0f172a' : '#fff', cursor: 'pointer', fontWeight: 'bold' }}>Бот активен на сайте</label>
                     </div>
                     
@@ -4180,26 +4189,22 @@ const DEFAULT_NORMS = [
                     
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                       <h4 style={{ fontSize: '1.1rem', margin: 0, color: theme === 'white' ? '#0f172a' : '#fff' }}>Сценарии ответов (Intents)</h4>
-                      <button onClick={() => setAdminData({...adminData, media: { rigBg: "/images/rig.jpg", labBg: "/images/lab.jpg", geoBg: "/images/geo.jpg" },
-      bot: {...adminData.bot, scenarios: [...adminData.bot.scenarios, { id: Date.now().toString(), keywords: '', answer: '' }]}})} style={{ background: 'var(--color-cyan)', color: '#fff', border: 'none', padding: '6px 14px', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold', fontSize: '0.85rem' }}>+ Добавить сценарий</button>
+                      <button onClick={() => setAdminData(prev => ({...prev, bot: {...prev.bot, scenarios: [...prev.bot.scenarios, { id: Date.now().toString(), keywords: '', answer: '' }]}}))} style={{ background: 'var(--color-cyan)', color: '#fff', border: 'none', padding: '6px 14px', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold', fontSize: '0.85rem' }}>+ Добавить сценарий</button>
                     </div>
                     
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
                       {adminData.bot.scenarios.map((scenario, index) => (
                         <div key={scenario.id} style={{ background: theme === 'white' ? '#f1f5f9' : '#1a1a1a', border: theme === 'white' ? '1px solid #e2e8f0' : '1px solid #333', borderRadius: '10px', padding: '20px', position: 'relative' }}>
-                          <button onClick={() => { const arr = adminData.bot.scenarios.filter((_, idx) => idx !== index); setAdminData({...adminData, media: { rigBg: "/images/rig.jpg", labBg: "/images/lab.jpg", geoBg: "/images/geo.jpg" },
-      bot: {...adminData.bot, scenarios: arr}}); }} style={{ position: 'absolute', top: '15px', right: '15px', background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', border: 'none', padding: '6px', borderRadius: '6px', cursor: 'pointer' }}><Trash2 size={16} /></button>
+                          <button onClick={() => { const arr = adminData.bot.scenarios.filter((_, idx) => idx !== index); setAdminData(prev => ({...prev, bot: {...prev.bot, scenarios: arr}})); }} style={{ position: 'absolute', top: '15px', right: '15px', background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', border: 'none', padding: '6px', borderRadius: '6px', cursor: 'pointer' }}><Trash2 size={16} /></button>
                           
                           <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', paddingRight: '40px' }}>
                             <div>
                               <label style={{ display: 'block', fontSize: '0.8rem', color: theme === 'white' ? '#64748b' : '#888', marginBottom: '5px', fontWeight: 'bold' }}>Ключевые слова (через запятую)</label>
-                              <input value={scenario.keywords} onChange={e => { const arr = [...adminData.bot.scenarios]; arr[index].keywords = e.target.value; setAdminData({...adminData, media: { rigBg: "/images/rig.jpg", labBg: "/images/lab.jpg", geoBg: "/images/geo.jpg" },
-      bot: {...adminData.bot, scenarios: arr}}); }} placeholder="Например: привет, здравствуй, добрый день" style={{ width: '100%', padding: '10px', background: theme === 'white' ? '#fff' : '#000', color: theme === 'white' ? '#0f172a' : '#fff', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', borderRadius: '6px', outline: 'none' }} />
+                              <input value={scenario.keywords} onChange={e => { const arr = [...adminData.bot.scenarios]; arr[index].keywords = e.target.value; setAdminData(prev => ({...prev, bot: {...prev.bot, scenarios: arr}})); }} placeholder="Например: привет, здравствуй, добрый день" style={{ width: '100%', padding: '10px', background: theme === 'white' ? '#fff' : '#000', color: theme === 'white' ? '#0f172a' : '#fff', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', borderRadius: '6px', outline: 'none' }} />
                             </div>
                             <div>
                               <label style={{ display: 'block', fontSize: '0.8rem', color: theme === 'white' ? '#64748b' : '#888', marginBottom: '5px', fontWeight: 'bold' }}>Ответ бота</label>
-                              <textarea value={scenario.answer} onChange={e => { const arr = [...adminData.bot.scenarios]; arr[index].answer = e.target.value; setAdminData({...adminData, media: { rigBg: "/images/rig.jpg", labBg: "/images/lab.jpg", geoBg: "/images/geo.jpg" },
-      bot: {...adminData.bot, scenarios: arr}}); }} rows={3} style={{ width: '100%', padding: '10px', background: theme === 'white' ? '#fff' : '#000', color: theme === 'white' ? '#0f172a' : '#fff', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', borderRadius: '6px', resize: 'vertical', outline: 'none' }} />
+                              <textarea value={scenario.answer} onChange={e => { const arr = [...adminData.bot.scenarios]; arr[index].answer = e.target.value; setAdminData(prev => ({...prev, bot: {...prev.bot, scenarios: arr}})); }} rows={3} style={{ width: '100%', padding: '10px', background: theme === 'white' ? '#fff' : '#000', color: theme === 'white' ? '#0f172a' : '#fff', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', borderRadius: '6px', resize: 'vertical', outline: 'none' }} />
                             </div>
                           </div>
                         </div>
