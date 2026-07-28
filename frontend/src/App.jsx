@@ -390,11 +390,41 @@ function ImageUploadField({ value, onChange, theme }) {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        onChange(reader.result);
-      };
-      reader.readAsDataURL(file);
+      if (file.type && file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          const img = new window.Image();
+          img.onload = () => {
+            const canvas = document.createElement('canvas');
+            let width = img.width;
+            let height = img.height;
+            const maxDim = 1200;
+            if (width > maxDim || height > maxDim) {
+              if (width > height) {
+                height = Math.round((height * maxDim) / width);
+                width = maxDim;
+              } else {
+                width = Math.round((width * maxDim) / height);
+                height = maxDim;
+              }
+            }
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+            const compressed = canvas.toDataURL('image/jpeg', 0.82);
+            onChange(compressed);
+          };
+          img.src = ev.target.result;
+        };
+        reader.readAsDataURL(file);
+      } else {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          onChange(reader.result);
+        };
+        reader.readAsDataURL(file);
+      }
     }
   };
   
