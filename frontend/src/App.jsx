@@ -1155,10 +1155,10 @@ const DEFAULT_NORMS = [
             <div className="container status-bar-content">
               <div className="status-indicator">
                 <div className="status-dot"></div>
-                <span>ТОО СПЕЦИНЖГЕО // СТАТУС СИСТЕМЫ: АКТИВЕН</span>
+                <span><EditableText id="top_status_title" defaultText="ТОО СПЕЦИНЖГЕО // СТАТУС СИСТЕМЫ: АКТИВЕН" isVisualBuilder={isVisualBuilder} /></span>
               </div>
               <div>
-                <span>БЭКЕНД: GOLANG | ФРОНТЕНД: REACT | ЛИЦЕНЗИЯ: ГСЛ №19004562</span>
+                <span><EditableText id="top_status_info" defaultText="БЭКЕНД: GOLANG | ФРОНТЕНД: REACT | ЛИЦЕНЗИЯ: ГСЛ №19004562" isVisualBuilder={isVisualBuilder} /></span>
               </div>
             </div>
           </div>
@@ -2915,15 +2915,17 @@ const DEFAULT_NORMS = [
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '50px', alignItems: 'flex-start' }}>
               <div>
                 <HudCard style={{ marginBottom: '30px' }}>
-                  <h3 style={{ fontSize: '1.25rem', marginBottom: '20px' }}>Главный офис</h3>
+                  <h3 style={{ fontSize: '1.25rem', marginBottom: '20px' }}>
+                    <EditableText id="contacts_main_office_title" defaultText="Главный офис" isVisualBuilder={isVisualBuilder} />
+                  </h3>
                   <p style={{ color: 'var(--color-text-secondary)', fontSize: '0.95rem', marginBottom: '15px' }}>
-                    📍 {adminData.global?.address || '050000, Республика Казахстан, г. Алматы, проспект Аль-Фараби'}
+                    📍 <EditableText id="contacts_address_val" defaultText={adminData.global?.address || '050000, Республика Казахстан, г. Алматы, проспект Аль-Фараби'} isVisualBuilder={isVisualBuilder} />
                   </p>
                   <p style={{ color: 'var(--color-text-secondary)', fontSize: '0.95rem', marginBottom: '15px' }}>
-                    📞 Телефон: {adminData.global?.phone || '+7 775 218 28 06'}
+                    📞 Телефон: <EditableText id="contacts_phone_val" defaultText={adminData.global?.phone || '+7 775 218 28 06'} isVisualBuilder={isVisualBuilder} />
                   </p>
                   <p style={{ color: 'var(--color-text-secondary)', fontSize: '0.95rem', marginBottom: '15px' }}>
-                    ✉️ Email: {adminData.global?.email || 'info@spengeo.kz'}
+                    ✉️ Email: <EditableText id="contacts_email_val" defaultText={adminData.global?.email || 'info@spengeo.kz'} isVisualBuilder={isVisualBuilder} />
                   </p>
                 </HudCard>
 
@@ -4461,33 +4463,30 @@ const DEFAULT_NORMS = [
             <div>
               <h3 style={{ color: 'var(--color-text-primary)', marginBottom: '15px', display: 'flex', alignItems: 'center', gap: '10px' }}>
                 <img src="/images/logo.png" alt="SpenGeo Logo" style={{ height: '30px', width: 'auto' }} />
-                ТОО «СпецИнжГео»
+                <EditableText id="footer_company_title" defaultText="ТОО «СпецИнжГео»" isVisualBuilder={isVisualBuilder} />
               </h3>
-              <p style={{ fontSize: '0.85rem', color: 'var(--color-text-secondary)', maxWidth: '400px' }}>
-                ТОО «СпецИнжГео» — Лицензированная проектно-изыскательская организация. Геология, геодезия, грунтовая лаборатория во всех регионах Казахстана.
-              </p>
+              <EditableText as="p" id="footer_company_desc" defaultText="ТОО «СпецИнжГео» — Лицензированная проектно-изыскательская организация. Геология, геодезия, грунтовая лаборатория во всех регионах Казахстана." isVisualBuilder={isVisualBuilder} style={{ fontSize: '0.85rem', color: 'var(--color-text-secondary)', maxWidth: '400px' }} />
             </div>
 
             <div>
-              <h4 className="footer-title">Разделы сайта</h4>
+              <h4 className="footer-title"><EditableText id="footer_links_title" defaultText="Разделы сайта" isVisualBuilder={isVisualBuilder} /></h4>
               <ul className="footer-links">
                 <li><a href="/" onClick={(e) => { e.preventDefault(); setActivePage('home'); logEvent('Footer navigation: Home'); }}>Главная</a></li>
                 <li><a href="/about" onClick={(e) => { e.preventDefault(); setActivePage('about'); logEvent('Footer navigation: About'); }}>О компании</a></li>
                 <li><a href="/services" onClick={(e) => { e.preventDefault(); setActivePage('services'); logEvent('Footer navigation: Services'); }}>Услуги изысканий</a></li>
                 <li><a href="/projects" onClick={(e) => { e.preventDefault(); setActivePage('projects'); logEvent('Footer navigation: Projects'); }}>Наши проекты</a></li>
-
               </ul>
             </div>
 
             <div>
-              <h4 className="footer-title">Контакты</h4>
+              <h4 className="footer-title"><EditableText id="footer_contacts_title" defaultText="Контакты" isVisualBuilder={isVisualBuilder} /></h4>
               <ul className="footer-links" style={{ fontSize: '0.85rem' }}>
-                <li>📍 {adminData.global?.address || 'Республика Казахстан, г. Алматы'}</li>
-                <li>📞 {adminData.global?.phone || '+7 775 218 28 06'}</li>
-                <li>✉️ {adminData.global?.email || 'info@spengeo.kz'}</li>
+                <li>📍 <EditableText id="footer_address" defaultText={adminData.global?.address || 'Республика Казахстан, г. Алматы'} isVisualBuilder={isVisualBuilder} /></li>
+                <li>📞 <EditableText id="footer_phone" defaultText={adminData.global?.phone || '+7 775 218 28 06'} isVisualBuilder={isVisualBuilder} /></li>
+                <li>✉️ <EditableText id="footer_email" defaultText={adminData.global?.email || 'info@spengeo.kz'} isVisualBuilder={isVisualBuilder} /></li>
                 <li style={{ marginTop: '15px' }}>Разработано при помощи <a href="https://codix-style-line-production.up.railway.app/" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--color-cyan)', textDecoration: 'none', textShadow: '0 0 10px rgba(14, 165, 233, 0.5)', borderBottom: '1px dashed var(--color-cyan)', paddingBottom: '2px', fontWeight: 600, letterSpacing: '0.5px', transition: 'all 0.3s' }} onMouseOver={(e) => { e.currentTarget.style.color = '#fff'; e.currentTarget.style.textShadow = '0 0 15px rgba(255, 255, 255, 0.8)'; e.currentTarget.style.borderBottom = '1px solid #fff'; }} onMouseOut={(e) => { e.currentTarget.style.color = 'var(--color-cyan)'; e.currentTarget.style.textShadow = '0 0 10px rgba(14, 165, 233, 0.5)'; e.currentTarget.style.borderBottom = '1px dashed var(--color-cyan)'; }}>Codix Style Line</a></li>
               </ul>
-    </div>
+            </div>
 
     <div className="service-bento-arrow">
       <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="2" style={{ width: '100%', height: '100%' }}>
