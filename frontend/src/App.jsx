@@ -2844,7 +2844,7 @@ const DEFAULT_NORMS = [
                             {item.image.includes('youtube.com') || item.image.includes('youtu.be') || item.image.includes('vimeo.com') ? (
                                 <iframe width="100%" height="100%" src={item.image.replace('watch?v=', 'embed/').replace('youtu.be/', 'youtube.com/embed/')} frameBorder="0" allowFullScreen></iframe>
                             ) : item.image.startsWith('data:video/') || item.image.startsWith('blob:') || item.image.toLowerCase().endsWith('.mp4') || item.image.toLowerCase().endsWith('.webm') || activeSubPage === 'videos' ? (
-                                <video src={item.image} controls style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                <video src={item.image} controls playsInline webkit-playsinline="true" preload="auto" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                             ) : (
                                 <img src={item.image} alt={item.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                             )}
@@ -4196,7 +4196,7 @@ const DEFAULT_NORMS = [
                                                 {item[field.key].includes('youtu') ? (
                                                   <iframe src={item[field.key].replace('watch?v=', 'embed/').replace('youtu.be/', 'youtube.com/embed/')} style={{ height: '100%', border: 'none' }} allowFullScreen />
                                                 ) : (
-                                                  <video src={item[field.key]} style={{ height: '100%' }} controls />
+                                                  <video src={item[field.key]} style={{ height: '100%' }} controls playsInline webkit-playsinline="true" preload="auto" />
                                                 )}
                                             </div>
                                         )}
