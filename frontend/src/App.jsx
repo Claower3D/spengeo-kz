@@ -654,13 +654,50 @@ const DEFAULT_NORMS = [
     return false;
   };
 
-  // Sync admin data from backend server on application mount and poll every 10s for real-time sync
+  // Sync admin data from backend server on application mount and set up SSE for real-time updates
   useEffect(() => {
     syncAdminDataFromServer();
-    const interval = setInterval(() => {
-      syncAdminDataFromServer(false);
-    }, 10000);
-    return () => clearInterval(interval);
+    
+    let evtSource = null;
+    let reconnectTimeout = null;
+    
+    const connectSSE = () => {
+      evtSource = new EventSource(getApiUrl('/api/admin/data/events'));
+      
+      evtSource.onmessage = (event) => {
+        try {
+          const serverData = JSON.parse(event.data);
+          if (serverData && typeof serverData === 'object' && Object.keys(serverData).length > 0) {
+            isServerSyncRef.current = true;
+            setAdminData(serverData);
+            localStorage.setItem('spengeo_admin_data', event.data);
+            
+            if (serverData.visualTexts) {
+              Object.entries(serverData.visualTexts).forEach(([k, v]) => {
+                if (v !== undefined && v !== null) {
+                  localStorage.setItem(`vb_${k}`, v);
+                  window.dispatchEvent(new CustomEvent('vb_update', { detail: { id: k, text: v } }));
+                }
+              });
+            }
+          }
+        } catch (e) {
+          console.warn('Failed to parse SSE data:', e);
+        }
+      };
+
+      evtSource.onerror = (err) => {
+        evtSource.close();
+        reconnectTimeout = setTimeout(connectSSE, 5000);
+      };
+    };
+
+    connectSSE();
+
+    return () => {
+      if (evtSource) evtSource.close();
+      if (reconnectTimeout) clearTimeout(reconnectTimeout);
+    };
   }, []);
 
   const saveAdminData = async (customData, silent = false) => {
@@ -3840,21 +3877,13 @@ const DEFAULT_NORMS = [
                                 <input type="file" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.txt,.csv,.zip,.rar" style={{ display: 'none' }} onChange={(e) => {
                                     const file = e.target.files[0];
                                     if (file) {
-                                        if (file.size > 2.5 * 1024 * 1024) {
-                                            alert('Файл слишком большой. Для временного предпросмотра размер урезан.');
-                                            const tempUrl = URL.createObjectURL(file);
+                                        const reader = new FileReader();
+                                        reader.onload = (ev) => {
                                             const newArr = [...adminData.articles];
-                                            newArr[i].image = tempUrl;
+                                            newArr[i].image = ev.target.result;
                                             setAdminData({...adminData, articles: newArr});
-                                        } else {
-                                            const reader = new FileReader();
-                                            reader.onload = (ev) => {
-                                                const newArr = [...adminData.articles];
-                                                newArr[i].image = ev.target.result;
-                                                setAdminData({...adminData, articles: newArr});
-                                            };
-                                            reader.readAsDataURL(file);
-                                        }
+                                        };
+                                        reader.readAsDataURL(file);
                                     }
                                 }} />
                               </label>
@@ -3911,7 +3940,7 @@ const DEFAULT_NORMS = [
                   'blog_norms': { title: 'Нормативные документы', addText: 'Добавить норматив', fields: [{ key: 'title', label: 'Шифр', type: 'text' }, { key: 'desc', label: 'Описание', type: 'text' }] },
                   'blog_news': { title: 'Новости', addText: 'Добавить новость', fields: [{ key: 'title', label: 'Заголовок', type: 'text' }, { key: 'date', label: 'Дата', type: 'text' }, { key: 'desc', label: 'Текст', type: 'textarea' }] },
                   'blog_photos': { title: 'Фото', addText: 'Добавить фото', fields: [{ key: 'title', label: 'Подпись', type: 'text' }, { key: 'image', label: 'Ссылка на фото (URL)', type: 'text' }] },
-                  'blog_video': { title: 'Видео', addText: 'Добавить видео', fields: [{ key: 'title', label: 'Подпись', type: 'text' }, { key: 'image', label: 'Ссылка на видео (URL)', type: 'text' }] },
+                  'blog_videos': { title: 'Видео', addText: 'Добавить видео', fields: [{ key: 'title', label: 'Подпись', type: 'text' }, { key: 'image', label: 'Ссылка на видео (URL)', type: 'text' }] },
 
                   // Equipment
                   'equipment_rigs_0': { title: 'Буровые установки', addText: 'Добавить установку', fields: [{ key: 'name', label: 'Название', type: 'text' }, { key: 'type', label: 'Тип', type: 'text' }, { key: 'maxDepth', label: 'Глубина бурения', type: 'text' }, { key: 'torque', label: 'Крутящий момент', type: 'text' }, { key: 'weight', label: 'Масса установки', type: 'text' }, { key: 'mobility', label: 'Транспортировка', type: 'text' }, { key: 'description', label: 'Описание', type: 'textarea' }, { key: 'soilType', label: 'Типы грунтов', type: 'text' }, { key: 'cadSpecs', label: 'CAD-Спецификации (через запятую)', type: 'text' }] },
@@ -4068,36 +4097,44 @@ const DEFAULT_NORMS = [
                                          newList[idx][field.key] = e.target.value;
                                          setAdminData({ ...adminData, dynamicLists: { ...adminData.dynamicLists, [sectionKey]: newList } });
                                      }} rows={3} style={{ width: '100%', padding: '10px', background: theme === 'white' ? '#fff' : '#000', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', color: theme === 'white' ? '#0f172a' : '#fff', borderRadius: '8px', fontFamily: 'inherit' }} />
-                                  ) : (field.key === 'image' || field.label.toLowerCase().includes('ссылка') || field.label.toLowerCase().includes('скан') || field.label.toLowerCase().includes('фото')) ? (
-                                     <div style={{ display: 'flex', gap: '10px' }}>
-                                        <input placeholder="Вставьте URL или загрузите файл..." value={item[field.key] || ''} onChange={(e) => {
-                                            const newList = [...adminData.dynamicLists[sectionKey]];
-                                            newList[idx][field.key] = e.target.value;
-                                            setAdminData({ ...adminData, dynamicLists: { ...adminData.dynamicLists, [sectionKey]: newList } });
-                                        }} style={{ flex: 1, padding: '10px', background: theme === 'white' ? '#fff' : '#000', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', color: theme === 'white' ? '#0f172a' : '#fff', borderRadius: '8px' }} />
-                                        <label style={{ background: '#3b82f6', color: '#fff', padding: '0 15px', borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: '0.85rem', flexShrink: 0 }}>
+                                  ) : (field.key === 'image' || field.label.toLowerCase().includes('ссылка') || field.label.toLowerCase().includes('скан') || field.label.toLowerCase().includes('фото') || field.label.toLowerCase().includes('видео')) ? (
+                                     <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                                        {item[field.key] && (item[field.key].startsWith('data:image/') || item[field.key].match(/\.(jpeg|jpg|gif|png)$/) || item[field.key].startsWith('blob:')) && (
+                                            <div style={{ height: '100px', width: 'fit-content', borderRadius: '8px', overflow: 'hidden', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', background: theme === 'white' ? '#f8fafc' : '#000' }}>
+                                                <img src={item[field.key]} style={{ height: '100%', objectFit: 'contain' }} alt="Preview" onError={(e) => e.target.style.display = 'none'} />
+                                            </div>
+                                        )}
+                                        {item[field.key] && (item[field.key].startsWith('data:video/') || item[field.key].match(/\.(mp4|webm|ogg)$/i) || item[field.key].includes('youtube.com') || item[field.key].includes('youtu.be')) && (
+                                            <div style={{ height: '100px', width: 'fit-content', borderRadius: '8px', overflow: 'hidden', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', background: theme === 'white' ? '#f8fafc' : '#000' }}>
+                                                {item[field.key].includes('youtu') ? (
+                                                  <iframe src={item[field.key].replace('watch?v=', 'embed/').replace('youtu.be/', 'youtube.com/embed/')} style={{ height: '100%', border: 'none' }} allowFullScreen />
+                                                ) : (
+                                                  <video src={item[field.key]} style={{ height: '100%' }} controls />
+                                                )}
+                                            </div>
+                                        )}
+                                        <div style={{ display: 'flex', gap: '10px' }}>
+                                            <input placeholder="Вставьте URL или загрузите файл..." value={item[field.key]?.length > 200 ? item[field.key].substring(0, 30) + '... (файл загружен)' : (item[field.key] || '')} onChange={(e) => {
+                                                const newList = [...adminData.dynamicLists[sectionKey]];
+                                                newList[idx][field.key] = e.target.value;
+                                                setAdminData({ ...adminData, dynamicLists: { ...adminData.dynamicLists, [sectionKey]: newList } });
+                                            }} style={{ flex: 1, padding: '10px', background: theme === 'white' ? '#fff' : '#000', border: theme === 'white' ? '1px solid #cbd5e1' : '1px solid #444', color: theme === 'white' ? '#0f172a' : '#fff', borderRadius: '8px' }} />
+                                            <label style={{ background: '#3b82f6', color: '#fff', padding: '0 15px', borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: '0.85rem', flexShrink: 0 }}>
                                            С устройства
                                            <input type="file" accept="image/*,video/*,.pdf,.doc,.docx,.xls,.xlsx,.txt,.csv,.zip,.rar" style={{ display: 'none' }} onChange={(e) => {
                                                const file = e.target.files[0];
                                                if (file) {
-                                                   if (file.size > 2.5 * 1024 * 1024) {
-                                                       alert('Файл больше 2.5МБ! Для сохранения в локальной памяти (localStorage) размер урезан. В продакшене файл будет отправлен на сервер.');
-                                                       const tempUrl = URL.createObjectURL(file);
+                                                   const reader = new FileReader();
+                                                   reader.onload = (ev) => {
                                                        const newList = [...adminData.dynamicLists[sectionKey]];
-                                                       newList[idx][field.key] = tempUrl;
+                                                       newList[idx][field.key] = ev.target.result;
                                                        setAdminData({ ...adminData, dynamicLists: { ...adminData.dynamicLists, [sectionKey]: newList } });
-                                                   } else {
-                                                       const reader = new FileReader();
-                                                       reader.onload = (ev) => {
-                                                           const newList = [...adminData.dynamicLists[sectionKey]];
-                                                           newList[idx][field.key] = ev.target.result;
-                                                           setAdminData({ ...adminData, dynamicLists: { ...adminData.dynamicLists, [sectionKey]: newList } });
-                                                       };
-                                                       reader.readAsDataURL(file);
-                                                   }
+                                                   };
+                                                   reader.readAsDataURL(file);
                                                }
                                            }} />
                                         </label>
+                                     </div>
                                      </div>
                                   ) : (
                                      <input value={item[field.key] || ''} onChange={(e) => {

@@ -26,6 +26,9 @@ var (
 	mutex     sync.Mutex
 	dbFile    = "inquiries.json"
 	adminDataFile = "admin_data.json"
+
+	adminClients   = make(map[chan []byte]bool)
+	adminClientsMu sync.Mutex
 )
 
 func main() {
@@ -45,6 +48,7 @@ func main() {
 	// Admin data endpoints
 	mux.HandleFunc("GET /api/admin/data", handleGetAdminData)
 	mux.HandleFunc("POST /api/admin/data", handlePostAdminData)
+	mux.HandleFunc("GET /api/admin/data/events", handleAdminDataEvents)
 
 	// Serve static SPA frontend from dist directory if present
 	if _, err := os.Stat("./dist"); err == nil {
@@ -253,7 +257,58 @@ func handlePostAdminData(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Broadcast update to all connected SSE clients
+	adminClientsMu.Lock()
+	for client := range adminClients {
+		select {
+		case client <- formatted:
+		default:
+			// client is slow or channel is full, skip
+		}
+	}
+	adminClientsMu.Unlock()
+
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte(`{"success":true,"message":"Admin data successfully saved"}`))
+}
+
+// GET /api/admin/data/events Handler (Server-Sent Events)
+func handleAdminDataEvents(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/event-stream")
+	w.Header().Set("Cache-Control", "no-cache")
+	w.Header().Set("Connection", "keep-alive")
+
+	flusher, ok := w.(http.Flusher)
+	if !ok {
+		http.Error(w, "Streaming unsupported!", http.StatusInternalServerError)
+		return
+	}
+
+	ch := make(chan []byte, 10)
+	
+	adminClientsMu.Lock()
+	adminClients[ch] = true
+	adminClientsMu.Unlock()
+
+	defer func() {
+		adminClientsMu.Lock()
+		delete(adminClients, ch)
+		adminClientsMu.Unlock()
+		close(ch)
+	}()
+
+	// Send an initial ping
+	fmt.Fprintf(w, ": connected\n\n")
+	flusher.Flush()
+
+	for {
+		select {
+		case data := <-ch:
+			fmt.Fprintf(w, "data: %s\n\n", data)
+			flusher.Flush()
+		case <-r.Context().Done():
+			return
+		}
+	}
 }
