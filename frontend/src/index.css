@@ -2168,21 +2168,19 @@ input[type="range"]::-webkit-slider-thumb:hover {
     top: 100%;
     left: 0;
     right: 0;
-    background: rgba(3, 5, 9, 0.95);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    background: var(--bg-dark);
+    height: calc(100dvh - 70px);
+    overflow-y: auto;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    padding: 30px 20px;
+    padding: 20px;
     display: flex;
     flex-direction: column;
-    box-shadow: 0 30px 60px rgba(0,0,0,0.7);
     z-index: 9999;
-    animation: slideDown 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation: slideDown 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
 
   :is([data-theme="white"], [data-theme="light-gray"]) .mobile-nav-panel {
-    background: rgba(255, 255, 255, 0.95);
-    box-shadow: 0 30px 60px rgba(0,0,0,0.1);
+    background: #ffffff;
     border-bottom: 1px solid var(--border-color);
   }
 

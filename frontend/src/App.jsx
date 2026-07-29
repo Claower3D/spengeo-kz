@@ -890,6 +890,15 @@ const DEFAULT_NORMS = [
   const [expandedMobileMenus, setExpandedMobileMenus] = useState({});
   const [certModal, setCertModal] = useState(null);
 
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+    return () => { document.body.style.overflow = 'auto'; };
+  }, [isMobileMenuOpen]);
+
   // Visual Builder States
   useEffect(() => {
     // Yandex Metrica
