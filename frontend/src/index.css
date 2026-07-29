@@ -2143,6 +2143,10 @@ input[type="range"]::-webkit-slider-thumb:hover {
   padding: 5px;
 }
 
+.mobile-nav-panel {
+  display: none;
+}
+
 @media (max-width: 1024px) {
   .desktop-nav {
     display: none;
