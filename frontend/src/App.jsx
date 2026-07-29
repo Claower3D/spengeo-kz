@@ -387,6 +387,31 @@ const MENU_STRUCTURE = {
   ]
 };
 
+const getApiUrl = (path) => {
+  if (typeof window !== 'undefined' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+    return path;
+  }
+  return `http://localhost:8083${path}`;
+};
+
+const uploadFileToServer = async (file) => {
+  try {
+    const formData = new FormData();
+    formData.append('file', file);
+    const res = await fetch(getApiUrl('/api/upload'), {
+      method: 'POST',
+      body: formData
+    });
+    if (res.ok) {
+      const data = await res.json();
+      return data.url;
+    }
+    return null;
+  } catch (e) {
+    console.error('File upload failed:', e);
+    return null;
+  }
+};
 
 function ImageUploadField({ value, onChange, theme }) {
   const handleFileChange = (e) => {
@@ -615,32 +640,6 @@ const DEFAULT_NORMS = [
       }));
     };
   }
-
-  const getApiUrl = (path) => {
-    if (typeof window !== 'undefined' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
-      return path;
-    }
-    return `http://localhost:8083${path}`;
-  };
-
-  const uploadFileToServer = async (file) => {
-    try {
-      const formData = new FormData();
-      formData.append('file', file);
-      const res = await fetch(getApiUrl('/api/upload'), {
-        method: 'POST',
-        body: formData
-      });
-      if (res.ok) {
-        const data = await res.json();
-        return data.url;
-      }
-      return null;
-    } catch (e) {
-      console.error('File upload failed:', e);
-      return null;
-    }
-  };
 
   const [isSavingAdmin, setIsSavingAdmin] = useState(false);
   const [adminSaveStatus, setAdminSaveStatus] = useState(null);
