@@ -622,6 +622,7 @@ const DEFAULT_NORMS = [
 
   const [isSavingAdmin, setIsSavingAdmin] = useState(false);
   const [adminSaveStatus, setAdminSaveStatus] = useState(null);
+  const isServerSyncRef = useRef(false);
 
   const syncAdminDataFromServer = async (showNotification = false) => {
     try {
@@ -629,6 +630,7 @@ const DEFAULT_NORMS = [
       if (res.ok) {
         const serverData = await res.json();
         if (serverData && typeof serverData === 'object' && Object.keys(serverData).length > 0) {
+          isServerSyncRef.current = true;
           setAdminData(serverData);
           localStorage.setItem('spengeo_admin_data', JSON.stringify(serverData));
           
@@ -661,7 +663,7 @@ const DEFAULT_NORMS = [
     return () => clearInterval(interval);
   }, []);
 
-  const saveAdminData = async (customData) => {
+  const saveAdminData = async (customData, silent = false) => {
     const visualTexts = { ...(adminData.visualTexts || {}) };
     if (typeof localStorage !== 'undefined') {
       for (let i = 0; i < localStorage.length; i++) {
@@ -749,8 +751,10 @@ const DEFAULT_NORMS = [
       }
     }
 
-    setIsSavingAdmin(true);
-    setAdminSaveStatus(null);
+    if (!silent) {
+      setIsSavingAdmin(true);
+      setAdminSaveStatus(null);
+    }
     
     // Save locally
     localStorage.setItem('spengeo_admin_data', JSON.stringify(dataToSave));
@@ -762,23 +766,43 @@ const DEFAULT_NORMS = [
         body: JSON.stringify(dataToSave)
       });
       if (res.ok) {
-        setAdminSaveStatus({ type: 'success', text: '✅ Все изменения успешно сохранены на сервере и синхронизированы с сайтом!' });
+        if (!silent) {
+          setAdminSaveStatus({ type: 'success', text: '✅ Все изменения успешно сохранены на сервере и синхронизированы с сайтом!' });
+        }
         logEvent('Admin data saved to backend server & synced.', 'success');
       } else {
-        setAdminSaveStatus({ type: 'warning', text: '💾 Сохранено локально в браузере (сервер ответил со статусом ' + res.status + ').' });
+        if (!silent) {
+          setAdminSaveStatus({ type: 'warning', text: '💾 Сохранено локально в браузере (сервер ответил со статусом ' + res.status + ').' });
+        }
       }
     } catch (err) {
-      setAdminSaveStatus({ type: 'warning', text: '💾 Сохранено в локальную память браузера.' });
+      if (!silent) {
+        setAdminSaveStatus({ type: 'warning', text: '💾 Сохранено в локальную память браузера.' });
+      }
     } finally {
-      setIsSavingAdmin(false);
-      setTimeout(() => {
-        setAdminSaveStatus(null);
-      }, 6000);
+      if (!silent) {
+        setIsSavingAdmin(false);
+        setTimeout(() => {
+          setAdminSaveStatus(null);
+        }, 6000);
+      }
     }
   };
 
   useEffect(() => {
     localStorage.setItem('spengeo_admin_data', JSON.stringify(adminData));
+    
+    if (isServerSyncRef.current) {
+      isServerSyncRef.current = false;
+      return; // Skip auto-save if this update was from server sync
+    }
+
+    // Auto-save debounced
+    const timeout = setTimeout(() => {
+      saveAdminData(adminData, true); // silent auto-save
+    }, 1000);
+
+    return () => clearTimeout(timeout);
   }, [adminData]);
 
   useEffect(() => {
