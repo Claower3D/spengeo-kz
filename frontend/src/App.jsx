@@ -1485,7 +1485,7 @@ const DEFAULT_NORMS = [
                                 }
                               }}
                             >
-                              {item.title}
+                              {item.title || item.name}
                             </a>
                           ))}
                         </div>
