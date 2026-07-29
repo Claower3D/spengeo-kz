@@ -4146,3 +4146,14 @@ html { scroll-behavior: smooth; }
 :is([data-theme="white"], [data-theme="light-gray"]) .dropdown-item.active {
   color: var(--color-accent);
 }
+
+/* Responsive Utilities */
+.responsive-grid-2col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+@media (max-width: 900px) {
+  .responsive-grid-2col {
+    grid-template-columns: 1fr !important;
+  }
+}

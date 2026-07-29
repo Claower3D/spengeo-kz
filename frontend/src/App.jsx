@@ -3250,7 +3250,7 @@ const DEFAULT_NORMS = [
               </p>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '50px', alignItems: 'flex-start' }}>
+            <div className="responsive-grid-2col" style={{ gap: '50px', alignItems: 'flex-start' }}>
               <div>
                 <HudCard style={{ marginBottom: '30px' }}>
                   <h3 style={{ fontSize: '1.25rem', marginBottom: '20px' }}>
