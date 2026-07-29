@@ -6,7 +6,7 @@ import {
   Eye, Trash2, Calendar, FileText, Check, Database, 
   RefreshCw, BarChart2, UserCheck, Menu, X, ArrowUpRight,
   Printer, HardDrive, AlertTriangle, Layers, Clock, Settings,
-  BookOpen, FileSpreadsheet, Search, MessageCircle, Bot, ArrowUp, Sun, Moon, Briefcase, Edit3, Folder, Users, Image, Calculator, User, Save, Camera
+  BookOpen, FileSpreadsheet, Search, MessageCircle, Bot, ArrowUp, Sun, Moon, Briefcase, Edit3, Folder, Users, Image, Calculator, User, Save, Camera, ChevronDown
 } from 'lucide-react';
 import { MapContainer, TileLayer, Marker, Popup, Tooltip, useMap, GeoJSON, ZoomControl } from 'react-leaflet';
 import L from 'leaflet';
@@ -887,6 +887,7 @@ const DEFAULT_NORMS = [
   const [language, setLanguage] = useState('ru');
   const t = translations[language];
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [expandedMobileMenus, setExpandedMobileMenus] = useState({});
   const [certModal, setCertModal] = useState(null);
 
   // Visual Builder States
@@ -1400,13 +1401,88 @@ const DEFAULT_NORMS = [
             {isMobileMenuOpen && (
               <div className="mobile-nav-panel">
                 <ul className="mobile-nav-links">
-                  <li><a href="/about" onClick={(e) => { e.preventDefault(); setActivePage('about'); setIsMobileMenuOpen(false); }}>{t.nav.about}</a></li>
-                  <li><a href="/services" onClick={(e) => { e.preventDefault(); setActivePage('services'); setIsMobileMenuOpen(false); }}>{t.nav.services}</a></li>
-                  <li><a href="/projects" onClick={(e) => { e.preventDefault(); setActivePage('projects'); setIsMobileMenuOpen(false); }}>{t.nav.projects}</a></li>
-                  <li><a href="/equipment" onClick={(e) => { e.preventDefault(); setActivePage('equipment'); setIsMobileMenuOpen(false); }}>{t.nav.equipment}</a></li>
-                  <li><a href="/calculator" onClick={(e) => { e.preventDefault(); setActivePage('calculator'); setIsMobileMenuOpen(false); }}>{t.nav.calculator}</a></li>
-                  <li><a href="/contacts" onClick={(e) => { e.preventDefault(); setActivePage('contacts'); setIsMobileMenuOpen(false); }}>{t.nav.contacts}</a></li>
-                  
+                  {(dynamicMenu[language] || dynamicMenu.ru).map((menu, i) => (
+                    <li key={i} className={`mobile-nav-item ${expandedMobileMenus[i] ? 'expanded' : ''}`}>
+                      <div className="mobile-nav-item-header">
+                        <a 
+                          href={menu.action && menu.action.type === 'page' ? (menu.action.val === 'home' ? '/' : `/${menu.action.val}`) : '#'}
+                          className={activePage === menu.page ? 'active' : ''}
+                          onClick={(e) => {
+                            if (menu.action && menu.action.type === 'page') {
+                              e.preventDefault();
+                              setActivePage(menu.action.val);
+                              setActiveSubPage(menu.action.subpage || null);
+                              setIsMobileMenuOpen(false);
+                              setExpandedMobileMenus({});
+                            } else if (menu.items) {
+                              e.preventDefault();
+                              setExpandedMobileMenus(prev => ({ ...prev, [i]: !prev[i] }));
+                            }
+                          }}
+                        >
+                          {menu.title}
+                        </a>
+                        {menu.items && (
+                          <button 
+                            className="mobile-expand-btn"
+                            onClick={(e) => { 
+                              e.stopPropagation(); 
+                              e.preventDefault();
+                              setExpandedMobileMenus(prev => ({ ...prev, [i]: !prev[i] })); 
+                            }}
+                          >
+                            <ChevronDown size={20} className={`expand-icon ${expandedMobileMenus[i] ? 'rotated' : ''}`} />
+                          </button>
+                        )}
+                      </div>
+                      {menu.items && (
+                        <div className={`mobile-submenu ${expandedMobileMenus[i] ? 'open' : ''}`}>
+                          {menu.items.map((item, j) => (
+                            <a 
+                              key={j} 
+                              href={item.action && item.action.type === 'page' ? (item.action.val === 'home' ? '/' : `/${item.action.val}`) : '#'}
+                              className="mobile-submenu-item"
+                              onClick={(e) => {
+                                if (item.action.type === 'page' || item.action.type === 'service' || item.action.type === 'equip') e.preventDefault();
+                                if (item.action.type === 'page') {
+                                  setActivePage(item.action.val);
+                                  setActiveSubPage(item.action.subpage || null);
+                                  setIsMobileMenuOpen(false);
+                                  setExpandedMobileMenus({});
+                                } else if (item.action.type === 'scroll') {
+                                  e.preventDefault();
+                                  setActivePage(item.action.page);
+                                  setTimeout(() => {
+                                    const el = document.getElementById(item.action.target);
+                                    if (el) el.scrollIntoView({ behavior: 'smooth' });
+                                  }, 100);
+                                  setIsMobileMenuOpen(false);
+                                  setExpandedMobileMenus({});
+                                } else if (item.action.type === 'service') {
+                                  setActiveServiceTab(item.action.val);
+                                  setActivePage('services');
+                                  setIsMobileMenuOpen(false);
+                                  setExpandedMobileMenus({});
+                                } else if (item.action.type === 'equip') {
+                                  setEquipCategory(item.action.cat);
+                                  if (item.action.cat === 'rigs') {
+                                    if (typeof setSelectedRig === 'function') setSelectedRig(item.action.idx);
+                                  } else if (item.action.cat === 'tools') {
+                                    if (typeof setSelectedTool === 'function') setSelectedTool(item.action.idx);
+                                  }
+                                  setActivePage('equipment');
+                                  setIsMobileMenuOpen(false);
+                                  setExpandedMobileMenus({});
+                                }
+                              }}
+                            >
+                              {item.title}
+                            </a>
+                          ))}
+                        </div>
+                      )}
+                    </li>
+                  ))}
                 </ul>
                 <div className="mobile-nav-footer">
                   
@@ -2965,7 +3041,7 @@ const DEFAULT_NORMS = [
               </p>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1.1fr 0.9fr', gap: '40px', alignItems: 'flex-start', marginBottom: '60px' }}>
+            <div className="calc-layout-grid" style={{ gap: '40px', alignItems: 'flex-start', marginBottom: '60px' }}>
               <HudCard>
                 <h3 style={{ marginBottom: '25px', fontSize: '1.2rem' }}>Параметры скважин</h3>
                 
@@ -3097,7 +3173,8 @@ const DEFAULT_NORMS = [
                     На основании предоставленных данных по площади застройки ({buildArea} м²), глубине выработок ({drillDepth} м) и литологическому строению грунтов ({selectedSoilConfig.name}), направляем смету изыскательских работ:
                   </p>
 
-                  <table style={{ width: '100%', fontSize: '0.75rem', borderCollapse: 'collapse', marginBottom: '20px' }}>
+                  <div style={{ overflowX: 'auto', width: '100%', paddingBottom: '10px', marginBottom: '20px' }}>
+                    <table style={{ width: '100%', minWidth: '450px', fontSize: '0.75rem', borderCollapse: 'collapse' }}>
                     <thead>
                       <tr style={{ borderBottom: '1.5px solid #0f172a', textAlign: 'left', fontWeight: 'bold' }}>
                         <th style={{ paddingBottom: '8px' }}>Наименование работ</th>
@@ -3132,7 +3209,8 @@ const DEFAULT_NORMS = [
                         </td>
                       </tr>
                     </tbody>
-                  </table>
+                    </table>
+                  </div>
 
                   <div style={{ fontSize: '0.7rem', color: '#64748b', lineHeight: '1.4', borderTop: '1px solid #cbd5e1', paddingTop: '15px' }}>
                     * Данный расчет является предварительным. Точный расчет сметы производится после согласования технического задания (ТЗ) с проектной организацией.
