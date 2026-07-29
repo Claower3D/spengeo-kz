@@ -734,6 +734,10 @@ const DEFAULT_NORMS = [
     }
     const dataToSave = customData || { ...adminData, visualTexts };
 
+    if (!dataToSave.visualTexts) {
+      dataToSave.visualTexts = {};
+    }
+
     // Synchronize Global Settings (address, phone, email) to Visual Texts
     if (dataToSave.global) {
       if (dataToSave.global.address) {
