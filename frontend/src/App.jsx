@@ -415,17 +415,20 @@ function ImageUploadField({ value, onChange, theme }) {
             const ctx = canvas.getContext('2d');
             ctx.drawImage(img, 0, 0, width, height);
             const compressed = canvas.toDataURL('image/jpeg', 0.82);
-            onChange(compressed);
+            
+            fetch(compressed).then(res => res.blob()).then(blob => {
+              uploadFileToServer(new File([blob], file.name, { type: 'image/jpeg' })).then(url => {
+                if (url) onChange(url);
+              });
+            });
           };
           img.src = ev.target.result;
         };
         reader.readAsDataURL(file);
       } else {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          onChange(reader.result);
-        };
-        reader.readAsDataURL(file);
+        uploadFileToServer(file).then(url => {
+          if (url) onChange(url);
+        });
       }
     }
   };
@@ -618,6 +621,25 @@ const DEFAULT_NORMS = [
       return path;
     }
     return `http://localhost:8083${path}`;
+  };
+
+  const uploadFileToServer = async (file) => {
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      const res = await fetch(getApiUrl('/api/upload'), {
+        method: 'POST',
+        body: formData
+      });
+      if (res.ok) {
+        const data = await res.json();
+        return data.url;
+      }
+      return null;
+    } catch (e) {
+      console.error('File upload failed:', e);
+      return null;
+    }
   };
 
   const [isSavingAdmin, setIsSavingAdmin] = useState(false);
@@ -2225,8 +2247,6 @@ const DEFAULT_NORMS = [
                           onChange={(e) => {
                             const file = e.target.files[0];
                             if (file) {
-                              const reader = new FileReader();
-                              reader.onload = (ev) => {
                                 const img = new window.Image();
                                 img.onload = () => {
                                   const canvas = document.createElement('canvas');
@@ -2247,19 +2267,24 @@ const DEFAULT_NORMS = [
                                   const ctx = canvas.getContext('2d');
                                   ctx.drawImage(img, 0, 0, width, height);
                                   const compressed = canvas.toDataURL('image/jpeg', 0.82);
-                                  setAdminData(prev => {
-                                    const newTeam = [...(prev.team || [])];
-                                    if (newTeam[0]) newTeam[0] = { ...newTeam[0], img: compressed };
-                                    return {
-                                      ...prev,
-                                      media: { ...(prev.media || {}), directorImage: compressed },
-                                      team: newTeam
-                                    };
+                                  
+                                  fetch(compressed).then(res => res.blob()).then(blob => {
+                                    uploadFileToServer(new File([blob], file.name, { type: 'image/jpeg' })).then(url => {
+                                      if (url) {
+                                        setAdminData(prev => {
+                                          const newTeam = [...(prev.team || [])];
+                                          if (newTeam[0]) newTeam[0] = { ...newTeam[0], img: url };
+                                          return {
+                                            ...prev,
+                                            media: { ...(prev.media || {}), directorImage: url },
+                                            team: newTeam
+                                          };
+                                        });
+                                      }
+                                    });
                                   });
                                 };
-                                img.src = ev.target.result;
-                              };
-                              reader.readAsDataURL(file);
+                                img.src = URL.createObjectURL(file);
                             }
                           }}
                         />
@@ -2455,10 +2480,17 @@ const DEFAULT_NORMS = [
                                     const ctx = canvas.getContext('2d');
                                     ctx.drawImage(img, 0, 0, width, height);
                                     const compressed = canvas.toDataURL('image/jpeg', 0.82);
-                                    setAdminData(prev => ({
-                                      ...prev,
-                                      media: { ...(prev.media || {}), historyDirectorImage: compressed }
-                                    }));
+                                    
+                                    fetch(compressed).then(res => res.blob()).then(blob => {
+                                      uploadFileToServer(new File([blob], file.name, { type: 'image/jpeg' })).then(url => {
+                                        if (url) {
+                                          setAdminData(prev => ({
+                                            ...prev,
+                                            media: { ...(prev.media || {}), historyDirectorImage: url }
+                                          }));
+                                        }
+                                      });
+                                    });
                                   };
                                   img.src = ev.target.result;
                                 };
@@ -3964,13 +3996,13 @@ const DEFAULT_NORMS = [
                                 <input type="file" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.txt,.csv,.zip,.rar" style={{ display: 'none' }} onChange={(e) => {
                                     const file = e.target.files[0];
                                     if (file) {
-                                        const reader = new FileReader();
-                                        reader.onload = (ev) => {
-                                            const newArr = [...adminData.articles];
-                                            newArr[i].image = ev.target.result;
-                                            setAdminData({...adminData, articles: newArr});
-                                        };
-                                        reader.readAsDataURL(file);
+                                        uploadFileToServer(file).then(url => {
+                                            if (url) {
+                                                const newArr = [...adminData.articles];
+                                                newArr[i].image = url;
+                                                setAdminData({...adminData, articles: newArr});
+                                            }
+                                        });
                                     }
                                 }} />
                               </label>
@@ -4211,13 +4243,13 @@ const DEFAULT_NORMS = [
                                            <input type="file" accept="image/*,video/*,.pdf,.doc,.docx,.xls,.xlsx,.txt,.csv,.zip,.rar" style={{ display: 'none' }} onChange={(e) => {
                                                const file = e.target.files[0];
                                                if (file) {
-                                                   const reader = new FileReader();
-                                                   reader.onload = (ev) => {
-                                                       const newList = [...adminData.dynamicLists[sectionKey]];
-                                                       newList[idx][field.key] = ev.target.result;
-                                                       setAdminData({ ...adminData, dynamicLists: { ...adminData.dynamicLists, [sectionKey]: newList } });
-                                                   };
-                                                   reader.readAsDataURL(file);
+                                                   uploadFileToServer(file).then(url => {
+                                                       if (url) {
+                                                           const newList = [...adminData.dynamicLists[sectionKey]];
+                                                           newList[idx][field.key] = url;
+                                                           setAdminData({ ...adminData, dynamicLists: { ...adminData.dynamicLists, [sectionKey]: newList } });
+                                                       }
+                                                   });
                                                }
                                            }} />
                                         </label>

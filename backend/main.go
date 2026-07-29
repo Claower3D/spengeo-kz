@@ -6,6 +6,8 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"io"
+	"path/filepath"
 	"strconv"
 	"sync"
 	"time"
@@ -49,6 +51,13 @@ func main() {
 	mux.HandleFunc("GET /api/admin/data", handleGetAdminData)
 	mux.HandleFunc("POST /api/admin/data", handlePostAdminData)
 	mux.HandleFunc("GET /api/admin/data/events", handleAdminDataEvents)
+
+	// File upload endpoint
+	mux.HandleFunc("POST /api/upload", handleFileUpload)
+
+	// Serve uploads directory
+	os.MkdirAll("./uploads", 0755)
+	mux.Handle("/uploads/", http.StripPrefix("/uploads/", http.FileServer(http.Dir("./uploads"))))
 
 	// Serve static SPA frontend from dist directory if present
 	if _, err := os.Stat("./dist"); err == nil {
@@ -311,4 +320,44 @@ func handleAdminDataEvents(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	}
+}
+
+// POST /api/upload Handler
+func handleFileUpload(w http.ResponseWriter, r *http.Request) {
+	// Parse the multipart form, 500 MB max memory
+	err := r.ParseMultipartForm(500 << 20)
+	if err != nil {
+		http.Error(w, "Bad Request: unable to parse form", http.StatusBadRequest)
+		return
+	}
+
+	file, header, err := r.FormFile("file")
+	if err != nil {
+		http.Error(w, "Bad Request: missing file", http.StatusBadRequest)
+		return
+	}
+	defer file.Close()
+
+	// Create a unique filename
+	ext := filepath.Ext(header.Filename)
+	filename := fmt.Sprintf("%d%s", time.Now().UnixNano(), ext)
+	filePath := filepath.Join("uploads", filename)
+
+	// Create the file on disk
+	dst, err := os.Create(filePath)
+	if err != nil {
+		http.Error(w, "Internal Server Error: unable to save file", http.StatusInternalServerError)
+		return
+	}
+	defer dst.Close()
+
+	// Copy the uploaded file to the destination
+	if _, err := io.Copy(dst, file); err != nil {
+		http.Error(w, "Internal Server Error: failed to write file", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte(fmt.Sprintf(`{"url": "/uploads/%s"}`, filename)))
 }
