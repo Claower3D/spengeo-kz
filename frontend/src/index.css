@@ -4156,8 +4156,11 @@ html { scroll-behavior: smooth; }
   display: grid;
   grid-template-columns: 1fr 1fr;
 }
-@media (max-width: 900px) {
+@media (max-width: 1024px) {
   .responsive-grid-2col {
+    grid-template-columns: 1fr !important;
+  }
+  .equip-grid {
     grid-template-columns: 1fr !important;
   }
 }
