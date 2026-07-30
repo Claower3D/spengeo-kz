@@ -210,6 +210,8 @@ html, body {
   isolation: isolate;
   min-height: 100vh;
   position: relative;
+  overflow-x: hidden;
+  width: 100%;
 }
 
 ::-webkit-scrollbar {
@@ -267,12 +269,9 @@ h1, h2, h3, h4 {
 /* Geological Static Parallax Story Backgrounds */
 .geological-layer {
   position: relative;
-  z-index: 1; /* Creates a stacking context */
+  z-index: 1;
   width: 100vw;
-  left: 50%;
-  right: 50%;
-  margin-left: -50vw;
-  margin-right: -50vw;
+  margin-left: calc(-50vw + 50%);
   background-attachment: fixed;
   background-size: cover;
   background-position: center;
@@ -1487,10 +1486,8 @@ input[type="range"]::-webkit-slider-thumb:hover {
 
 .hero-section.full-width-bleed {
   width: 100vw;
-  left: 50%;
-  right: 50%;
-  margin-left: -50vw;
-  margin-right: -50vw;
+  margin-left: calc(-50vw + 50%);
+  position: relative;
   border-radius: 0;
   border-left: none;
   border-right: none;
