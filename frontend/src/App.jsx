@@ -394,6 +394,17 @@ const getApiUrl = (path) => {
   return `http://localhost:8083${path}`;
 };
 
+const getMediaUrl = (url) => {
+  if (!url) return '';
+  if (url.startsWith('data:') || url.startsWith('http://') || url.startsWith('https://')) {
+    return url;
+  }
+  if (url.startsWith('/uploads/')) {
+    return getApiUrl(url);
+  }
+  return url;
+};
+
 const uploadFileToServer = async (file) => {
   try {
     const formData = new FormData();
@@ -443,8 +454,16 @@ function ImageUploadField({ value, onChange, theme }) {
             
             fetch(compressed).then(res => res.blob()).then(blob => {
               uploadFileToServer(new File([blob], file.name, { type: 'image/jpeg' })).then(url => {
-                if (url) onChange(url);
+                if (url) {
+                  onChange(url);
+                } else {
+                  onChange(compressed);
+                }
+              }).catch(() => {
+                onChange(compressed);
               });
+            }).catch(() => {
+              onChange(compressed);
             });
           };
           img.src = ev.target.result;
@@ -452,17 +471,20 @@ function ImageUploadField({ value, onChange, theme }) {
         reader.readAsDataURL(file);
       } else {
         uploadFileToServer(file).then(url => {
-          if (url) onChange(url);
+          if (url) {
+            onChange(url);
+          }
         });
       }
     }
   };
   
   const isLight = theme === 'white';
+  const previewUrl = getMediaUrl(value);
 
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: '10px', background: isLight ? '#fff' : '#000', padding: '6px', border: isLight ? '1px solid #cbd5e1' : '1px solid #444', borderRadius: '8px', flex: 1, boxShadow: isLight ? 'inset 0 1px 2px rgba(0,0,0,0.05)' : 'none' }}>
-      {value && <img src={value} style={{ width: '32px', height: '32px', objectFit: 'cover', borderRadius: '4px', border: isLight ? '1px solid #e2e8f0' : '1px solid #222' }} alt="" onError={(e) => { e.target.style.display = 'none'; }} onLoad={(e) => { e.target.style.display = 'block'; }} />}
+      {previewUrl && <img src={previewUrl} style={{ width: '32px', height: '32px', objectFit: 'cover', borderRadius: '4px', border: isLight ? '1px solid #e2e8f0' : '1px solid #222' }} alt="" onError={(e) => { e.target.style.display = 'none'; }} onLoad={(e) => { e.target.style.display = 'block'; }} />}
       <label style={{ background: isLight ? '#eff6ff' : 'rgba(59, 130, 246, 0.2)', color: '#3b82f6', border: isLight ? '1px solid #bfdbfe' : '1px solid rgba(59, 130, 246, 0.5)', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer', fontSize: '0.8rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap', transition: 'all 0.2s' }}>
         <Folder size={14} /> Выбрать
         <input type="file" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.txt,.csv,.zip,.rar" onChange={handleFileChange} style={{ display: 'none' }} />
@@ -791,15 +813,23 @@ const DEFAULT_NORMS = [
       }
     }
 
-    // Synchronize Founder / CEO fields across team[0], media.directorImage, and visualTexts
-    if (dataToSave.visualTexts) {
-      const fName = dataToSave.visualTexts['f_name'];
-      const fPatr = dataToSave.visualTexts['f_patr'];
-      const fRole = dataToSave.visualTexts['f_role'];
-      const fQuote = dataToSave.visualTexts['f_quote'];
+    // Synchronize Founder / CEO fields across team[0], media.directorImage, media.historyDirectorImage, and visualTexts
+    if (dataToSave.visualTexts || dataToSave.media) {
+      const fName = dataToSave.visualTexts?.['f_name'];
+      const fPatr = dataToSave.visualTexts?.['f_patr'];
+      const fRole = dataToSave.visualTexts?.['f_role'];
+      const fQuote = dataToSave.visualTexts?.['f_quote'];
       const fullName = fName ? (fPatr ? `${fName} ${fPatr}` : fName) : undefined;
 
-      if (fullName || fRole || fQuote || dataToSave.media?.directorImage) {
+      const founderImg = dataToSave.media?.directorImage || dataToSave.media?.historyDirectorImage || dataToSave.team?.[0]?.img;
+
+      if (founderImg) {
+        dataToSave.media = dataToSave.media || {};
+        dataToSave.media.directorImage = founderImg;
+        dataToSave.media.historyDirectorImage = founderImg;
+      }
+
+      if (fullName || fRole || fQuote || founderImg) {
         dataToSave.team = dataToSave.team || [];
         if (dataToSave.team[0]) {
           dataToSave.team[0] = {
@@ -807,7 +837,7 @@ const DEFAULT_NORMS = [
             ...(fullName ? { name: fullName } : {}),
             ...(fRole ? { badge: fRole, role: fRole } : {}),
             ...(fQuote ? { desc: fQuote } : {}),
-            ...(dataToSave.media?.directorImage ? { img: dataToSave.media.directorImage } : {})
+            ...(founderImg ? { img: founderImg } : {})
           };
         }
       }
@@ -1897,7 +1927,7 @@ const DEFAULT_NORMS = [
   {/* 1. Geology - Wide */}
   <div className="service-bento-card wide" onClick={() => {setActiveServiceTab('geology'); setActivePage('services');}}>
     <div className="service-bento-bg">
-      <img src={adminData.services.find(s => s.id === 'geology')?.image || "/images/services/geology.jpg"} onError={(e) => { e.target.src='/images/hero.png'; e.target.style.filter='brightness(0.7)'; }} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center right' }} alt="Service" />
+      <img src={getMediaUrl(adminData.services.find(s => s.id === 'geology')?.image || "/images/services/geology.jpg")} onError={(e) => { e.target.src='/images/hero.png'; e.target.style.filter='brightness(0.7)'; }} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center right' }} alt="Service" />
     </div><div className="service-bento-overlay"></div>
     <div className="service-bento-content">
       <h3 className="service-bento-title">Инженерно-геологические изыскания</h3>
@@ -1921,7 +1951,7 @@ const DEFAULT_NORMS = [
   {/* 2. Geodesy - Normal */}
   <div className="service-bento-card" onClick={() => {setActiveServiceTab('geodesy'); setActivePage('services');}}>
     <div className="service-bento-bg">
-      <img src={adminData.services.find(s => s.id === 'geodesy')?.image || "/images/services/geodesy.jpg"} onError={(e) => { e.target.src='/images/hero.png'; e.target.style.filter='brightness(0.7)'; }} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center right' }} alt="Service" />
+      <img src={getMediaUrl(adminData.services.find(s => s.id === 'geodesy')?.image || "/images/services/geodesy.jpg")} onError={(e) => { e.target.src='/images/hero.png'; e.target.style.filter='brightness(0.7)'; }} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center right' }} alt="Service" />
     </div><div className="service-bento-overlay"></div>
     <div className="service-bento-content">
       <h3 className="service-bento-title">Геодезия и топосъемка</h3>
@@ -1944,7 +1974,7 @@ const DEFAULT_NORMS = [
   {/* 3. CPT - Normal */}
   <div className="service-bento-card" onClick={() => {setActiveServiceTab('cpt'); setActivePage('services');}}>
     <div className="service-bento-bg">
-      <img src={adminData.services.find(s => s.id === 'cpt')?.image || "/images/services/cpt.jpg"} onError={(e) => { e.target.src='/images/hero.png'; e.target.style.filter='brightness(0.7)'; }} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center right' }} alt="Service" />
+      <img src={getMediaUrl(adminData.services.find(s => s.id === 'cpt')?.image || "/images/services/cpt.jpg")} onError={(e) => { e.target.src='/images/hero.png'; e.target.style.filter='brightness(0.7)'; }} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center right' }} alt="Service" />
     </div><div className="service-bento-overlay"></div>
     <div className="service-bento-content">
       <h3 className="service-bento-title">CPT Зондирование</h3>
@@ -1967,7 +1997,7 @@ const DEFAULT_NORMS = [
   {/* 4. Piles - Normal */}
   <div className="service-bento-card" onClick={() => {setActiveServiceTab('piles'); setActivePage('services');}}>
     <div className="service-bento-bg">
-      <img src={adminData.services.find(s => s.id === 'piles')?.image || "/images/services/piles.jpg"} onError={(e) => { e.target.src='/images/hero.png'; e.target.style.filter='brightness(0.7)'; }} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center right' }} alt="Service" />
+      <img src={getMediaUrl(adminData.services.find(s => s.id === 'piles')?.image || "/images/services/piles.jpg")} onError={(e) => { e.target.src='/images/hero.png'; e.target.style.filter='brightness(0.7)'; }} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center right' }} alt="Service" />
     </div><div className="service-bento-overlay"></div>
     <div className="service-bento-content">
       <h3 className="service-bento-title">Испытания свай</h3>
@@ -1990,7 +2020,7 @@ const DEFAULT_NORMS = [
   {/* 5. Plates - Normal */}
   <div className="service-bento-card" onClick={() => {setActiveServiceTab('plates'); setActivePage('services');}}>
     <div className="service-bento-bg">
-      <img src={adminData.services.find(s => s.id === 'plates')?.image || "/images/services/plates.jpg"} onError={(e) => { e.target.src='/images/hero.png'; e.target.style.filter='brightness(0.7)'; }} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center right' }} alt="Service" />
+      <img src={getMediaUrl(adminData.services.find(s => s.id === 'plates')?.image || "/images/services/plates.jpg")} onError={(e) => { e.target.src='/images/hero.png'; e.target.style.filter='brightness(0.7)'; }} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center right' }} alt="Service" />
     </div><div className="service-bento-overlay"></div>
     <div className="service-bento-content">
       <h3 className="service-bento-title">Штамповые испытания</h3>
@@ -2013,7 +2043,7 @@ const DEFAULT_NORMS = [
   {/* 6. Laboratory - Full Width */}
   <div className="service-bento-card full" onClick={() => {setActiveServiceTab('laboratory'); setActivePage('services');}}>
     <div className="service-bento-bg">
-      <img src={adminData.services.find(s => s.id === 'laboratory')?.image || "/images/services/laboratory.jpg"} onError={(e) => { e.target.src='/images/hero.png'; e.target.style.filter='brightness(0.7)'; }} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center right' }} alt="Service" />
+      <img src={getMediaUrl(adminData.services.find(s => s.id === 'laboratory')?.image || "/images/services/laboratory.jpg")} onError={(e) => { e.target.src='/images/hero.png'; e.target.style.filter='brightness(0.7)'; }} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center right' }} alt="Service" />
     </div><div className="service-bento-overlay"></div>
     <div className="service-bento-content">
       <h3 className="service-bento-title">Лаборатория грунтов</h3>
@@ -2358,7 +2388,7 @@ const DEFAULT_NORMS = [
               <>
               <div className="glow-card-premium" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '0', alignItems: 'stretch', padding: '0', overflow: 'hidden', position: 'relative', zIndex: 2, background: 'var(--bg-card)', border: '1px solid var(--border-color)', boxShadow: '0 0 50px rgba(0,0,0,0.1)', marginBottom: '60px' }}>
                   <div style={{ position: 'relative', minHeight: '500px', overflow: 'hidden' }}>
-                    <img src={adminData.media?.historyDirectorImage || '/images/director.png'} alt="Руководитель" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', filter: 'contrast(1.1)' }} />
+                    <img src={getMediaUrl(adminData.media?.directorImage || adminData.media?.historyDirectorImage || adminData.team?.[0]?.img || '/images/director.png')} alt="Руководитель" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', filter: 'contrast(1.1)' }} />
                     {isVisualBuilder && (
                       <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 10 }}>
                         <label style={{ background: 'var(--color-cyan)', color: '#000', padding: '12px 24px', borderRadius: '30px', fontWeight: 'bold', cursor: 'pointer', display: 'flex', gap: '8px', alignItems: 'center', boxShadow: '0 4px 20px rgba(6, 182, 212, 0.6)' }}>
@@ -2395,13 +2425,25 @@ const DEFAULT_NORMS = [
                                     
                                     fetch(compressed).then(res => res.blob()).then(blob => {
                                       uploadFileToServer(new File([blob], file.name, { type: 'image/jpeg' })).then(url => {
-                                        if (url) {
-                                          setAdminData(prev => ({
-                                            ...prev,
-                                            media: { ...(prev.media || {}), historyDirectorImage: url }
-                                          }));
-                                        }
+                                        const finalUrl = url || compressed;
+                                        setAdminData(prev => ({
+                                          ...prev,
+                                          media: { ...(prev.media || {}), historyDirectorImage: finalUrl, directorImage: finalUrl },
+                                          team: (prev.team || []).map((t, idx) => idx === 0 ? { ...t, img: finalUrl } : t)
+                                        }));
+                                      }).catch(() => {
+                                        setAdminData(prev => ({
+                                          ...prev,
+                                          media: { ...(prev.media || {}), historyDirectorImage: compressed, directorImage: compressed },
+                                          team: (prev.team || []).map((t, idx) => idx === 0 ? { ...t, img: compressed } : t)
+                                        }));
                                       });
+                                    }).catch(() => {
+                                      setAdminData(prev => ({
+                                        ...prev,
+                                        media: { ...(prev.media || {}), historyDirectorImage: compressed, directorImage: compressed },
+                                        team: (prev.team || []).map((t, idx) => idx === 0 ? { ...t, img: compressed } : t)
+                                      }));
                                     });
                                   };
                                   img.src = ev.target.result;
@@ -2449,7 +2491,7 @@ const DEFAULT_NORMS = [
                     <div key={i} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                       <div style={{ position: 'relative', height: '400px', borderRadius: '12px', overflow: 'hidden', border: '1px solid var(--color-border)', boxShadow: '0 10px 30px rgba(0,0,0,0.1)' }}>
                         <div className="hud-bracket hud-bracket-tl"></div><div className="hud-bracket hud-bracket-tr"></div><div className="hud-bracket hud-bracket-bl"></div><div className="hud-bracket hud-bracket-br"></div>
-                        <img src={member.img || member.image || '/images/director.png'} alt={member.name} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }} />
+                        <img src={getMediaUrl(member.img || member.image || '/images/director.png')} alt={member.name} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }} />
                         <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '100px', background: 'linear-gradient(to top, var(--color-bg) 0%, transparent 100%)' }}></div>
                       </div>
                       <div>
@@ -2696,7 +2738,7 @@ const DEFAULT_NORMS = [
                     const finalImg = proj.image || fallbackImg;
                     return (
                     <HudCard key={proj.id} style={{ padding: '25px', display: 'flex', flexDirection: 'column' }}>
-                      <img src={finalImg} alt={proj.name} style={{ width: '100%', height: '180px', objectFit: 'cover', borderRadius: '8px', marginBottom: '15px' }} />
+                      <img src={getMediaUrl(finalImg)} alt={proj.name} style={{ width: '100%', height: '180px', objectFit: 'cover', borderRadius: '8px', marginBottom: '15px' }} />
                       <span className="spec-label" style={{ color: 'var(--color-accent)' }}>{proj.client}</span>
                       <h3 style={{ fontSize: '1.2rem', marginBlock: '8px 12px', color: 'var(--color-text-primary)' }}>{proj.name}</h3>
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', fontSize: '0.85rem', color: 'var(--color-text-secondary)' }}>
@@ -4331,14 +4373,14 @@ const DEFAULT_NORMS = [
                     <div>
                       <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 'bold', color: theme === 'white' ? '#0f172a' : '#fff', marginBottom: '8px' }}>Фотография Основателя / Директора</label>
                       <ImageUploadField 
-                        value={adminData.media?.directorImage || adminData.team?.[0]?.img || '/images/director.png'} 
+                        value={adminData.media?.directorImage || adminData.media?.historyDirectorImage || adminData.team?.[0]?.img || '/images/director.png'} 
                         onChange={v => {
                           setAdminData(prev => {
                             const newTeam = [...(prev.team || [])];
                             if (newTeam[0]) newTeam[0] = { ...newTeam[0], img: v };
                             return {
                               ...prev,
-                              media: { ...(prev.media || {}), directorImage: v },
+                              media: { ...(prev.media || {}), directorImage: v, historyDirectorImage: v },
                               team: newTeam
                             };
                           });
