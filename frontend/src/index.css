@@ -4144,3 +4144,8 @@ html { scroll-behavior: smooth; }
     grid-template-columns: 1fr !important;
   }
 }
+
+/* Disable all text glow / text-shadow effects across the site */
+*, *::before, *::after {
+  text-shadow: none !important;
+}
