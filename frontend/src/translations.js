@@ -11,39 +11,39 @@ export const translations = {
       knowledge: 'База знаний'
     },
     hero: {
-      subtitle: 'ТОО «СпецИнжГео» // Лицензия №19004562',
+      subtitle: 'ТОО «СпецИнжГео» — Лицензия №19004562',
       title: 'Инженерные изыскания на прочном основании',
       desc: 'Проводим полный комплекс полевых геологических, геодезических изысканий, статического зондирования CPT и лабораторных тестов по всей территории Республики Казахстан.',
       btnCalc: 'Калькулятор сметы и КП',
       btnServices: 'Наши услуги',
       slides: [
         {
-          subtitle: 'ТОО «СпецИнжГео» // ЛАБОРАТОРИЯ & БУРЕНИЕ',
+          subtitle: 'ТОО «СпецИнжГео» — Лаборатория и Бурение',
           title: 'Инженерно-геологические изыскания',
           desc: 'Собственный буровой флот Bauer и аккредитованная грунтовая лаборатория. Исследуем грунты на глубину до 80 метров для любых типов сооружений.',
           badge: 'ГЕОЛОГИЯ',
-          techText: 'DRILL_SYS_OK // BAUER_BG'
+          techText: 'Буровая техника Bauer & ПБУ'
         },
         {
-          subtitle: 'ТОО «СпецИнжГео» // ТАХЕОМЕТРЫ & GNSS',
+          subtitle: 'ТОО «СпецИнжГео» — Тахеометры & GNSS',
           title: 'Высокоточная геодезия и топография',
           desc: 'Создание геоподосновы, топографическая съемка масштаба 1:500, фасадная съемка и 3D-моделирование рельефа с миллиметровой точностью.',
           badge: 'ГЕОДЕЗИЯ',
-          techText: 'GNSS_RTK_ACTIVE // GPS_OK'
+          techText: 'Топогеодезия & GNSS RTK'
         },
         {
-          subtitle: 'ТОО «СпецИнжГео» // СТАТИЧЕСКОЕ ЗОНДИРОВАНИЕ CPT',
+          subtitle: 'ТОО «СпецИнжГео» — Статическое зондирование CPT',
           title: 'Испытания грунтов методом CPT',
           desc: 'Получение непрерывных профилей прочности грунта в реальном времени. Самый надежный метод определения несущей способности свай.',
-          badge: 'CPT_TESTING',
-          techText: 'CPT_SENSOR_ON // 200_KN'
+          badge: 'CPT ЗОНДИРОВАНИЕ',
+          techText: 'Зондирование CPT до 200 кН'
         },
         {
-          subtitle: 'ТОО «СпецИнжГео» // РГП ГОСЭКСПЕРТИЗА',
+          subtitle: 'ТОО «СпецИнжГео» — РГП Госэкспертиза',
           title: 'Гарантия прохождения Госэкспертизы',
           desc: 'Полное техническое сопровождение проектов. Сопровождаем технические отчеты до получения положительного заключения экспертов.',
           badge: 'ЭКСПЕРТИЗА',
-          techText: 'EXPERT_SYS_CONNECTED // 200_OK'
+          techText: 'Сопровождение Госэкспертизы'
         }
       ]
     },
@@ -106,39 +106,39 @@ export const translations = {
       knowledge: 'Knowledge Base'
     },
     hero: {
-      subtitle: 'SpenGeo LLP // License No. 19004562',
+      subtitle: 'SpenGeo LLP — License No. 19004562',
       title: 'Engineering Surveys on a Solid Foundation',
       desc: 'We conduct a full range of field geological, geodetic surveys, CPT static sounding, and laboratory tests throughout the Republic of Kazakhstan.',
       btnCalc: 'Estimate Calculator & Proposal',
       btnServices: 'Our Services',
       slides: [
         {
-          subtitle: 'SpenGeo LLP // LABORATORY & DRILLING',
+          subtitle: 'SpenGeo LLP — Laboratory & Drilling',
           title: 'Engineering Geological Surveys',
           desc: 'Own Bauer drilling fleet and accredited soil laboratory. We investigate soils up to 80 meters deep for all types of structures.',
           badge: 'GEOLOGY',
-          techText: 'DRILL_SYS_OK // BAUER_BG'
+          techText: 'Bauer & PBU Drilling Systems'
         },
         {
-          subtitle: 'SpenGeo LLP // TACHEOMETERS & GNSS',
+          subtitle: 'SpenGeo LLP — Tacheometers & GNSS',
           title: 'High-Precision Geodesy & Topography',
           desc: 'Creation of geobasis, 1:500 scale topographic survey, facade survey, and 3D terrain modeling with millimeter accuracy.',
           badge: 'GEODESY',
-          techText: 'GNSS_RTK_ACTIVE // GPS_OK'
+          techText: 'Geodesy & GNSS RTK'
         },
         {
-          subtitle: 'SpenGeo LLP // CPT STATIC PENETRATION',
+          subtitle: 'SpenGeo LLP — CPT Static Penetration',
           title: 'Soil Testing by CPT Method',
           desc: 'Obtaining continuous soil strength profiles in real-time. The most reliable method for determining pile bearing capacity.',
-          badge: 'CPT_TESTING',
-          techText: 'CPT_SENSOR_ON // 200_KN'
+          badge: 'CPT TESTING',
+          techText: 'CPT Sounding up to 200 kN'
         },
         {
-          subtitle: 'SpenGeo LLP // STATE EXPERTISE',
+          subtitle: 'SpenGeo LLP — State Expertise Guarantee',
           title: 'State Expertise Guarantee',
           desc: 'Full technical support for projects. We support technical reports until obtaining a positive expert conclusion.',
           badge: 'EXPERTISE',
-          techText: 'EXPERT_SYS_CONNECTED // 200_OK'
+          techText: 'State Expertise Support'
         }
       ]
     },
@@ -201,39 +201,39 @@ export const translations = {
       knowledge: 'Білім базасы'
     },
     hero: {
-      subtitle: '«СпецИнжГео» ЖШС // Лицензия №19004562',
+      subtitle: '«СпецИнжГео» ЖШС — Лицензия №19004562',
       title: 'Берік іргетастағы инженерлік ізденістер',
       desc: 'Біз Қазақстан Республикасының барлық аумағында далалық геологиялық, геодезиялық ізденістердің, CPT статикалық зондтаудың және зертханалық сынақтардың толық кешенін жүргіземіз.',
       btnCalc: 'Смета және Ұсыныс калькуляторы',
       btnServices: 'Біздің қызметтер',
       slides: [
         {
-          subtitle: '«СпецИнжГео» ЖШС // ЗЕРТХАНА & БҰРҒЫЛАУ',
+          subtitle: '«СпецИнжГео» ЖШС — Зертхана және Бұрғылау',
           title: 'Инженерлік-геологиялық ізденістер',
           desc: 'Жеке Bauer бұрғылау паркі мен аккредиттелген топырақ зертханасы. Кез келген нысандар үшін топырақты 80 метр тереңдікке дейін зерттейміз.',
           badge: 'ГЕОЛОГИЯ',
-          techText: 'DRILL_SYS_OK // BAUER_BG'
+          techText: 'Bauer & ПБҰ Бұрғылау жүйелері'
         },
         {
-          subtitle: '«СпецИнжГео» ЖШС // ТАХЕОМЕТРЛЕР & GNSS',
+          subtitle: '«СпецИнжГео» ЖШС — Тахеометрлер & GNSS',
           title: 'Жоғары дәлдіктегі геодезия және топография',
           desc: 'Геодезиялық негіз құру, 1:500 масштабтағы топографиялық түсірілім және миллиметрлік дәлдікпен рельефті 3D модельдеу.',
           badge: 'ГЕОДЕЗИЯ',
-          techText: 'GNSS_RTK_ACTIVE // GPS_OK'
+          techText: 'Геодезия & GNSS RTK'
         },
         {
-          subtitle: '«СпецИнжГео» ЖШС // CPT СТАТИКАЛЫҚ ЗОНДТАУ',
+          subtitle: '«СпецИнжГео» ЖШС — CPT Статикалық зондтау',
           title: 'Топырақты CPT әдісімен сынау',
           desc: 'Нақты уақыт режимінде топырақ беріктігінің үздіксіз профильдерін алу. Қадалардың көтеру қабілетін анықтаудың ең сенімді әдісі.',
-          badge: 'CPT_TESTING',
-          techText: 'CPT_SENSOR_ON // 200_KN'
+          badge: 'CPT ЗОНДТАУ',
+          techText: '200 кН-ға дейінгі CPT зондтау'
         },
         {
-          subtitle: '«СпецИнжГео» ЖШС // МЕМЛЕКЕТТІК САРАПТАМА',
+          subtitle: '«СпецИнжГео» ЖШС — Мемлекеттік сараптама',
           title: 'Мемсараптамадан өту кепілдігі',
           desc: 'Жобаларды толық техникалық сүйемелдеу. Техникалық есептерді сарапшылардың оң қорытындысын алғанға дейін сүйемелдейміз.',
           badge: 'САРАПТАМА',
-          techText: 'EXPERT_SYS_CONNECTED // 200_OK'
+          techText: 'Мемсараптаманы сүйемелдеу'
         }
       ]
     },

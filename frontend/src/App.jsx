@@ -104,7 +104,7 @@ const DRILLING_RIGS = [
     soilType: 'Все типы, включая скальные и крупнообломочные породы',
     description: 'Многофункциональная буровая установка для устройства свайных фундаментов глубокого заложения. Используется для ответственных гражданских зданий, мостов и тяжелых промышленных объектов.',
     mobility: 'Транспортируется тралом',
-    cadSpecs: ['[Kelly Bar: 4-fold]', '[Rotary Head KDK 280]', '[Mast Height: 24.5m]', '[Main Winch: 200kN]']
+    cadSpecs: ['Kelly Bar: 4-fold', 'Rotary Head KDK 280', 'Mast Height: 24.5m', 'Main Winch: 200kN']
   },
   {
     name: 'ПБУ-2 на базе УРАЛ-4350',
@@ -116,7 +116,7 @@ const DRILLING_RIGS = [
     soilType: 'Песок, глина, суглинок, гравийные отложения',
     description: 'Самоходная буровая установка на базе вездеходного шасси УРАЛ. Применяется для глубокого разведочного бурения в любых климатических зонах Казахстана.',
     mobility: 'Вездеходное шасси 4х4',
-    cadSpecs: ['[Mast Cylinder: Lift 3.2m]', '[Drill Feed Rate: 1.2m/s]', '[Outriggers: Hydraulic]', '[Chassis: Ural 4x4]']
+    cadSpecs: ['Mast Cylinder: Lift 3.2m', 'Drill Feed Rate: 1.2m/s', 'Outriggers: Hydraulic', 'Chassis: Ural 4x4']
   },
   {
     name: 'ПБУ-2-3 на базе КАМАЗ-5350',
@@ -128,7 +128,7 @@ const DRILLING_RIGS = [
     soilType: 'Широкий спектр связных и сыпучих грунтов',
     description: 'Универсальная установка для полевых инженерно-геологических изысканий, статического и динамического зондирования грунтов.',
     mobility: 'Армейское шасси КАМАЗ',
-    cadSpecs: ['[Spindle Speed: 400rpm]', '[Pullup Force: 60kN]', '[Mud Pump: NB-32]', '[Chassis: Kamaz 6x6]']
+    cadSpecs: ['Spindle Speed: 400rpm', 'Pullup Force: 60kN', 'Mud Pump: NB-32', 'Chassis: Kamaz 6x6']
   },
   {
     name: 'УГБ-1ВС на базе ГАЗ-66',
@@ -140,7 +140,7 @@ const DRILLING_RIGS = [
     soilType: 'Мягкие и средней плотности породы',
     description: 'Компактная маневренная установка для изысканий в стесненных городских условиях, дачных массивах или труднодоступных горных районах.',
     mobility: 'Легкий полный привод ГАЗ-66',
-    cadSpecs: ['[Auger Drilling Type]', '[Mast Type: Folding]', '[Chassis: GAZ-66]', '[Core Barrel: 108mm]']
+    cadSpecs: ['Auger Drilling Type', 'Mast Type: Folding', 'Chassis: GAZ-66', 'Core Barrel: 108mm']
   }
 ];
 
@@ -152,7 +152,7 @@ const LAB_EQUIP = [
     standard: 'ГОСТ 19912-2012',
     description: 'Автоматизированный комплекс для непрерывного зондирования грунтов с регистрацией лобового сопротивления и трения по муфте конуса в режиме реального времени.',
     purpose: 'Определение плотности, модуля деформации и несущей способности свай.',
-    cadSpecs: ['[Cone Area: 10cm²]', '[Friction Sleeve Area: 150cm²]', '[Max Force: 200kN]', '[Data Sync: Wireless]']
+    cadSpecs: ['Cone Area: 10cm²', 'Friction Sleeve Area: 150cm²', 'Max Force: 200kN', 'Data Sync: Wireless']
   },
   {
     name: 'ШИНОВЫЕ ШТАМПЫ ШВ-60',
@@ -161,7 +161,7 @@ const LAB_EQUIP = [
     standard: 'ГОСТ 20276-2012',
     description: 'Установка для проведения полевых штамповых испытаний грунтов в буровых скважинах на различной глубине.',
     purpose: 'Самый точный метод определения модуля деформации (Е) непосредственно в массиве грунта.',
-    cadSpecs: ['[Screw Anchor Area: 600cm²]', '[Hydraulic Jack Stroke: 50mm]', '[Reference Beam System]', '[Digital Indicator]']
+    cadSpecs: ['Screw Anchor Area: 600cm²', 'Hydraulic Jack Stroke: 50mm', 'Reference Beam System', 'Digital Indicator']
   },
   {
     name: 'Грунтовая лаборатория ТОО «СпецИнжГео»',
@@ -170,7 +170,7 @@ const LAB_EQUIP = [
     standard: 'ГОСТ 5180, ГОСТ 12248',
     description: 'Полный комплекс лабораторных исследований физико-механических и химических свойств грунтов и подземных вод. Химический анализ на агрессивность к бетонам.',
     purpose: 'Определение сцепления, угла внутреннего трения, коэффициента сжимаемости.',
-    cadSpecs: ['[Compression Cells]', '[Shear Apparatus KP-2]', '[Sieve Shaker Grid]', '[Agilent Water Analyzer]']
+    cadSpecs: ['Compression Cells', 'Shear Apparatus KP-2', 'Sieve Shaker Grid', 'Agilent Water Analyzer']
   }
 ];
 
@@ -1331,15 +1331,15 @@ const DEFAULT_NORMS = [
 
       {activePage !== 'admin' && (
         <>
-          {/* High-Tech Top Status Bar */}
+          {/* Top Info Bar */}
           <div className="status-bar">
             <div className="container status-bar-content">
               <div className="status-indicator">
                 <div className="status-dot"></div>
-                <span><EditableText id="top_status_title" defaultText="ТОО СПЕЦИНЖГЕО // СТАТУС СИСТЕМЫ: АКТИВЕН" isVisualBuilder={isVisualBuilder} /></span>
+                <span><EditableText id="top_status_title" defaultText="ТОО «СпецИнжГео» — Лицензированные инженерные изыскания по РК" isVisualBuilder={isVisualBuilder} /></span>
               </div>
               <div>
-                <span><EditableText id="top_status_info" defaultText="БЭКЕНД: GOLANG | ФРОНТЕНД: REACT | ЛИЦЕНЗИЯ: ГСЛ №19004562" isVisualBuilder={isVisualBuilder} /></span>
+                <span><EditableText id="top_status_info" defaultText="Государственная лицензия ГСЛ №19004562 | Республика Казахстан" isVisualBuilder={isVisualBuilder} /></span>
               </div>
             </div>
           </div>
@@ -2705,7 +2705,7 @@ const DEFAULT_NORMS = [
                         <span>📍 Локация: {proj.loc}</span>
                         <span>⚙️ Вид работ: {proj.type}</span>
                         <span>📊 Спецификация: {proj.specs}</span>
-                        <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.75rem', marginTop: '10px', color: 'var(--color-text-muted)' }}>ГОД СДАЧИ: {proj.year || '2025'} // STATUS: ARCHIVED_OK</span>
+                        <span style={{ fontSize: '0.8rem', marginTop: '10px', color: 'var(--color-text-secondary)', fontWeight: 500 }}>📅 Год реализации: {proj.year || '2025'} • Объект успешно сдан</span>
                       </div>
                     </HudCard>
                     );
