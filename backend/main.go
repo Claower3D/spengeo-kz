@@ -1,16 +1,19 @@
 package main
 
 import (
+	"database/sql"
 	"encoding/json"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"os"
-	"io"
 	"path/filepath"
 	"strconv"
 	"sync"
 	"time"
+
+	_ "github.com/lib/pq"
 )
 
 // Inquiry represents a contact request from the frontend
@@ -24,17 +27,85 @@ type Inquiry struct {
 }
 
 var (
-	inquiries []Inquiry
-	mutex     sync.Mutex
-	dbFile    = "inquiries.json"
+	db            *sql.DB
+	inquiries     []Inquiry
+	mutex         sync.Mutex
+	dbFile        = "inquiries.json"
 	adminDataFile = "admin_data.json"
 
 	adminClients   = make(map[chan []byte]bool)
 	adminClientsMu sync.Mutex
 )
 
+func initPostgres() {
+	connStr := os.Getenv("DATABASE_URL")
+	if connStr == "" {
+		connStr = os.Getenv("POSTGRES_URL")
+	}
+	if connStr == "" {
+		connStr = os.Getenv("DATABASE_PRIVATE_URL")
+	}
+	if connStr == "" && os.Getenv("PGHOST") != "" {
+		port := os.Getenv("PGPORT")
+		if port == "" {
+			port = "5432"
+		}
+		user := os.Getenv("PGUSER")
+		pass := os.Getenv("PGPASSWORD")
+		dbname := os.Getenv("PGDATABASE")
+		host := os.Getenv("PGHOST")
+		connStr = fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable", host, port, user, pass, dbname)
+	}
+
+	if connStr == "" {
+		log.Println("No PostgreSQL connection environment variables found. Operating in file fallback mode.")
+		return
+	}
+
+	var err error
+	db, err = sql.Open("postgres", connStr)
+	if err != nil {
+		log.Printf("Warning: failed to open PostgreSQL database connection: %v", err)
+		db = nil
+		return
+	}
+
+	if err = db.Ping(); err != nil {
+		log.Printf("Warning: failed to ping PostgreSQL database: %v", err)
+		db = nil
+		return
+	}
+
+	log.Println("✅ Successfully connected to PostgreSQL database!")
+
+	// Create tables if they do not exist
+	createTablesQuery := `
+	CREATE TABLE IF NOT EXISTS inquiries (
+		id BIGINT PRIMARY KEY,
+		name TEXT NOT NULL,
+		phone TEXT NOT NULL,
+		service_type TEXT,
+		message TEXT,
+		created_at TIMESTAMPTZ NOT NULL
+	);
+	CREATE TABLE IF NOT EXISTS admin_data (
+		id INT PRIMARY KEY DEFAULT 1,
+		data JSONB NOT NULL,
+		updated_at TIMESTAMPTZ NOT NULL
+	);
+	`
+	if _, err := db.Exec(createTablesQuery); err != nil {
+		log.Printf("Warning: failed to create database tables: %v", err)
+	} else {
+		log.Println("✅ Database schema initialized successfully (inquiries & admin_data tables).")
+	}
+}
+
 func main() {
-	// Load existing inquiries from JSON database file
+	// Initialize PostgreSQL connection if DATABASE_URL or PGHOST is present
+	initPostgres()
+
+	// Load existing inquiries
 	if err := loadDatabase(); err != nil {
 		log.Printf("Warning: could not load database: %v. Starting fresh.", err)
 	}
@@ -94,12 +165,10 @@ func main() {
 // CORS Middleware
 func enableCORS(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// Allow React frontend origin (default Vite is http://localhost:5173)
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS")
 		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
 
-		// Handle preflight OPTIONS request
 		if r.Method == "OPTIONS" {
 			w.WriteHeader(http.StatusOK)
 			return
@@ -116,13 +185,11 @@ func handleGetInquiries(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	if err := json.NewEncoder(w).Encode(inquiries); err != nil {
-		// Fallback standard encoding
 		jsonBytes, _ := json.Marshal(inquiries)
 		w.Write(jsonBytes)
 	}
 }
 
-// custom encoder wrapper helper for safety
 func (i Inquiry) MarshalJSON() ([]byte, error) {
 	type Alias Inquiry
 	return json.Marshal(&struct {
@@ -150,7 +217,16 @@ func handlePostInquiry(w http.ResponseWriter, r *http.Request) {
 	mutex.Lock()
 	inq.ID = time.Now().UnixNano()
 	inq.CreatedAt = time.Now()
-	inquiries = append([]Inquiry{inq}, inquiries...) // Prepend new inquiry
+	inquiries = append([]Inquiry{inq}, inquiries...)
+
+	if db != nil {
+		_, err := db.Exec("INSERT INTO inquiries (id, name, phone, service_type, message, created_at) VALUES ($1, $2, $3, $4, $5, $6)",
+			inq.ID, inq.Name, inq.Phone, inq.ServiceType, inq.Message, inq.CreatedAt)
+		if err != nil {
+			log.Printf("Error inserting inquiry to PostgreSQL: %v", err)
+		}
+	}
+
 	err := saveDatabase()
 	mutex.Unlock()
 
@@ -190,6 +266,13 @@ func handleDeleteInquiry(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if db != nil {
+		_, err := db.Exec("DELETE FROM inquiries WHERE id = $1", id)
+		if err != nil {
+			log.Printf("Error deleting inquiry from PostgreSQL: %v", err)
+		}
+	}
+
 	if err := saveDatabase(); err != nil {
 		http.Error(w, "Internal Server Error: failed to update database", http.StatusInternalServerError)
 		return
@@ -201,6 +284,23 @@ func handleDeleteInquiry(w http.ResponseWriter, r *http.Request) {
 
 // Database Helpers
 func loadDatabase() error {
+	if db != nil {
+		rows, err := db.Query("SELECT id, name, phone, service_type, message, created_at FROM inquiries ORDER BY created_at DESC")
+		if err == nil {
+			defer rows.Close()
+			var loaded []Inquiry
+			for rows.Next() {
+				var inq Inquiry
+				if err := rows.Scan(&inq.ID, &inq.Name, &inq.Phone, &inq.ServiceType, &inq.Message, &inq.CreatedAt); err == nil {
+					loaded = append(loaded, inq)
+				}
+			}
+			inquiries = loaded
+			return nil
+		}
+		log.Printf("Warning: failed to query inquiries from DB: %v", err)
+	}
+
 	file, err := os.Open(dbFile)
 	if err != nil {
 		if os.IsNotExist(err) {
@@ -230,6 +330,16 @@ func saveDatabase() error {
 func handleGetAdminData(w http.ResponseWriter, r *http.Request) {
 	mutex.Lock()
 	defer mutex.Unlock()
+
+	if db != nil {
+		var jsonData []byte
+		err := db.QueryRow("SELECT data FROM admin_data WHERE id = 1").Scan(&jsonData)
+		if err == nil && len(jsonData) > 0 {
+			w.Header().Set("Content-Type", "application/json")
+			w.Write(jsonData)
+			return
+		}
+	}
 
 	data, err := os.ReadFile(adminDataFile)
 	if err != nil {
@@ -261,18 +371,32 @@ func handlePostAdminData(w http.ResponseWriter, r *http.Request) {
 		formatted = raw
 	}
 
-	if err := os.WriteFile(adminDataFile, formatted, 0644); err != nil {
-		http.Error(w, "Internal Server Error: failed to save admin data", http.StatusInternalServerError)
-		return
+	// 1. Save to PostgreSQL DB if connected
+	if db != nil {
+		_, err := db.Exec(`
+			INSERT INTO admin_data (id, data, updated_at)
+			VALUES (1, $1, NOW())
+			ON CONFLICT (id) DO UPDATE
+			SET data = EXCLUDED.data, updated_at = EXCLUDED.updated_at
+		`, formatted)
+		if err != nil {
+			log.Printf("Error saving admin data to Postgres: %v", err)
+		} else {
+			log.Println("✅ Admin data successfully saved to PostgreSQL database.")
+		}
 	}
 
-	// Broadcast update to all connected SSE clients
+	// 2. Backup to local JSON file
+	if err := os.WriteFile(adminDataFile, formatted, 0644); err != nil {
+		log.Printf("Warning: failed to write admin_data.json backup: %v", err)
+	}
+
+	// 3. Broadcast update to all connected SSE clients
 	adminClientsMu.Lock()
 	for client := range adminClients {
 		select {
 		case client <- formatted:
 		default:
-			// client is slow or channel is full, skip
 		}
 	}
 	adminClientsMu.Unlock()
@@ -295,7 +419,7 @@ func handleAdminDataEvents(w http.ResponseWriter, r *http.Request) {
 	}
 
 	ch := make(chan []byte, 10)
-	
+
 	adminClientsMu.Lock()
 	adminClients[ch] = true
 	adminClientsMu.Unlock()
@@ -307,7 +431,6 @@ func handleAdminDataEvents(w http.ResponseWriter, r *http.Request) {
 		close(ch)
 	}()
 
-	// Send an initial ping
 	fmt.Fprintf(w, ": connected\n\n")
 	flusher.Flush()
 
@@ -324,7 +447,6 @@ func handleAdminDataEvents(w http.ResponseWriter, r *http.Request) {
 
 // POST /api/upload Handler
 func handleFileUpload(w http.ResponseWriter, r *http.Request) {
-	// Parse the multipart form, 500 MB max memory
 	err := r.ParseMultipartForm(500 << 20)
 	if err != nil {
 		http.Error(w, "Bad Request: unable to parse form", http.StatusBadRequest)
@@ -338,12 +460,10 @@ func handleFileUpload(w http.ResponseWriter, r *http.Request) {
 	}
 	defer file.Close()
 
-	// Create a unique filename
 	ext := filepath.Ext(header.Filename)
 	filename := fmt.Sprintf("%d%s", time.Now().UnixNano(), ext)
 	filePath := filepath.Join("uploads", filename)
 
-	// Create the file on disk
 	dst, err := os.Create(filePath)
 	if err != nil {
 		http.Error(w, "Internal Server Error: unable to save file", http.StatusInternalServerError)
@@ -351,7 +471,6 @@ func handleFileUpload(w http.ResponseWriter, r *http.Request) {
 	}
 	defer dst.Close()
 
-	// Copy the uploaded file to the destination
 	if _, err := io.Copy(dst, file); err != nil {
 		http.Error(w, "Internal Server Error: failed to write file", http.StatusInternalServerError)
 		return

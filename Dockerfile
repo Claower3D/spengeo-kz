@@ -13,7 +13,7 @@ RUN npm run build
 FROM golang:alpine AS backend-builder
 WORKDIR /app/backend
 
-COPY backend/go.mod ./
+COPY backend/go.mod backend/go.sum* ./
 COPY backend/main.go ./
 RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-s -w" -o server main.go
 
