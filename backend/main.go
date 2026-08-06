@@ -128,13 +128,21 @@ func main() {
 
 	// Serve uploads directory
 	os.MkdirAll("./uploads", 0755)
-	mux.Handle("/uploads/", http.StripPrefix("/uploads/", http.FileServer(http.Dir("./uploads"))))
 
 	// Serve static SPA frontend from dist directory if present
 	if _, err := os.Stat("./dist"); err == nil {
 		fs := http.FileServer(http.Dir("./dist"))
 		mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 			if len(r.URL.Path) >= 4 && r.URL.Path[:4] == "/api" {
+				http.NotFound(w, r)
+				return
+			}
+			if len(r.URL.Path) >= 8 && r.URL.Path[:8] == "/uploads" {
+				uploadFilePath := "." + r.URL.Path
+				if stat, err := os.Stat(uploadFilePath); err == nil && !stat.IsDir() {
+					http.ServeFile(w, r, uploadFilePath)
+					return
+				}
 				http.NotFound(w, r)
 				return
 			}
@@ -147,6 +155,8 @@ func main() {
 			}
 			fs.ServeHTTP(w, r)
 		})
+	} else {
+		mux.Handle("/uploads/", http.StripPrefix("/uploads/", http.FileServer(http.Dir("./uploads"))))
 	}
 
 	// Wrap mux with CORS middleware
