@@ -1696,7 +1696,6 @@ const DEFAULT_NORMS = [
             {/* 1.5. Clients / Partners (Moved above stats) */}
             <section style={{ marginBottom: '60px', textAlign: 'center', position: 'relative', overflow: 'visible', padding: '40px 0' }}>
                <div className="bg-glow-orb" style={{ top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '1000px', height: '400px', opacity: 0.08, background: 'radial-gradient(ellipse, var(--color-cyan) 0%, transparent 70%)' }}></div>
-               <EditableText id="clients_subtitle" defaultText="НАМ ДОВЕРЯЮТ" isVisualBuilder={isVisualBuilder} className="hero-subtitle" style={{ color: 'var(--color-accent)', textShadow: '0 0 15px rgba(59, 130, 246, 0.6)' }} />
                <EditableText as="h2" id="clients_title" defaultText={t.sections.clientsTitle} isVisualBuilder={isVisualBuilder} style={{ fontSize: '3.2rem', marginBottom: '40px', textShadow: '0 0 40px rgba(255,255,255,0.2)' }} />
                
                <div className="marquee-container" style={{ position: 'relative', zIndex: 2, marginTop: '20px' }}>
@@ -1714,7 +1713,6 @@ const DEFAULT_NORMS = [
             <div className="geological-layer-content">
               {/* Quick KPI stats dashboard */}
               <div style={{ textAlign: 'center', marginBottom: '40px', position: 'relative', zIndex: 2 }}>
-                 <EditableText id="stats_subtitle" defaultText={t.stats.subtitle} isVisualBuilder={isVisualBuilder} className="hero-subtitle" style={{ color: 'var(--color-cyan)', textShadow: '0 0 15px rgba(6, 182, 212, 0.6)' }} />
                  <EditableText as="h2" id="stats_title" defaultText={t.stats.title} isVisualBuilder={isVisualBuilder} style={{ fontSize: '3.2rem', textShadow: '0 0 40px rgba(255,255,255,0.2)' }} />
               </div>
               
