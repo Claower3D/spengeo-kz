@@ -4054,12 +4054,19 @@ const DEFAULT_NORMS = [
                         <div>
                           <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 'bold', color: theme === 'white' ? '#0f172a' : '#fff', marginBottom: '8px' }}>Фотография</label>
                           <ImageUploadField 
-                            value={adminData.media?.historyDirectorImage || '/images/director.png'} 
+                            value={adminData.media?.historyDirectorImage || adminData.media?.directorImage || adminData.team?.[0]?.img || '/images/director.png'} 
                             onChange={v => {
-                              setAdminData(prev => ({
-                                ...prev,
-                                media: { ...(prev.media || {}), historyDirectorImage: v }
-                              }));
+                              setAdminData(prev => {
+                                const newTeam = [...(prev.team || [])];
+                                if (newTeam[0]) newTeam[0] = { ...newTeam[0], img: v };
+                                const updated = {
+                                  ...prev,
+                                  media: { ...(prev.media || {}), historyDirectorImage: v, directorImage: v },
+                                  team: newTeam
+                                };
+                                saveAdminData(updated, true);
+                                return updated;
+                              });
                             }} 
                             theme={theme} 
                           />
@@ -4286,7 +4293,22 @@ const DEFAULT_NORMS = [
                           </div>
                           <div>
                             <label style={{ display: 'block', fontSize: '0.8rem', color: theme === 'white' ? '#64748b' : '#888', marginBottom: '5px' }}>Фотография</label>
-                            <ImageUploadField value={member.img || member.image || ''} onChange={v => { const arr = [...(adminData.team || [])]; arr[i].img = v; setAdminData({...adminData, team: arr}); }} theme={theme} />
+                            <ImageUploadField 
+                              value={member.img || member.image || ''} 
+                              onChange={v => { 
+                                setAdminData(prev => {
+                                  const arr = [...(prev.team || [])]; 
+                                  arr[i] = { ...arr[i], img: v, image: v }; 
+                                  const updated = { ...prev, team: arr };
+                                  if (i === 0) {
+                                    updated.media = { ...(updated.media || {}), directorImage: v, historyDirectorImage: v };
+                                  }
+                                  saveAdminData(updated, true);
+                                  return updated;
+                                });
+                              }} 
+                              theme={theme} 
+                            />
                           </div>
                           <div>
                             <label style={{ display: 'block', fontSize: '0.8rem', color: theme === 'white' ? '#64748b' : '#888', marginBottom: '5px' }}>Описание</label>
@@ -4378,11 +4400,13 @@ const DEFAULT_NORMS = [
                           setAdminData(prev => {
                             const newTeam = [...(prev.team || [])];
                             if (newTeam[0]) newTeam[0] = { ...newTeam[0], img: v };
-                            return {
+                            const updated = {
                               ...prev,
                               media: { ...(prev.media || {}), directorImage: v, historyDirectorImage: v },
                               team: newTeam
                             };
+                            saveAdminData(updated, true);
+                            return updated;
                           });
                         }} 
                         theme={theme} 
